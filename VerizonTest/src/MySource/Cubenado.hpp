@@ -1,8 +1,17 @@
-#include <string>
+#ifndef Cubenado_hpp
+#define Cubenado_hpp
 
-namespace NJLI
+#include <string>
+#include <vector>
+
+#include "Camera.hpp"
+
+namespace njli
 {
     class Shader;
+    class CubeGeometry;
+    class Node;
+    class Scene;
     
     class Cubenado
     {
@@ -26,6 +35,8 @@ namespace NJLI
         void update(float step);
         void render();
         
+        Camera *const getCamera()const;
+        
         void setNumberOfCubes(const unsigned int amount);
         void setRandomness(const float percent);
         
@@ -39,5 +50,13 @@ namespace NJLI
         /* members */
         
         Shader *m_Shader;
+        CubeGeometry *m_CubeGeometry;
+        Camera *m_Camera;
+        Node *m_CameraNode;
+        Node *m_RootNode;
+        Scene *m_Scene;
+        std::vector<Node*> m_CubeNodes;
     };
 }
+
+#endif

@@ -9,8 +9,14 @@
 #ifndef Scene_hpp
 #define Scene_hpp
 
-namespace NJLI
+#include <vector>
+
+namespace njli
 {
+    class CubeGeometry;
+    class Camera;
+    class Node;
+    
     class Scene
     {
     public:
@@ -19,8 +25,20 @@ namespace NJLI
         Scene(const Scene &rhs);
         const Scene &operator=(const Scene &rhs);
         ~Scene();
+        
+        void update(float timeStep, const unsigned int numSubSteps = 2);
+        void render();
+        
+        void addActiveCamera(Camera * camera);
+        void removeActiveCamera(Camera * camera);
+        
+        void addActiveNode(Node * node);
+        void removeActiveNode(Node * node);
     protected:
     private:
+        std::vector<CubeGeometry*> m_ActiveGeometries;
+        std::vector<Camera*> m_ActiveCameras;
+        std::vector<Node*> m_ActiveNodes;
     };
 }
 

@@ -4,14 +4,14 @@
 precision mediump float;
 #endif
 
-//varying vec4 destinationNormal;
 varying vec4 destinationColor;
-varying vec2 destinationTexCoord2D;
+//varying vec4 destinationNormal;
+//varying vec2 destinationTexCoord2D;
 varying float destinationOpacity;
 varying float destinationHidden;
 varying mat4 destinationColorTransform;
 
-uniform sampler2D diffuseTexture2D;
+//uniform sampler2D diffuseTexture2D;
 uniform sampler2D ambientTexture2D;
 uniform sampler2D specularTexture2D;
 uniform sampler2D normalTexture2D;
@@ -20,7 +20,7 @@ uniform sampler2D emissionTexture2D;
 uniform sampler2D transparentTexture2D;
 uniform sampler2D multiplyTexture2D;
 
-uniform int u_opacityModifyRGB;
+uniform int opacityModifyRGB;
 
 //vec3 transform3DPoint(vec3 point, mat4 matrix)
 //{
@@ -173,10 +173,12 @@ void main(void)
     if(destinationHidden != 0.0)
         discard;
     
-    vec4 color = destinationColor;
-    int modifyRGB = u_opacityModifyRGB;
+//    vec4 normal = destinationNormal;
     
-    vec4 diffuseColor = texture2D(diffuseTexture2D, destinationTexCoord2D);
+    vec4 color = destinationColor;
+    int modifyRGB = opacityModifyRGB;
+    
+//    vec4 diffuseColor = texture2D(diffuseTexture2D, destinationTexCoord2D);
     
     if (modifyRGB == 1)
     {
@@ -186,18 +188,18 @@ void main(void)
                      destinationColor.a);
     }
     
-    color = (color * diffuseColor * destOpacityColor);
-    //    color = (color * diffuseColor);
+    color = (color * destOpacityColor);
+//    color = (color * diffuseColor * destOpacityColor);
     
     color = transformRGB(color, destinationColorTransform);
     
     
     
     
-    if (color.a == 0.0)
-    {
-        discard;
-    }
+//    if (color.a == 0.0)
+//    {
+//        discard;
+//    }
     
     
     gl_FragColor = color;

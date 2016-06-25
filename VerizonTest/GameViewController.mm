@@ -114,12 +114,12 @@ GLfloat gCubeVertexData[216] =
     view.context = self.context;
     view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
     
-    NJLI::Cubenado::createInstance();
+    njli::Cubenado::createInstance();
     
     NSMutableString *path = [[NSMutableString alloc] initWithString:[[NSBundle mainBundle] resourcePath]];
     [path appendString: [[NSString alloc] initWithCString:"/assets/"
                                                  encoding:NSASCIIStringEncoding]];
-    NJLI::Cubenado::setBundlePath([path UTF8String]);
+    njli::Cubenado::setBundlePath([path UTF8String]);
     
     [self setupGL];
 }
@@ -128,7 +128,7 @@ GLfloat gCubeVertexData[216] =
 {    
     [self tearDownGL];
     
-    NJLI::Cubenado::destroyInstance();
+    njli::Cubenado::destroyInstance();
     
     if ([EAGLContext currentContext] == self.context) {
         [EAGLContext setCurrentContext:nil];
@@ -162,7 +162,7 @@ GLfloat gCubeVertexData[216] =
     [EAGLContext setCurrentContext:self.context];
     
     GLKView *view = (GLKView *)self.view;
-    NJLI::Cubenado::getInstance()->create(0, 0, view.frame.size.width * view.contentScaleFactor, view.frame.size.height * view.contentScaleFactor);
+    njli::Cubenado::getInstance()->create(0, 0, view.frame.size.width * view.contentScaleFactor, view.frame.size.height * view.contentScaleFactor);
     
 //    [self loadShaders];
 //    
@@ -191,7 +191,7 @@ GLfloat gCubeVertexData[216] =
 {
     [EAGLContext setCurrentContext:self.context];
     
-    NJLI::Cubenado::getInstance()->destroy();
+    njli::Cubenado::getInstance()->destroy();
     
 //    glDeleteBuffers(1, &_vertexBuffer);
 //    glDeleteVertexArraysOES(1, &_vertexArray);
@@ -208,7 +208,10 @@ GLfloat gCubeVertexData[216] =
 
 - (void)update
 {
-    NJLI::Cubenado::getInstance()->update(self.timeSinceLastUpdate);
+    float aspect = fabs(self.view.bounds.size.width / self.view.bounds.size.height);
+    njli::Cubenado::getInstance()->getCamera()->setAspectRatio(aspect);
+    
+    njli::Cubenado::getInstance()->update(self.timeSinceLastUpdate);
     
 //    float aspect = fabs(self.view.bounds.size.width / self.view.bounds.size.height);
 //    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
@@ -239,7 +242,7 @@ GLfloat gCubeVertexData[216] =
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-    NJLI::Cubenado::getInstance()->render();
+    njli::Cubenado::getInstance()->render();
     
 //    glClearColor(0.65f, 0.65f, 0.65f, 1.0f);
 //    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -266,7 +269,7 @@ GLfloat gCubeVertexData[216] =
     
     GLKView *view = (GLKView *)self.view;
     
-    NJLI::Cubenado::getInstance()->resize(0, 0, view.frame.size.width * view.contentScaleFactor, view.frame.size.height * view.contentScaleFactor);
+    njli::Cubenado::getInstance()->resize(0, 0, view.frame.size.width * view.contentScaleFactor, view.frame.size.height * view.contentScaleFactor);
 }
 
 //#pragma mark -  OpenGL ES 2 shader compilation

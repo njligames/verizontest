@@ -15,7 +15,9 @@
 #import <OpenGLES/ES2/glext.h>
 #import <OpenGLES/ES2/gl.h>
 
-namespace NJLI
+#include "btTransform.h"
+
+namespace njli
 {
     class Shader
     {
@@ -27,13 +29,23 @@ namespace NJLI
         ~Shader();
 
         bool load(const std::string &vertexSource,
-                  const std::string &fragmentSource,
-                  const std::vector<std::string> &attributes);
+                  const std::string &fragmentSource);
         
         void unLoad();
         bool isLoaded()const;
         
-        void use();
+        bool use()const;
+        
+        int getAttributeLocation(const std::string &attributeName)const;
+        
+        int getUniformLocation(const std::string &uniformName)const;
+        
+        bool setUniformValue(const std::string &uniformName, const btTransform &value, bool transpose = false);
+        bool setUniformValue(const std::string &uniformName, GLfloat *matrix4x4, bool transpose = false);
+        bool getUniformValue(const std::string &uniformName, btTransform &value)const;
+        
+        bool setUniformValue(const char *uniformName, int value);
+        bool getUniformValue(const char *uniformName, int &value);
     protected:
         GLuint compileShader(const std::string &source, GLenum type);
         bool compileStatus(GLuint shader);
@@ -42,6 +54,9 @@ namespace NJLI
         
     private:
         GLuint m_Program;
+        
+        GLfloat *m_mat4Buffer;
+        
     };
 }
 

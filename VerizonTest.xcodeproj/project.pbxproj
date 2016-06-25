@@ -144,6 +144,7 @@
 		C1242DCC1D1A008C00CEABBF /* btVector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1242C3E1D1A008C00CEABBF /* btVector3.cpp */; };
 		C1242DD61D1A1E2000CEABBF /* assets in Resources */ = {isa = PBXBuildFile; fileRef = C1242DD51D1A1E2000CEABBF /* assets */; };
 		C1242DD91D1A1FFD00CEABBF /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1242DD71D1A1FFD00CEABBF /* Scene.cpp */; };
+		C1242DDD1D1B311000CEABBF /* AbstractDecorator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1242DDB1D1B311000CEABBF /* AbstractDecorator.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -487,6 +488,9 @@
 		C1242DD51D1A1E2000CEABBF /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = "<group>"; };
 		C1242DD71D1A1FFD00CEABBF /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
 		C1242DD81D1A1FFD00CEABBF /* Scene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Scene.hpp; sourceTree = "<group>"; };
+		C1242DDA1D1AE60300CEABBF /* btVector2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = btVector2.h; sourceTree = "<group>"; };
+		C1242DDB1D1B311000CEABBF /* AbstractDecorator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AbstractDecorator.cpp; sourceTree = "<group>"; };
+		C1242DDC1D1B311000CEABBF /* AbstractDecorator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AbstractDecorator.hpp; sourceTree = "<group>"; };
 		C5BBBB5F935C45E7A9F8EA84 /* Pods-VerizonTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VerizonTest.release.xcconfig"; path = "Pods/Target Support Files/Pods-VerizonTest/Pods-VerizonTest.release.xcconfig"; sourceTree = "<group>"; };
 		C7A9C7528DDDC86DAAD0C386 /* Pods-VerizonTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VerizonTest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VerizonTest/Pods-VerizonTest.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -612,6 +616,8 @@
 		C12429A11D19F50D00CEABBF /* MySource */ = {
 			isa = PBXGroup;
 			children = (
+				C1242DDB1D1B311000CEABBF /* AbstractDecorator.cpp */,
+				C1242DDC1D1B311000CEABBF /* AbstractDecorator.hpp */,
 				C12429A31D19F50D00CEABBF /* Cubenado.hpp */,
 				C12429A21D19F50D00CEABBF /* Cubenado.cpp */,
 				C12429A61D19FE8F00CEABBF /* Shader.hpp */,
@@ -1027,6 +1033,7 @@
 				C1242C3B1D1A008C00CEABBF /* btStackAlloc.h */,
 				C1242C3C1D1A008C00CEABBF /* btTransform.h */,
 				C1242C3D1D1A008C00CEABBF /* btTransformUtil.h */,
+				C1242DDA1D1AE60300CEABBF /* btVector2.h */,
 				C1242C3E1D1A008C00CEABBF /* btVector3.cpp */,
 				C1242C3F1D1A008C00CEABBF /* btVector3.h */,
 			);
@@ -1315,6 +1322,7 @@
 				C124296A1D19F2BB00CEABBF /* main.m in Sources */,
 				C1242CB51D1A008C00CEABBF /* btCapsuleShape.cpp in Sources */,
 				C1242CC31D1A008C00CEABBF /* btConvexInternalShape.cpp in Sources */,
+				C1242DDD1D1B311000CEABBF /* AbstractDecorator.cpp in Sources */,
 				C1242C911D1A008C00CEABBF /* btConvexConcaveCollisionAlgorithm.cpp in Sources */,
 				C1242C851D1A008C00CEABBF /* btCollisionDispatcher.cpp in Sources */,
 				C1242CBF1D1A008C00CEABBF /* btConvex2dShape.cpp in Sources */,
@@ -1486,6 +1494,7 @@
 			baseConfigurationReference = C7A9C7528DDDC86DAAD0C386 /* Pods-VerizonTest.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_ROOT}/Headers/Public\"",
@@ -1504,6 +1513,7 @@
 			baseConfigurationReference = C5BBBB5F935C45E7A9F8EA84 /* Pods-VerizonTest.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_ROOT}/Headers/Public\"",

@@ -10,27 +10,30 @@
 #include <iostream>
 #include <assert.h>
 
-namespace NJLI
-{
+namespace njli
+{   
     Shader::Shader():
-    m_Program(0)
+    m_Program(0),
+    m_mat4Buffer(new GLfloat[16])
     {
         
     }
     
     Shader::~Shader()
     {
+        delete [] m_mat4Buffer;
+        m_mat4Buffer = NULL;
+        
         unLoad();
     }
     
     
     bool Shader::load(const std::string &vertexSource,
-              const std::string &fragmentSource,
-              const std::vector<std::string> &attributes)
+              const std::string &fragmentSource)//,
+//              const std::vector<std::string> &attributes)
     {
         GLuint vertShader, fragShader;
         
-        // Create shader program.
         m_Program = glCreateProgram();
         
         if(!(vertShader = compileShader(vertexSource, GL_VERTEX_SHADER)))
@@ -39,24 +42,8 @@ namespace NJLI
         if(!(fragShader = compileShader(fragmentSource, GL_FRAGMENT_SHADER)))
             return false;
         
-        // Attach vertex shader to program.
         glAttachShader(m_Program, vertShader);
-        
-        // Attach fragment shader to program.
         glAttachShader(m_Program, fragShader);
-        
-        
-        for (std::vector<std::string>::const_iterator i = attributes.begin(); i != attributes.end(); i++)
-        {
-            std::string attributeName = *i;
-            int location = glGetAttribLocation(m_Program, attributeName.c_str());
-            glBindAttribLocation(m_Program, location, attributeName.c_str());
-        }
-        
-        // Bind attribute locations.
-        // This needs to be done prior to linking.
-//        glBindAttribLocation(_program, GLKVertexAttribPosition, "position");
-//        glBindAttribLocation(_program, GLKVertexAttribNormal, "normal");
         
         if(!linkProgram(m_Program))
         {
@@ -78,13 +65,6 @@ namespace NJLI
             return false;
         }
         
-        
-        
-        // Get uniform locations.
-//        uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX] = glGetUniformLocation(_program, "modelViewProjectionMatrix");
-//        uniforms[UNIFORM_NORMAL_MATRIX] = glGetUniformLocation(_program, "normalMatrix");
-        
-        // Release vertex and fragment shaders.
         if (vertShader)
         {
             glDetachShader(m_Program, vertShader);
@@ -112,10 +92,96 @@ namespace NJLI
         return (m_Program != 0);
     }
     
-    void Shader::use()
+    bool Shader::use()const
     {
         if(m_Program)
+        {
             glUseProgram(m_Program);
+            return true;
+        }
+        return false;
+    }
+    
+    int Shader::getAttributeLocation(const std::string &attributeName)const
+    {
+        int location = glGetAttribLocation(m_Program, attributeName.c_str());
+        
+#if defined(DEBUG)
+        if(location == -1)
+        {
+            std::cout << "The named attribute variable " << attributeName << " is not an active attribute in the specified program object or if name starts with the reserved prefix \"gl_\"" << std::endl;
+        }
+#endif
+        
+        return location;
+    }
+    
+    int Shader::getUniformLocation(const std::string &uniformName)const
+    {
+        int location = glGetUniformLocation(m_Program, uniformName.c_str());
+        
+#if defined(DEBUG)
+        if(location == -1)
+        {
+            std::cout << "The named attribute variable " << uniformName << " is not an active attribute in the specified program object or if name starts with the reserved prefix \"gl_\"" << std::endl;
+        }
+#endif
+        
+        return location;
+    }
+    
+    bool Shader::setUniformValue(const std::string &uniformName, const btTransform &value, bool transpose)
+    {
+        value.getOpenGLMatrix(m_mat4Buffer);
+        return setUniformValue(uniformName, m_mat4Buffer, transpose);
+    }
+    
+    bool Shader::setUniformValue(const std::string &uniformName, GLfloat *matrix4x4, bool transpose)
+    {
+        int location = getUniformLocation(uniformName);
+        if(location != -1)
+        {
+            glUniformMatrix4fv(location,
+                               1,
+                               (transpose)?GL_TRUE:GL_FALSE,
+                               matrix4x4);
+            return true;
+        }
+        return false;
+    }
+    
+    bool Shader::getUniformValue(const std::string &uniformName, btTransform &value)const
+    {
+        int location = getUniformLocation(uniformName);
+        if(location != -1)
+        {
+            glGetUniformfv(m_Program, location, m_mat4Buffer);
+            value.setFromOpenGLMatrix(m_mat4Buffer);
+            return true;
+        }
+        return false;
+    }
+    
+    bool Shader::setUniformValue(const char *uniformName, int value)
+    {
+        int location = getUniformLocation(uniformName);
+        if(location != -1)
+        {
+            glUniform1i(location, value);
+            return true;
+        }
+        return false;
+    }
+    
+    bool Shader::getUniformValue(const char *uniformName, int &value)
+    {
+        int location = getUniformLocation(uniformName);
+        if(location != -1)
+        {
+            glGetUniformiv(m_Program, location, &value);
+            return true;
+        }
+        return false;
     }
     
     GLuint Shader::compileShader(const std::string &source, GLenum type)

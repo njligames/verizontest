@@ -9,18 +9,98 @@
 #ifndef Node_hpp
 #define Node_hpp
 
-namespace NJLI
+#include "btTransform.h"
+#include "btVector2.h"
+#include "btQuaternion.h"
+
+#include <vector>
+#include <string>
+
+namespace njli
 {
+    class Camera;
+    class CubeGeometry;
+    
     class Node
     {
+        friend class CubeGeometry;
+        friend class Scene;
+        
     public:
         /* members */
         Node();
         Node(const Node &rhs);
         const Node &operator=(const Node &rhs);
         ~Node();
+        
+        void setName(const std::string &name);
+        const std::string &getName()const;
+        
+        void addCamera(Camera *camera);
+        void removeCamera();
+        Camera* getCamera();
+        
+        void addGeometry(CubeGeometry * body);
+        void removeGeometry();
+        CubeGeometry *const getGeometry()const;
+    public:
+        Node* getParentNode();
+        const Node* getParentNode() const;
+        bool hasParentNode() const;
+        void setParentNode(Node * parent);
+        void removeParentNode();
+        bool removeFromParentNode();
+        Node* findChildNode(const std::string &name);
+        const Node* findChildNode(const std::string &name) const;
+        Node* getChildNode(const unsigned long index);
+        const Node* getChildNode(const unsigned long index) const;
+        void getChildrenNodes(std::vector<Node*> & children) const;
+        unsigned long getChildNodeIndex(Node * object) const;
+        bool hasChildNode(Node * object) const;
+        bool hasChildrenNodes() const;
+        void addChildNode(Node * object);
+        void removeChildNode(const unsigned long index);
+        void removeChildNode(Node * object);
+        void removeChildrenNodes();
+        unsigned long numberOfChildrenNodes() const;
+        void replaceChildNode(Node * oldChild, Node * newChild);
+    public:
+        btTransform getWorldTransform() const;
+        
+        const btTransform& getColorTransform() const;
+        void setColorTransform(const btTransform& transform);
+        const btTransform& getTransform() const;
+        void setTransform(const btTransform& transform);
+        btVector3 getOrigin() const;
+        void setOrigin(const btVector3& origin);
+        void setOrigin(const btVector2& origin);
+        btQuaternion getRotation() const;
+        void setRotation(const btQuaternion& rotation);
+        btVector3 getEulerAngles() const;
+        void setEulerAngles(const btVector3& angles);
+        const btQuaternion& getOrientation() const;
+        void setOrientation(const btQuaternion& orientation);
+        
+        const btVector3 &getScale()const;
+        void setScale(const btVector3 &scale);
+        void setScale(const float scale);
     protected:
+        void setGeometryIndex(unsigned long index);
+        unsigned long getGeometryIndex() const;
+        void clearGeometryIndex();
     private:
+        std::string m_Name;
+        btVector3 *m_Scale;
+        btTransform* m_Transform;
+        btTransform* m_ColorTransform;
+        btQuaternion* m_Orientation;
+        
+        Node* m_ParentNode;
+        std::vector<Node*> m_ChildrenNodes;
+        
+        Camera *m_Camera;
+        CubeGeometry *m_Geometry;
+        unsigned long m_GeometryIndex;
     };
 }
 
