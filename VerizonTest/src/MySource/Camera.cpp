@@ -165,7 +165,7 @@ namespace njli
         
         delete [] m_ProjectionMatrixBuffer;
         m_ProjectionMatrixBuffer = NULL;
-
+        
         delete [] m_MatrixBuffer;
         m_MatrixBuffer = NULL;
     }

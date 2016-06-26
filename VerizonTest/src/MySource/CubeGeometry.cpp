@@ -20,6 +20,14 @@
 
 namespace njli
 {
+    static const float N0 = 0.408248f;
+    static const float N1 = 0.816497f;
+    
+    static const btVector3 BL_NORMAL = { -N0, -N0, N1 };
+    static const btVector3 BR_NORMAL = {  N0, -N0, N1 };
+    static const btVector3 TL_NORMAL = { -N0,  N0, N1 };
+    static const btVector3 TR_NORMAL = {  N0,  N0, N1 };
+    
     static const btVector3 BL_VERTEX = { -0.5f, -0.5f, 0.0f };
     static const btVector3 BR_VERTEX = {  0.5f, -0.5f, 0.0f };
     static const btVector3 TL_VERTEX = { -0.5f,  0.5f, 0.0f };
@@ -54,6 +62,7 @@ namespace njli
     CubeGeometry::CubeGeometry():
     m_ModelViewTransformData(new GLfloat[CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_VERTICES * 16]),
     m_ColorTransformData(new GLfloat[CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_VERTICES * 16]),
+    m_NormalMatrixTransformData(new GLfloat[CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_VERTICES * 16]),
     m_VertexData(new SpriteQuad[CubeGeometry::MAX_CUBES]),
     m_IndiceData(new GLushort[CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_INDICES]),
     m_VertexArray(0),
@@ -67,6 +76,7 @@ namespace njli
     {
         assert(m_ModelViewTransformData);
         assert(m_ColorTransformData);
+        assert(m_NormalMatrixTransformData);
         assert(m_VertexData);
         assert(m_IndiceData);
         
@@ -83,6 +93,11 @@ namespace njli
              i += 16)
             memcpy(m_ColorTransformData + i, COLOR_IDENTITY_MATRIX, sizeof(COLOR_IDENTITY_MATRIX));
 
+        for (i = 0;
+             i < (CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_VERTICES * 16);
+             i += 16)
+            memcpy(m_NormalMatrixTransformData + i, TRANSFORM_IDENTITY_MATRIX, sizeof(TRANSFORM_IDENTITY_MATRIX));
+        
         for(i=0; i<CubeGeometry::MAX_CUBES; i++)
         {
             m_VertexData[i].bl.vertex = BL_VERTEX;
@@ -94,6 +109,11 @@ namespace njli
 //            m_VertexData[i].br.texture = BR_TEXTURECOORD;
 //            m_VertexData[i].tl.texture = TL_TEXTURECOORD;
 //            m_VertexData[i].tr.texture = TR_TEXTURECOORD;
+            
+            m_VertexData[i].bl.normal = BL_NORMAL;
+            m_VertexData[i].br.normal = BR_NORMAL;
+            m_VertexData[i].tl.normal = TL_NORMAL;
+            m_VertexData[i].tr.normal = TR_NORMAL;
             
             m_VertexData[i].bl.color = DEFAULTCOLOR;
             m_VertexData[i].br.color = DEFAULTCOLOR;
@@ -137,6 +157,9 @@ namespace njli
         delete [] m_VertexData;
         m_VertexData = NULL;
         
+        delete [] m_NormalMatrixTransformData;
+        m_NormalMatrixTransformData = NULL;
+        
         delete [] m_ColorTransformData;
         m_ColorTransformData = NULL;
         
@@ -169,28 +192,44 @@ namespace njli
                 glBindBuffer(GL_ARRAY_BUFFER, 0);
             }
             
+//            {
+//                glGenBuffers(1, &m_ColorTransformBuffer);
+//                glBindBuffer(GL_ARRAY_BUFFER, m_ColorTransformBuffer);
+//                glBufferData(GL_ARRAY_BUFFER, getColorTransformArrayBufferSize(), getColorTransformArrayBufferPtr(), GL_DYNAMIC_DRAW);
+//                int inColorTransform = getShader()->getAttributeLocation("inColorTransform");
+//                glEnableVertexAttribArray(inColorTransform + 0);
+//                glEnableVertexAttribArray(inColorTransform + 1);
+//                glEnableVertexAttribArray(inColorTransform + 2);
+//                glEnableVertexAttribArray(inColorTransform + 3);
+//                glVertexAttribPointer(inColorTransform + 0, 4, GL_FLOAT, 0, 64, (GLvoid*)0);
+//                glVertexAttribPointer(inColorTransform + 1, 4, GL_FLOAT, 0, 64, (GLvoid*)16);
+//                glVertexAttribPointer(inColorTransform + 2, 4, GL_FLOAT, 0, 64, (GLvoid*)32);
+//                glVertexAttribPointer(inColorTransform + 3, 4, GL_FLOAT, 0, 64, (GLvoid*)48);
+//                glBindBuffer(GL_ARRAY_BUFFER, 0);
+//            }
+            
             {
-                glGenBuffers(1, &m_ColorTransformBuffer);
-                glBindBuffer(GL_ARRAY_BUFFER, m_ColorTransformBuffer);
-                glBufferData(GL_ARRAY_BUFFER, getColorTransformArrayBufferSize(), getColorTransformArrayBufferPtr(), GL_DYNAMIC_DRAW);
-                int inColorTransform = getShader()->getAttributeLocation("inColorTransform");
-                glEnableVertexAttribArray(inColorTransform + 0);
-                glEnableVertexAttribArray(inColorTransform + 1);
-                glEnableVertexAttribArray(inColorTransform + 2);
-                glEnableVertexAttribArray(inColorTransform + 3);
-                glVertexAttribPointer(inColorTransform + 0, 4, GL_FLOAT, 0, 64, (GLvoid*)0);
-                glVertexAttribPointer(inColorTransform + 1, 4, GL_FLOAT, 0, 64, (GLvoid*)16);
-                glVertexAttribPointer(inColorTransform + 2, 4, GL_FLOAT, 0, 64, (GLvoid*)32);
-                glVertexAttribPointer(inColorTransform + 3, 4, GL_FLOAT, 0, 64, (GLvoid*)48);
+                glGenBuffers(1, &m_NormalMatrixTransformBuffer);
+                glBindBuffer(GL_ARRAY_BUFFER, m_NormalMatrixTransformBuffer);
+                glBufferData(GL_ARRAY_BUFFER, getNormalMatrixTransformArrayBufferSize(), getNormalMatrixTransformArrayBufferPtr(), GL_DYNAMIC_DRAW);
+                int inNormalMatrixAttrib = getShader()->getAttributeLocation("inNormalMatrix");
+                glEnableVertexAttribArray(inNormalMatrixAttrib + 0);
+                glEnableVertexAttribArray(inNormalMatrixAttrib + 1);
+                glEnableVertexAttribArray(inNormalMatrixAttrib + 2);
+                glEnableVertexAttribArray(inNormalMatrixAttrib + 3);
+                glVertexAttribPointer(inNormalMatrixAttrib + 0, 4, GL_FLOAT, 0, 64, (GLvoid*)0);
+                glVertexAttribPointer(inNormalMatrixAttrib + 1, 4, GL_FLOAT, 0, 64, (GLvoid*)16);
+                glVertexAttribPointer(inNormalMatrixAttrib + 2, 4, GL_FLOAT, 0, 64, (GLvoid*)32);
+                glVertexAttribPointer(inNormalMatrixAttrib + 3, 4, GL_FLOAT, 0, 64, (GLvoid*)48);
                 glBindBuffer(GL_ARRAY_BUFFER, 0);
             }
-            
             {
                 glGenBuffers(1, &m_VerticesBuffer);
                 glBindBuffer(GL_ARRAY_BUFFER, m_VerticesBuffer);
                 glBufferData(GL_ARRAY_BUFFER, getVertexArrayBufferSize(), getVertexArrayBufferPtr(), GL_DYNAMIC_DRAW);
                 int inPositionAttrib = getShader()->getAttributeLocation("inPosition");
                 int inColorAttrib = getShader()->getAttributeLocation("inColor");
+                int inNormalAttrib = getShader()->getAttributeLocation("inNormal");
                 int inOpacityAttrib = getShader()->getAttributeLocation("inOpacity");
                 int inHiddenAttrib = getShader()->getAttributeLocation("inHidden");
 //                int inTexCoordAttrib = getShader()->getAttributeLocation("inTexCoord");
@@ -209,6 +248,14 @@ namespace njli
 //                                      GL_FALSE,
 //                                      sizeof(TexturedColoredVertex),
 //                                      (const GLvoid*) offsetof(TexturedColoredVertex, texture));
+                
+                glEnableVertexAttribArray(inNormalAttrib);
+                glVertexAttribPointer(inNormalAttrib,
+                                      3,
+                                      GL_FLOAT,
+                                      GL_FALSE,
+                                      sizeof(TexturedColoredVertex),
+                                      (const GLvoid*) offsetof(TexturedColoredVertex, normal));
                 
                 glEnableVertexAttribArray(inColorAttrib);
                 glVertexAttribPointer(inColorAttrib,
@@ -292,18 +339,22 @@ namespace njli
             glBufferSubData(GL_ARRAY_BUFFER, 0, getModelViewTransformArrayBufferSize(), getModelViewTransformArrayBufferPtr());
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             
-            glBindBuffer(GL_ARRAY_BUFFER, m_ColorTransformBuffer);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, getColorTransformArrayBufferSize(), getColorTransformArrayBufferPtr());
+//            glBindBuffer(GL_ARRAY_BUFFER, m_ColorTransformBuffer);
+//            glBufferSubData(GL_ARRAY_BUFFER, 0, getColorTransformArrayBufferSize(), getColorTransformArrayBufferPtr());
+//            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            
+            glBindBuffer(GL_ARRAY_BUFFER, m_NormalMatrixTransformBuffer);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, getNormalMatrixTransformArrayBufferSize(), getNormalMatrixTransformArrayBufferPtr());
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             
             glBindBuffer(GL_ARRAY_BUFFER, m_VerticesBuffer);
             glBufferSubData(GL_ARRAY_BUFFER, 0, getVertexArrayBufferSize(), getVertexArrayBufferPtr());
             glBindBuffer(GL_ARRAY_BUFFER, 0);
-//
+
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
-//
-            glDrawElements(GL_TRIANGLES, static_cast<GLsizei>((CubeGeometry::MAX_CUBES) * CubeGeometry::NUMBER_OF_INDICES), GL_UNSIGNED_SHORT, (const GLvoid*)0);
-//
+
+            glDrawElements(GL_TRIANGLES, CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_INDICES, GL_UNSIGNED_SHORT, (const GLvoid*)0);
+
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
             glBindVertexArrayOES(0);
         }
@@ -365,6 +416,17 @@ namespace njli
     }
     
     GLsizeiptr CubeGeometry::getColorTransformArrayBufferSize()const
+    {
+        GLsizeiptr size = sizeof(GLfloat) * CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_VERTICES * 16;
+        return size;
+    }
+    
+    const void *CubeGeometry::getNormalMatrixTransformArrayBufferPtr()const
+    {
+        return m_NormalMatrixTransformData;
+    }
+    
+    GLsizeiptr CubeGeometry::getNormalMatrixTransformArrayBufferSize()const
     {
         GLsizeiptr size = sizeof(GLfloat) * CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_VERTICES * 16;
         return size;
@@ -505,6 +567,52 @@ namespace njli
                 unsigned long p = ((index * STRIDE) + (16 * currentVertex));
                 memcpy(m_MatrixBuffer,
                        m_ColorTransformData + p,
+                       sizeof(float) * 16);
+            }
+            
+            transform.setFromOpenGLMatrix(m_MatrixBuffer);
+        }
+        return transform;
+    }
+    
+    void CubeGeometry::setNormalMatrixTransform(const unsigned long index, const btTransform &transform)
+    {
+        if (index < CubeGeometry::MAX_CUBES)
+        {
+            const GLuint STRIDE = 64;
+            
+            transform.getOpenGLMatrix(m_MatrixBuffer);
+            
+            for (int currentVertex = 0; currentVertex < CubeGeometry::NUMBER_OF_VERTICES; currentVertex++)
+            {
+                unsigned long p = ((index * STRIDE) + (16 * currentVertex));
+                
+                int cmp = memcmp(m_NormalMatrixTransformData + p,
+                                 m_MatrixBuffer,
+                                 sizeof(float) * 16);
+                
+                if(0 != cmp)
+                {
+                    memcpy(m_NormalMatrixTransformData + p,
+                           m_MatrixBuffer,
+                           sizeof(float) * 16);
+                }
+            }
+        }
+    }
+    
+    btTransform CubeGeometry::getNormalMatrixTransform(const unsigned long index)
+    {
+        btTransform transform(btTransform::getIdentity());
+        if (index < CubeGeometry::MAX_CUBES)
+        {
+            const GLuint STRIDE = 64;
+            
+            for (int currentVertex = 0; currentVertex < CubeGeometry::NUMBER_OF_VERTICES; currentVertex++)
+            {
+                unsigned long p = ((index * STRIDE) + (16 * currentVertex));
+                memcpy(m_MatrixBuffer,
+                       m_NormalMatrixTransformData + p,
                        sizeof(float) * 16);
             }
             

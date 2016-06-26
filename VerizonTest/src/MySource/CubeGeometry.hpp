@@ -26,6 +26,7 @@ namespace njli
         : vertex(0, 0, 0)
         , color(1, 1, 1, 1)
 //        , texture(0, 0)
+        , normal(1,1,1)
         , opacity(1.0f)
         , hidden(0.0f)
         {
@@ -33,11 +34,13 @@ namespace njli
         TexturedColoredVertex(const btVector3 vertex,
                               const btVector4 color,
 //                              const btVector2 texture,
+                              const btVector3 normal,
                               const GLfloat opacity,
                               const GLfloat hidden)
         : vertex(vertex)
         , color(color)
 //        , texture(texture)
+        , normal(normal)
         , opacity(opacity)
         , hidden(hidden)
         {
@@ -45,6 +48,7 @@ namespace njli
         btVector3 vertex;
         btVector4 color;
 //        btVector2 texture;
+        btVector3 normal;
         GLfloat opacity;
         GLfloat hidden;
         
@@ -61,6 +65,7 @@ namespace njli
                 vertex = rhs.vertex;
                 color = rhs.color;
 //                texture = rhs.texture;
+                normal = rhs.normal;
                 opacity = rhs.opacity;
                 hidden = rhs.hidden;
             }
@@ -139,6 +144,9 @@ namespace njli
         const void *getColorTransformArrayBufferPtr()const;
         GLsizeiptr getColorTransformArrayBufferSize()const;
         
+        const void *getNormalMatrixTransformArrayBufferPtr()const;
+        GLsizeiptr getNormalMatrixTransformArrayBufferSize()const;
+        
         const void *getVertexArrayBufferPtr()const;
         GLsizeiptr getVertexArrayBufferSize()const;
         
@@ -151,8 +159,12 @@ namespace njli
         
         void setTransform(const unsigned long index, const btTransform &transform);
         btTransform getTransform(const unsigned long index);
+        
         void setColorTransform(const unsigned long index, const btTransform &transform);
         btTransform getColorTransform(const unsigned long index);
+        
+        void setNormalMatrixTransform(const unsigned long index, const btTransform &transform);
+        btTransform getNormalMatrixTransform(const unsigned long index);
         
         void setOpacity(Node *node);
         void setHidden(Node *node);
@@ -163,6 +175,7 @@ namespace njli
         
         GLfloat *m_ModelViewTransformData;
         GLfloat *m_ColorTransformData;
+        GLfloat *m_NormalMatrixTransformData;
         
         SpriteQuad *m_VertexData;
         GLushort *m_IndiceData;
@@ -170,6 +183,7 @@ namespace njli
         GLuint m_VertexArray;
         GLuint m_ModelViewBuffer;
         GLuint m_ColorTransformBuffer;
+        GLuint m_NormalMatrixTransformBuffer;
         GLuint m_VerticesBuffer;
         GLuint m_IndexBuffer;
         

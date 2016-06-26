@@ -42,6 +42,7 @@ namespace njli
                 const unsigned long geometryIndex = node->getGeometryIndex();
                 geometry->setTransform(geometryIndex, node->getWorldTransform());
                 geometry->setColorTransform(geometryIndex, node->getColorTransform());
+                geometry->setNormalMatrixTransform(geometryIndex, btTransform(node->getNormalMatrix()));
                 geometry->setHidden(node);
                 geometry->setOpacity(node);
             }

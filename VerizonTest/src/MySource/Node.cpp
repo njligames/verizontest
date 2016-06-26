@@ -27,13 +27,17 @@ namespace njli
     m_GeometryIndex(-1),
     m_TornadoData(new TornadoData()),
     m_HideGeometry(false),
-    m_Opacity(1.0f)
+    m_Opacity(1.0f),
+    m_NormalMatrix(new btMatrix3x3(btMatrix3x3::getIdentity()))
     {
         
     }
     
     Node::~Node()
     {
+        delete m_NormalMatrix;
+        m_NormalMatrix = NULL;
+        
         delete m_TornadoData;
         m_TornadoData = NULL;
         
@@ -125,6 +129,16 @@ namespace njli
     float Node::getOpacity()const
     {
         return m_Opacity;
+    }
+    
+    void Node::setNormalMatrix(const btMatrix3x3 &mtx)
+    {
+        *m_NormalMatrix = mtx;
+    }
+    
+    const btMatrix3x3 &Node::getNormalMatrix()const
+    {
+        return *m_NormalMatrix;
     }
     
     Node *Node::getParentNode()

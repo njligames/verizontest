@@ -50,6 +50,8 @@ namespace njli
         
         void setOpacity(float opacity);
         float getOpacity()const;
+        void setNormalMatrix(const btMatrix3x3 &mtx);
+        const btMatrix3x3 &getNormalMatrix()const;
     public:
         Node* getParentNode();
         const Node* getParentNode() const;
@@ -114,6 +116,7 @@ namespace njli
         TornadoData *m_TornadoData;
         bool m_HideGeometry;
         float m_Opacity;
+        btMatrix3x3 *m_NormalMatrix;
     };
 }
 

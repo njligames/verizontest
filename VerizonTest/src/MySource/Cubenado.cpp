@@ -178,6 +178,9 @@ namespace njli
             
             node->setTransform(node->getTornadoData()->getBaseTransform() * node->getTransform());
             
+            
+            node->setNormalMatrix(node->getTransform().getBasis().inverse().transpose());
+            
             node->enableHideGeometry(false);
             if(cubesToDraw < 0)
                 node->enableHideGeometry();
