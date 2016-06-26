@@ -25,7 +25,9 @@ namespace njli
     m_Camera(NULL),
     m_Geometry(NULL),
     m_GeometryIndex(-1),
-    m_TornadoData(new TornadoData())
+    m_TornadoData(new TornadoData()),
+    m_HideGeometry(false),
+    m_Opacity(1.0f)
     {
         
     }
@@ -98,6 +100,31 @@ namespace njli
     CubeGeometry *const Node::getGeometry()const
     {
         return m_Geometry;
+    }
+    
+    void Node::enableHideGeometry(bool hidden)
+    {
+        m_HideGeometry = hidden;
+    }
+    
+    bool Node::isHiddenGeometry()const
+    {
+        return m_HideGeometry;
+    }
+    
+    void Node::setOpacity(float opacity)
+    {
+        if(opacity<0.0f)
+            m_Opacity = 0.0f;
+        else if(opacity > 1.0f)
+            m_Opacity = 1.0f;
+        else
+            m_Opacity = opacity;
+    }
+    
+    float Node::getOpacity()const
+    {
+        return m_Opacity;
     }
     
     Node *Node::getParentNode()

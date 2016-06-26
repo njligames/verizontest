@@ -309,19 +309,43 @@ namespace njli
         }
     }
     
-    void CubeGeometry::setOpacity(Node *node, GLfloat opacity)
+    void CubeGeometry::setOpacity(Node *node)
     {
+        unsigned long index = node->getGeometryIndex();
         
+        if(m_VertexData)
+        {
+            float opacity = node->getOpacity();
+            float o = (opacity > 1.0f)?1.0f:((opacity<0.0f)?0.0f:opacity);
+            
+            m_VertexData[index].bl.opacity = o;
+            m_VertexData[index].br.opacity = o;
+            m_VertexData[index].tl.opacity = o;
+            m_VertexData[index].tr.opacity = o;
+        }
     }
     
-    void CubeGeometry::setHidden(Node *node, bool hidden)
+    void CubeGeometry::setHidden(Node *node)
     {
+        unsigned long index = node->getGeometryIndex();
         
-    }
-    
-    bool CubeGeometry::isHidden(Node *node)const
-    {
-        return false;
+        if(m_VertexData)
+        {
+            bool hidden = node->isHiddenGeometry();
+            
+            float h = (hidden)?1.0f:0.0f;
+            
+            if(m_VertexData[index].bl.hidden != (h) ||
+               m_VertexData[index].br.hidden != (h) ||
+               m_VertexData[index].tl.hidden != (h) ||
+               m_VertexData[index].tr.hidden != (h))
+            {
+                m_VertexData[index].bl.hidden = (hidden)?1.0f:0.0f;
+                m_VertexData[index].br.hidden = (hidden)?1.0f:0.0f;
+                m_VertexData[index].tl.hidden = (hidden)?1.0f:0.0f;
+                m_VertexData[index].tr.hidden = (hidden)?1.0f:0.0f;
+            }
+        }
     }
     
     const void *CubeGeometry::getModelViewTransformArrayBufferPtr()const

@@ -129,10 +129,6 @@ namespace njli
         
         void render(Camera *camera);
         
-        void setOpacity(Node *node, GLfloat opacity);
-        void setHidden(Node *node, bool hidden = true);
-        bool isHidden(Node *node)const;
-        
         static const unsigned int MAX_CUBES = 10000;
         static const unsigned int NUMBER_OF_VERTICES = 4;
         static const unsigned int NUMBER_OF_INDICES = 6;
@@ -157,6 +153,9 @@ namespace njli
         btTransform getTransform(const unsigned long index);
         void setColorTransform(const unsigned long index, const btTransform &transform);
         btTransform getColorTransform(const unsigned long index);
+        
+        void setOpacity(Node *node);
+        void setHidden(Node *node);
         
         
     private:

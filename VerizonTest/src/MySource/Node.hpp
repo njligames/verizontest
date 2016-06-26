@@ -44,6 +44,12 @@ namespace njli
         void addGeometry(CubeGeometry * body);
         void removeGeometry();
         CubeGeometry *const getGeometry()const;
+        
+        void enableHideGeometry(bool hidden = true);
+        bool isHiddenGeometry()const;
+        
+        void setOpacity(float opacity);
+        float getOpacity()const;
     public:
         Node* getParentNode();
         const Node* getParentNode() const;
@@ -106,6 +112,8 @@ namespace njli
         unsigned long m_GeometryIndex;
         
         TornadoData *m_TornadoData;
+        bool m_HideGeometry;
+        float m_Opacity;
     };
 }
 
