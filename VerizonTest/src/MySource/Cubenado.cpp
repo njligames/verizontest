@@ -205,6 +205,11 @@ namespace njli
         m_Randomness = percent;
     }
     
+    float Cubenado::getRandomness()const
+    {
+        return m_Randomness;
+    }
+    
     std::string Cubenado::loadFile(const std::string filepath)
     {
         std::string filedata("");

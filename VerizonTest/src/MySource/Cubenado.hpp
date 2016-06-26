@@ -39,6 +39,7 @@ namespace njli
         
         void setNumberOfCubes(const unsigned int amount);
         void setRandomness(const float percent);
+        float getRandomness()const;
         
         std::string loadFile(const std::string filepath);
     protected:

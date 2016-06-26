@@ -9,6 +9,7 @@
 #include "Node.hpp"
 #include "CubeGeometry.hpp"
 #include "TornadoData.hpp"
+#include "Camera.hpp"
 
 #include <assert.h>
 
@@ -63,6 +64,8 @@ namespace njli
     void Node::addCamera(Camera *camera)
     {
         m_Camera = camera;
+        camera->setNodeOwner(this);
+        
     }
     
     void Node::removeCamera()
