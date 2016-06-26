@@ -34,11 +34,14 @@ namespace njli
         
         void addActiveNode(Node * node);
         void removeActiveNode(Node * node);
+        
+        Node *const getRootNode()const;
     protected:
     private:
         std::vector<CubeGeometry*> m_ActiveGeometries;
         std::vector<Camera*> m_ActiveCameras;
         std::vector<Node*> m_ActiveNodes;
+        Node *m_RootNode;
     };
 }
 

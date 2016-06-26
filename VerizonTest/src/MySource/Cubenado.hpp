@@ -42,6 +42,10 @@ namespace njli
         
         std::string loadFile(const std::string filepath);
     protected:
+        btVector3 randomPosition(const btVector3 &min, const btVector3 &max)const;
+        btQuaternion randomRotation(const btVector3 &axis, const float degreesMin, const float degreesMax)const;
+        btQuaternion randomRotation(const float degreesMin, const float degreesMax)const;
+        btQuaternion randomRotation()const;
     private:
         /* static */
         static Cubenado *s_Instance;
@@ -53,9 +57,10 @@ namespace njli
         CubeGeometry *m_CubeGeometry;
         Camera *m_Camera;
         Node *m_CameraNode;
-        Node *m_RootNode;
         Scene *m_Scene;
         std::vector<Node*> m_CubeNodes;
+        float m_Randomness;
+        unsigned long m_NumberOfCubes;
     };
 }
 

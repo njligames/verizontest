@@ -133,7 +133,7 @@ namespace njli
         void setHidden(Node *node, bool hidden = true);
         bool isHidden(Node *node)const;
         
-        static const unsigned int MAX_CUBES = 3;
+        static const unsigned int MAX_CUBES = 10000;
         static const unsigned int NUMBER_OF_VERTICES = 4;
         static const unsigned int NUMBER_OF_INDICES = 6;
     protected:

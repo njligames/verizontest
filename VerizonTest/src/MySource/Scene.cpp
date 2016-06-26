@@ -14,14 +14,15 @@
 
 namespace njli
 {
-    Scene::Scene()
+    Scene::Scene():
+    m_RootNode(new Node())
     {
         
     }
     
     Scene::~Scene()
     {
-        
+        delete m_RootNode;
     }
     
     void Scene::update(float timeStep, const unsigned int numSubSteps)
@@ -117,6 +118,11 @@ namespace njli
         std::vector<Node*>::iterator i = std::find(m_ActiveNodes.begin(), m_ActiveNodes.end(), node);
         
         m_ActiveNodes.erase(i);
+    }
+    
+    Node *const Scene::getRootNode()const
+    {
+        return m_RootNode;
     }
 }
 

@@ -301,7 +301,7 @@ namespace njli
         
         if(getParentNode())
         {
-            return (transform * getParentNode()->getWorldTransform());
+            return (getParentNode()->getWorldTransform() * transform);
         }
         return (transform);
     }

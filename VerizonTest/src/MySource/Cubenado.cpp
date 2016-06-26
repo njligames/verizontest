@@ -13,7 +13,15 @@
 #include "Node.hpp"
 #include "Scene.hpp"
 
+#include "btQuaternion.h"
+
 using namespace std;
+
+static float randomFloat(float min, float max)
+{
+    float r = (float)rand() / (float)RAND_MAX;
+    return min + r * (max - min);
+}
 
 namespace njli
 {
@@ -54,8 +62,9 @@ namespace njli
     m_CubeGeometry(new CubeGeometry()),
     m_Camera(new Camera()),
     m_CameraNode(new Node()),
-    m_RootNode(new Node()),
-    m_Scene(new Scene())
+    m_Scene(new Scene()),
+    m_Randomness(0.0f),
+    m_NumberOfCubes(CubeGeometry::MAX_CUBES)
     {
         for (unsigned long i = 0; i < CubeGeometry::MAX_CUBES; i++)
             m_CubeNodes.push_back(new Node());
@@ -72,9 +81,6 @@ namespace njli
         
         delete m_Scene;
         m_Scene = NULL;
-        
-        delete m_RootNode;
-        m_RootNode = NULL;
         
         delete m_CameraNode;
         m_CameraNode = NULL;
@@ -98,15 +104,16 @@ namespace njli
         
         m_Scene->addActiveNode(m_CameraNode);
         m_Scene->addActiveCamera(m_Camera);
+        m_Scene->getRootNode()->setOrigin(btVector3(0.0f, 0.0f, 20.0f));
         
         assert(m_Shader->load(loadFile("shaders/Shader.vsh"), loadFile("shaders/Shader.fsh")));
         
         m_CubeGeometry->load(m_Shader);
         
+        
         float z = 20.0f;
         float min_y = -7.0f;
-        float max_y = 7.0f;
-        float inc = 1.5;
+        float inc = 0.0014f;
         
         float yy = min_y;
         for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
@@ -116,10 +123,11 @@ namespace njli
             Node *node = *i;
             
             m_Scene->addActiveNode(node);
+            m_Scene->getRootNode()->addChildNode(node);
             
             node->addGeometry(m_CubeGeometry);
             
-            node->setOrigin(btVector3(0.0f, yy, z));
+            node->setOrigin(btVector3(0.0f, yy, 0.0f));
             
             yy+=inc;
         }
@@ -165,6 +173,20 @@ namespace njli
         return m_Camera;
     }
     
+    void Cubenado::setNumberOfCubes(const unsigned int amount)
+    {
+        if (amount > CubeGeometry::MAX_CUBES)
+        {
+            m_NumberOfCubes = CubeGeometry::MAX_CUBES;
+        }
+    }
+    
+    void Cubenado::setRandomness(const float percent)
+    {
+        assert(percent >= 0.0f && percent <= 1.0f);
+        m_Randomness = percent;
+    }
+    
     std::string Cubenado::loadFile(const std::string filepath)
     {
         std::string filedata("");
@@ -190,5 +212,33 @@ namespace njli
         }
         
         return filedata;
+    }
+    
+    btVector3 Cubenado::randomPosition(const btVector3 &min, const btVector3 &max)const
+    {
+        assert(min.x() <= max.x());
+        assert(min.y() <= max.y());
+        assert(min.z() <= max.z());
+        
+        return btVector3(randomFloat(min.x(), max.x()),
+                      randomFloat(min.y(), max.y()),
+                      randomFloat(min.z(), max.z()));
+    }
+    
+    btQuaternion Cubenado::randomRotation(const btVector3 &axis, const float degreesMin, const float degreesMax)const
+    {
+        assert(degreesMin <= degreesMax);
+        
+        return btQuaternion(axis, randomFloat(degreesMin, degreesMax)).normalized();
+    }
+    
+    btQuaternion Cubenado::randomRotation(const float degreesMin, const float degreesMax)const
+    {
+        return randomRotation(randomPosition(btVector3(0,0,0), btVector3(1,1,1)).normalized(), degreesMin, degreesMax);
+    }
+    
+    btQuaternion Cubenado::randomRotation()const
+    {
+        return randomRotation(randomPosition(btVector3(0,0,0), btVector3(1,1,1)).normalized(), btRadians(0), btRadians(360));
     }
 }
