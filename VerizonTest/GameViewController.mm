@@ -106,6 +106,8 @@ GLfloat gCubeVertexData[216] =
     
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 
+    self.preferredFramesPerSecond = 60;
+    
     if (!self.context) {
         NSLog(@"Failed to create ES context");
     }

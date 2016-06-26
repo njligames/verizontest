@@ -11,6 +11,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #import <OpenGLES/ES2/glext.h>
 #import <OpenGLES/ES2/gl.h>
@@ -38,11 +39,11 @@ namespace njli
         
         int getAttributeLocation(const std::string &attributeName)const;
         
-        int getUniformLocation(const std::string &uniformName)const;
+        int getUniformLocation(const std::string &uniformName);
         
         bool setUniformValue(const std::string &uniformName, const btTransform &value, bool transpose = false);
         bool setUniformValue(const std::string &uniformName, GLfloat *matrix4x4, bool transpose = false);
-        bool getUniformValue(const std::string &uniformName, btTransform &value)const;
+        bool getUniformValue(const std::string &uniformName, btTransform &value);
         
         bool setUniformValue(const char *uniformName, int value);
         bool getUniformValue(const char *uniformName, int &value);
@@ -56,6 +57,12 @@ namespace njli
         GLuint m_Program;
         
         GLfloat *m_mat4Buffer;
+        
+        
+        typedef std::map<std::string, int> UniformMap;
+        typedef std::pair<std::string, int> UniformPair;
+        
+        UniformMap m_UniformMap;
         
     };
 }

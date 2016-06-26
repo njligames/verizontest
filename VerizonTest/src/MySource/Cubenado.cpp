@@ -139,13 +139,14 @@ namespace njli
                 
     void Cubenado::update(float step)
     {
+        int n = 0;
         for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
              i != m_CubeNodes.end();
              i++)
         {
             Node *node = *i;
             
-            node->setRotation(node->getRotation() * btQuaternion(btVector3(0.0f, 1.0f, 0.0f), step));
+            node->setRotation(node->getRotation() * btQuaternion(btVector3(0.0f, 1.0f, 0.0f), step + (step * n++)));
         }
         
         m_Scene->update(step);

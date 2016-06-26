@@ -116,9 +116,20 @@ namespace njli
         return location;
     }
     
-    int Shader::getUniformLocation(const std::string &uniformName)const
+    int Shader::getUniformLocation(const std::string &uniformName)
     {
-        int location = glGetUniformLocation(m_Program, uniformName.c_str());
+        int location = -1;
+        
+        UniformMap::iterator iter = m_UniformMap.find(uniformName);
+        if(iter != m_UniformMap.end())
+        {
+            location = iter->second;
+        }
+        else
+        {
+            location = glGetUniformLocation(m_Program, uniformName.c_str());
+            m_UniformMap.insert(UniformPair(uniformName, location));
+        }
         
 #if defined(DEBUG)
         if(location == -1)
@@ -150,7 +161,7 @@ namespace njli
         return false;
     }
     
-    bool Shader::getUniformValue(const std::string &uniformName, btTransform &value)const
+    bool Shader::getUniformValue(const std::string &uniformName, btTransform &value)
     {
         int location = getUniformLocation(uniformName);
         if(location != -1)

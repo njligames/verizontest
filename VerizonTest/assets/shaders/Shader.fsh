@@ -170,8 +170,8 @@ void main(void)
 {
     vec4 destOpacityColor = vec4(1.0, 1.0, 1.0, destinationOpacity);
     
-    if(destinationHidden != 0.0)
-        discard;
+    if(destinationHidden == 0.0)
+        destOpacityColor = vec4(1.0, 1.0, 1.0, 0.0);
     
 //    vec4 normal = destinationNormal;
     
