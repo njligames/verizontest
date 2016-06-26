@@ -6,8 +6,6 @@ precision mediump float;
 
 varying vec4 destinationColor;
 varying vec2 destinationTexCoord2D;
-varying float destinationOpacity;
-varying float destinationHidden;
 //varying mat4 destinationColorTransform;
 
 uniform sampler2D diffuseTexture2D;
@@ -25,12 +23,7 @@ vec4 transformRGB(vec4 color, mat4 matrix)
 
 void main(void)
 {
-    vec4 destOpacityColor = vec4(1.0, 1.0, 1.0, destinationOpacity);
-    
     vec4 color = destinationColor;
-    if(destinationHidden == 1.0)
-        discard;
-    
     int modifyRGB = opacityModifyRGB;
     
     vec4 diffuseColor = texture2D(diffuseTexture2D, destinationTexCoord2D);
@@ -43,8 +36,8 @@ void main(void)
                      destinationColor.a);
     }
     
-//    color = (color * diffuseColor * destOpacityColor);
-    color = (color * destOpacityColor);
+//    color = (color * diffuseColor);
+    
     
 //    color = transformRGB(color, destinationColorTransform);
     

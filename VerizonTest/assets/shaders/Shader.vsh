@@ -12,8 +12,6 @@ attribute mat4 inNormalMatrix;
 
 varying vec4 destinationColor;
 varying vec2 destinationTexCoord2D;
-varying float destinationOpacity;
-varying float destinationHidden;
 //varying mat4 destinationColorTransform;
 uniform mat4 modelView;
 uniform mat4 projection;
@@ -33,11 +31,18 @@ void main ()
     vec3 lightPosition = vec3(0.0, 0.0, 1.0);
     float nDotVP = max(0.0, dot(eyeNormal, normalize(lightPosition)));
     
-    destinationColor = inColor * nDotVP;
+    vec4 position = inPosition;
+    if(inHidden == 1.0)
+    {
+        position = vec4(modelView[3][0], modelView[3][1], modelView[3][2], modelView[3][3]);
+    }
+    
+    vec4 color = inColor * nDotVP;
+    color.a = inOpacity;
+    
+    destinationColor = color;
     destinationTexCoord2D = inTexCoord;
-    destinationOpacity = inOpacity;
-    destinationHidden = inHidden;
 //    destinationColorTransform = inColorTransform;
-    gl_Position = (((projection * modelView) * inTransform) * inPosition);
+    gl_Position = (((projection * modelView) * inTransform) * position);
 }
 
