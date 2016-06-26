@@ -113,7 +113,7 @@ namespace njli
         m_CubeGeometry->load(m_Shader);
         
         float min_y = -7.0f;
-        float xinc = 0.000025f;
+        float xinc = 0.00001f;
         float yinc = 0.0014f;
         
         btTransform baseTransform(btTransform::getIdentity());
@@ -138,7 +138,7 @@ namespace njli
             node->setOrigin(btVector3(0.0f, yy, 0.0f));
             
             node->getTornadoData()->setTranslationOffset(btVector3(xx, 0.0f, 0.0f));
-            node->getTornadoData()->setMaxDegreesPerTimestep(randomFloat(1.0f, 90.0f));
+            
             
             xx+=xinc;
             yy+=yinc;
@@ -168,11 +168,13 @@ namespace njli
         {
             Node *node = *i;
             
+            node->getTornadoData()->setMaxDegreesPerTimestep(randomFloat(1.0f, 45.0f) + (randomFloat(1.0f, 45.0f) * m_Randomness));
+            
             node->getTornadoData()->update(step);
             
             
             btVector3 axis = randomPosition(btVector3(0.0f, 0.0f, 0.0f), btVector3(1.0f, 1.0f, 1.0f)).normalized();
-            node->setRotation(node->getRotation() * btQuaternion(axis, step + (step * n++)));
+            node->setRotation(node->getRotation() * btQuaternion(axis, step + (step * m_Randomness)));
             
             node->setTransform(node->getTornadoData()->getBaseTransform() * node->getTransform());
             
