@@ -159,6 +159,8 @@ namespace njli
                 
     void Cubenado::update(float step)
     {
+        long cubesToDraw = m_NumberOfCubes;
+        
         int n = 0;
         for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
              i != m_CubeNodes.end();
@@ -173,6 +175,12 @@ namespace njli
             node->setRotation(node->getRotation() * btQuaternion(axis, step + (step * n++)));
             
             node->setTransform(node->getTornadoData()->getBaseTransform() * node->getTransform());
+            
+            node->enableHideGeometry(false);
+            if(cubesToDraw < 0)
+                node->enableHideGeometry();
+            cubesToDraw--;
+                
         }
         
         m_Scene->update(step);
@@ -197,6 +205,7 @@ namespace njli
         {
             m_NumberOfCubes = CubeGeometry::MAX_CUBES;
         }
+        m_NumberOfCubes = amount;
     }
     
     void Cubenado::setRandomness(const float percent)
