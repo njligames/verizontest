@@ -4,14 +4,14 @@
 precision mediump float;
 #endif
 
-varying vec4 destinationColor;
 //varying vec4 destinationNormal;
-//varying vec2 destinationTexCoord2D;
+varying vec4 destinationColor;
+varying vec2 destinationTexCoord2D;
 varying float destinationOpacity;
 varying float destinationHidden;
 varying mat4 destinationColorTransform;
 
-//uniform sampler2D diffuseTexture2D;
+uniform sampler2D diffuseTexture2D;
 uniform sampler2D ambientTexture2D;
 uniform sampler2D specularTexture2D;
 uniform sampler2D normalTexture2D;
@@ -170,15 +170,13 @@ void main(void)
 {
     vec4 destOpacityColor = vec4(1.0, 1.0, 1.0, destinationOpacity);
     
-    if(destinationHidden == 0.0)
-        destOpacityColor = vec4(1.0, 1.0, 1.0, 0.0);
-    
-//    vec4 normal = destinationNormal;
+    if(destinationHidden != 0.0)
+        discard;
     
     vec4 color = destinationColor;
     int modifyRGB = opacityModifyRGB;
     
-//    vec4 diffuseColor = texture2D(diffuseTexture2D, destinationTexCoord2D);
+    vec4 diffuseColor = texture2D(diffuseTexture2D, destinationTexCoord2D);
     
     if (modifyRGB == 1)
     {
@@ -188,18 +186,18 @@ void main(void)
                      destinationColor.a);
     }
     
-    color = (color * destOpacityColor);
 //    color = (color * diffuseColor * destOpacityColor);
+        color = (color * destOpacityColor);
     
     color = transformRGB(color, destinationColorTransform);
     
     
     
     
-//    if (color.a == 0.0)
-//    {
-//        discard;
-//    }
+    if (color.a == 0.0)
+    {
+        discard;
+    }
     
     
     gl_FragColor = color;

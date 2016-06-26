@@ -15,13 +15,97 @@
 #include <bitset>
 
 #include "btTransform.h"
+#include "btVector2.h"
 
 namespace njli
 {
+    ATTRIBUTE_ALIGNED16(struct)
+    TexturedColoredVertex
+    {
+        TexturedColoredVertex()
+        : vertex(0, 0, 0)
+        , color(1, 1, 1, 1)
+//        , texture(0, 0)
+        , opacity(1.0f)
+        , hidden(0.0f)
+        {
+        }
+        TexturedColoredVertex(const btVector3 vertex,
+                              const btVector4 color,
+//                              const btVector2 texture,
+                              const GLfloat opacity,
+                              const GLfloat hidden)
+        : vertex(vertex)
+        , color(color)
+//        , texture(texture)
+        , opacity(opacity)
+        , hidden(hidden)
+        {
+        }
+        btVector3 vertex;
+        btVector4 color;
+//        btVector2 texture;
+        GLfloat opacity;
+        GLfloat hidden;
+        
+//        operator std::string() const
+//        {
+//            char buffer[2048];
+//            sprintf(buffer, "{{%f, %f, %f}, {%f, %f}, {%f, %f, %f, %f}}", vertex.x(), vertex.y(), vertex.z(), texture.x(), texture.y(), color.x(), color.y(), color.z(), color.w());
+//            return std::string(buffer);
+//        }
+        
+        TexturedColoredVertex& operator=(const TexturedColoredVertex& rhs)
+        {
+            if (this != &rhs) {
+                vertex = rhs.vertex;
+                color = rhs.color;
+//                texture = rhs.texture;
+                opacity = rhs.opacity;
+                hidden = rhs.hidden;
+            }
+            return *this;
+        }
+    };
+    
+    class SpriteQuad
+    {
+    public:
+        TexturedColoredVertex bl;
+        TexturedColoredVertex br;
+        TexturedColoredVertex tl;
+        TexturedColoredVertex tr;
+        
+//        operator std::string() const
+//        {
+//            std::string bottomLeft(bl);
+//            std::string bottomRight(br);
+//            std::string topLeft(tl);
+//            std::string topRight(tr);
+//            
+//            return std::string("\nbl: ") + bottomLeft +
+//            std::string("\nbr: ") + bottomRight +
+//            std::string("\ntl: ") + topLeft +
+//            std::string("\ntr: ") + topRight;
+//        }
+        SpriteQuad &operator=(const SpriteQuad &rhs)
+        {
+            if(this != &rhs)
+            {
+                bl = rhs.bl;
+                br = rhs.br;
+                tl = rhs.tl;
+                tr = rhs.tr;
+            }
+            return *this;
+        }
+    };
+    
+    
     class Shader;
     class Camera;
     class Node;
-    
+
     class CubeGeometry
     {
         friend class Node;
@@ -29,42 +113,7 @@ namespace njli
         
     public:
         
-        ATTRIBUTE_ALIGNED16(struct) VertexData
-        {
-            VertexData():
-            m_Vertex(btVector3(0.0f, 0.0f, 0.0f)),
-            m_Color(btVector4(1.0f, 1.0f, 1.0f, 1.0f)),
-//            m_Normal(normal),
-//            m_Texture(texture),
-            m_Opacity(1.0f),
-            m_Hidden(0.0f)
-            {}
-            
-            VertexData(const btVector3 vertex,
-                       const btVector4 color,
-//                       const btVector3 normal,
-//                       const btVector2 texture,
-                       const GLfloat opacity,
-                       const GLfloat hidden):
-            m_Vertex(vertex),
-            m_Color(color),
-//            m_Normal(normal),
-//            m_Texture(texture),
-            m_Opacity(opacity),
-            m_Hidden(hidden)
-            {
-            }
-            
-            btVector3 m_Vertex;
-            btVector4 m_Color;
-            GLfloat m_Opacity;
-            GLfloat m_Hidden;
-        };
         
-        ATTRIBUTE_ALIGNED16(struct) CubeVerts
-        {
-            VertexData vertices[24];
-        };
         
         /* members */
         CubeGeometry();
@@ -85,8 +134,8 @@ namespace njli
         bool isHidden(Node *node)const;
         
         static const unsigned int MAX_CUBES = 3;
-        static const unsigned int NUMBER_OF_VERTICES = 24;
-        static const unsigned int NUMBER_OF_INDICES = 36;
+        static const unsigned int NUMBER_OF_VERTICES = 4;
+        static const unsigned int NUMBER_OF_INDICES = 6;
     protected:
         const void *getModelViewTransformArrayBufferPtr()const;
         GLsizeiptr getModelViewTransformArrayBufferSize()const;
@@ -109,14 +158,15 @@ namespace njli
         void setColorTransform(const unsigned long index, const btTransform &transform);
         btTransform getColorTransform(const unsigned long index);
         
+        
     private:
         
         
         GLfloat *m_ModelViewTransformData;
         GLfloat *m_ColorTransformData;
         
-        CubeVerts *m_CubeVertexData;
-        GLushort *m_CubeIndiceData;
+        SpriteQuad *m_VertexData;
+        GLushort *m_IndiceData;
         
         GLuint m_VertexArray;
         GLuint m_ModelViewBuffer;
