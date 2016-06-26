@@ -12,6 +12,7 @@
 #include "CubeGeometry.hpp"
 #include "Node.hpp"
 #include "Scene.hpp"
+#include "TornadoData.hpp"
 
 #include "btQuaternion.h"
 
@@ -64,7 +65,8 @@ namespace njli
     m_CameraNode(new Node()),
     m_Scene(new Scene()),
     m_Randomness(0.0f),
-    m_NumberOfCubes(CubeGeometry::MAX_CUBES)
+    m_NumberOfCubes(CubeGeometry::MAX_CUBES),
+    m_Rotation(0.0f)
     {
         for (unsigned long i = 0; i < CubeGeometry::MAX_CUBES; i++)
             m_CubeNodes.push_back(new Node());
@@ -104,18 +106,24 @@ namespace njli
         
         m_Scene->addActiveNode(m_CameraNode);
         m_Scene->addActiveCamera(m_Camera);
-        m_Scene->getRootNode()->setOrigin(btVector3(0.0f, 0.0f, 20.0f));
+        m_Scene->getRootNode()->setOrigin(btVector3(0.0f, 0.0f, 40.0f));
         
         assert(m_Shader->load(loadFile("shaders/Shader.vsh"), loadFile("shaders/Shader.fsh")));
         
         m_CubeGeometry->load(m_Shader);
         
-        
-        float z = 20.0f;
         float min_y = -7.0f;
-        float inc = 0.0014f;
+        float xinc = 0.000025f;
+        float yinc = 0.0014f;
         
+        btTransform baseTransform(btTransform::getIdentity());
+        baseTransform.setOrigin(btVector3(0.0f, 0.0f, 2.0f));
+        
+        btQuaternion rot(btVector3(0.0f, 1.0f, 0.0f), m_Rotation);
+        
+        float xx = 0.0f;
         float yy = min_y;
+        
         for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
              i != m_CubeNodes.end();
              i++)
@@ -129,7 +137,11 @@ namespace njli
             
             node->setOrigin(btVector3(0.0f, yy, 0.0f));
             
-            yy+=inc;
+            node->getTornadoData()->setTranslationOffset(btVector3(xx, 0.0f, 0.0f));
+            node->getTornadoData()->setMaxDegreesPerTimestep(randomFloat(1.0f, 90.0f));
+            
+            xx+=xinc;
+            yy+=yinc;
         }
         
     }
@@ -154,7 +166,13 @@ namespace njli
         {
             Node *node = *i;
             
-            node->setRotation(node->getRotation() * btQuaternion(btVector3(0.0f, 1.0f, 0.0f), step + (step * n++)));
+            node->getTornadoData()->update(step);
+            
+            
+            btVector3 axis = randomPosition(btVector3(0.0f, 0.0f, 0.0f), btVector3(1.0f, 1.0f, 1.0f)).normalized();
+            node->setRotation(node->getRotation() * btQuaternion(axis, step + (step * n++)));
+            
+            node->setTransform(node->getTornadoData()->getBaseTransform() * node->getTransform());
         }
         
         m_Scene->update(step);

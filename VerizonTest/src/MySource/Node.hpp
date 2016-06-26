@@ -20,6 +20,7 @@ namespace njli
 {
     class Camera;
     class CubeGeometry;
+    class TornadoData;
     
     class Node
     {
@@ -84,6 +85,8 @@ namespace njli
         const btVector3 &getScale()const;
         void setScale(const btVector3 &scale);
         void setScale(const float scale);
+        
+        TornadoData *const getTornadoData()const;
     protected:
         void setGeometryIndex(unsigned long index);
         unsigned long getGeometryIndex() const;
@@ -101,6 +104,8 @@ namespace njli
         Camera *m_Camera;
         CubeGeometry *m_Geometry;
         unsigned long m_GeometryIndex;
+        
+        TornadoData *m_TornadoData;
     };
 }
 

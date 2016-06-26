@@ -8,6 +8,7 @@
 
 #include "Node.hpp"
 #include "CubeGeometry.hpp"
+#include "TornadoData.hpp"
 
 #include <assert.h>
 
@@ -22,13 +23,17 @@ namespace njli
     m_ParentNode(NULL),
     m_Camera(NULL),
     m_Geometry(NULL),
-    m_GeometryIndex(-1)
+    m_GeometryIndex(-1),
+    m_TornadoData(new TornadoData())
     {
         
     }
     
     Node::~Node()
     {
+        delete m_TornadoData;
+        m_TornadoData = NULL;
+        
         m_Camera = NULL;
         m_ParentNode = NULL;
         
@@ -406,6 +411,11 @@ namespace njli
     {
         btVector3 _scale(scale,scale,scale);
         Node::setScale(_scale);
+    }
+    
+    TornadoData *const Node::getTornadoData()const
+    {
+        return m_TornadoData;
     }
     
     void Node::setGeometryIndex(unsigned long index)

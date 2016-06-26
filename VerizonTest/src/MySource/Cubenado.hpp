@@ -61,6 +61,7 @@ namespace njli
         std::vector<Node*> m_CubeNodes;
         float m_Randomness;
         unsigned long m_NumberOfCubes;
+        float m_Rotation;
     };
 }
 
