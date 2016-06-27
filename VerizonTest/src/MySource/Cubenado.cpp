@@ -154,7 +154,7 @@ namespace njli
                                          randomFloat(0.0f, 1.0f),
                                          randomFloat(0.0f, 1.0f), 1.0f));
             
-            node->setScale(randomFloat(0.1f, 1.1f));
+            node->setScale(randomFloat(0.8f, 1.1f));
             
             xx+=xinc;
             yy+=yinc;
