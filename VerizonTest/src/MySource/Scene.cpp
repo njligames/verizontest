@@ -45,6 +45,7 @@ namespace njli
                 geometry->setNormalMatrixTransform(geometryIndex, btTransform(node->getNormalMatrix()));
                 geometry->setHidden(node);
                 geometry->setOpacity(node);
+                geometry->setColorBase(node);
             }
         }
     }

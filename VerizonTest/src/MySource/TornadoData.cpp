@@ -15,7 +15,8 @@ namespace njli
     m_Rotation(0),
     m_BaseTranslation(new btTransform(btTransform::getIdentity())),
     m_TranslationOffset(new btVector3(0,0,0)),
-    m_MaxDegrees(10.0f)
+    m_MaxDegrees(10.0f),
+    m_BaseDegrees(0.0f)
     {
         
     }
@@ -52,8 +53,23 @@ namespace njli
         return *m_BaseTranslation;
     }
     
+    void TornadoData::setBaseDegreesPerTimeStep(const float base)
+    {
+        m_BaseDegrees = base;
+    }
+    
+    float TornadoData::getBaseDegreesPerTimeStep()const
+    {
+        return m_BaseDegrees;
+    }
+    
     void TornadoData::setMaxDegreesPerTimestep(const float max)
     {
         m_MaxDegrees = max;
+    }
+    
+    float TornadoData::getMaxDegreesPerTimestep()const
+    {
+        return m_MaxDegrees;
     }
 }

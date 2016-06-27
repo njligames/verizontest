@@ -168,7 +168,7 @@ namespace njli
         
         void setOpacity(Node *node);
         void setHidden(Node *node);
-        
+        void setColorBase(Node *node);
         
     private:
         

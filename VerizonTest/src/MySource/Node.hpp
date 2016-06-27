@@ -52,6 +52,9 @@ namespace njli
         float getOpacity()const;
         void setNormalMatrix(const btMatrix3x3 &mtx);
         const btMatrix3x3 &getNormalMatrix()const;
+        
+        void setColorBase(const btVector4 &color);
+        const btVector4 &getColorBase()const;
     public:
         Node* getParentNode();
         const Node* getParentNode() const;
@@ -117,6 +120,7 @@ namespace njli
         bool m_HideGeometry;
         float m_Opacity;
         btMatrix3x3 *m_NormalMatrix;
+        btVector4 *m_Colorbase;
     };
 }
 

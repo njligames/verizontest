@@ -399,6 +399,26 @@ namespace njli
         }
     }
     
+    
+    void CubeGeometry::setColorBase(Node *node)
+    {
+        unsigned long index = node->getGeometryIndex();
+        
+        if(m_VertexData)
+        {
+            
+            btVector4 c(btFabs(node->getColorBase().x()),
+                        btFabs(node->getColorBase().y()),
+                        btFabs(node->getColorBase().z()),
+                        btFabs(node->getColorBase().w()));
+            
+            m_VertexData[index].bl.color = c;
+            m_VertexData[index].br.color = c;
+            m_VertexData[index].tl.color = c;
+            m_VertexData[index].tr.color = c;
+        }
+    }
+    
     const void *CubeGeometry::getModelViewTransformArrayBufferPtr()const
     {
         return m_ModelViewTransformData;

@@ -28,13 +28,17 @@ namespace njli
     m_TornadoData(new TornadoData()),
     m_HideGeometry(false),
     m_Opacity(1.0f),
-    m_NormalMatrix(new btMatrix3x3(btMatrix3x3::getIdentity()))
+    m_NormalMatrix(new btMatrix3x3(btMatrix3x3::getIdentity())),
+    m_Colorbase(new btVector4(1, 1, 1, 1))
     {
         
     }
     
     Node::~Node()
     {
+        delete m_Colorbase;
+        m_Colorbase = NULL;
+        
         delete m_NormalMatrix;
         m_NormalMatrix = NULL;
         
@@ -139,6 +143,16 @@ namespace njli
     const btMatrix3x3 &Node::getNormalMatrix()const
     {
         return *m_NormalMatrix;
+    }
+    
+    void Node::setColorBase(const btVector4 &color)
+    {
+        *m_Colorbase = color;
+    }
+    
+    const btVector4 &Node::getColorBase()const
+    {
+        return *m_Colorbase;
     }
     
     Node *Node::getParentNode()

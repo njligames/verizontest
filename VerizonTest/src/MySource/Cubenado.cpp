@@ -139,6 +139,11 @@ namespace njli
             
             node->getTornadoData()->setTranslationOffset(btVector3(xx, 0.0f, 0.0f));
             
+            node->getTornadoData()->setBaseDegreesPerTimeStep(randomFloat(1.0f, 90.0f));
+            
+            node->getTornadoData()->setMaxDegreesPerTimestep(randomFloat(1.0f, 45.0f) + (randomFloat(1.0f, 45.0f) * m_Randomness));
+            
+            node->setColorBase(btVector4(0.0f, 1.0f, 0.0f, 1.0f));
             
             xx+=xinc;
             yy+=yinc;
@@ -161,14 +166,13 @@ namespace njli
     {
         long cubesToDraw = m_NumberOfCubes;
         
-        int n = 0;
         for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
              i != m_CubeNodes.end();
              i++)
         {
             Node *node = *i;
             
-            node->getTornadoData()->setMaxDegreesPerTimestep(randomFloat(1.0f, 45.0f) + (randomFloat(1.0f, 45.0f) * m_Randomness));
+//            node->getTornadoData()->setMaxDegreesPerTimestep(randomFloat(1.0f, 45.0f) + (randomFloat(1.0f, 45.0f) * m_Randomness));
             
             node->getTornadoData()->update(step);
             
@@ -217,6 +221,15 @@ namespace njli
     {
         assert(percent >= 0.0f && percent <= 1.0f);
         m_Randomness = percent;
+        
+        for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
+             i != m_CubeNodes.end();
+             i++)
+        {
+            Node *node = *i;
+            node->getTornadoData()->setMaxDegreesPerTimestep(node->getTornadoData()->getBaseDegreesPerTimeStep() + (randomFloat(1.0f, 10.0f) * m_Randomness));
+            
+        }
     }
     
     float Cubenado::getRandomness()const

@@ -26,12 +26,17 @@ namespace njli
         
         const btTransform &getBaseTransform()const;
         
+        void setBaseDegreesPerTimeStep(const float base);
+        float getBaseDegreesPerTimeStep()const;
+        
         void setMaxDegreesPerTimestep(const float max);
+        float getMaxDegreesPerTimestep()const;
     protected:
     private:
         float m_Rotation;
         btTransform *m_BaseTranslation;
         btVector3 *m_TranslationOffset;
+        float m_BaseDegrees;
         float m_MaxDegrees;
     };
 }
