@@ -60,11 +60,11 @@ namespace njli
     
     
     CubeGeometry::CubeGeometry():
-    m_ModelViewTransformData(new GLfloat[CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_VERTICES * 16]),
-    m_ColorTransformData(new GLfloat[CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_VERTICES * 16]),
-    m_NormalMatrixTransformData(new GLfloat[CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_VERTICES * 16]),
-    m_VertexData(new SpriteQuad[CubeGeometry::MAX_CUBES]),
-    m_IndiceData(new GLushort[CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_INDICES]),
+    m_ModelViewTransformData(new GLfloat[CubeGeometry::MAX_CUBES * numberOfVertices() * 16]),
+    m_ColorTransformData(new GLfloat[CubeGeometry::MAX_CUBES * numberOfVertices() * 16]),
+    m_NormalMatrixTransformData(new GLfloat[CubeGeometry::MAX_CUBES * numberOfVertices() * 16]),
+    m_VertexData(new Sprite[CubeGeometry::MAX_CUBES]),
+    m_IndiceData(new GLushort[CubeGeometry::MAX_CUBES * numberOfIndices()]),
     m_VertexArray(0),
     m_ModelViewBuffer(0),
     m_ColorTransformBuffer(0),
@@ -84,17 +84,17 @@ namespace njli
         
         
         for (i = 0;
-             i < (CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_VERTICES * 16);
+             i < (CubeGeometry::MAX_CUBES * numberOfVertices() * 16);
              i += 16)
             memcpy(m_ModelViewTransformData + i, TRANSFORM_IDENTITY_MATRIX, sizeof(TRANSFORM_IDENTITY_MATRIX));
         
         for (i = 0;
-             i < (CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_VERTICES * 16);
+             i < (CubeGeometry::MAX_CUBES * numberOfVertices() * 16);
              i += 16)
             memcpy(m_ColorTransformData + i, COLOR_IDENTITY_MATRIX, sizeof(COLOR_IDENTITY_MATRIX));
 
         for (i = 0;
-             i < (CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_VERTICES * 16);
+             i < (CubeGeometry::MAX_CUBES * numberOfVertices() * 16);
              i += 16)
             memcpy(m_NormalMatrixTransformData + i, TRANSFORM_IDENTITY_MATRIX, sizeof(TRANSFORM_IDENTITY_MATRIX));
         
@@ -133,13 +133,13 @@ namespace njli
         
         for(i=0;i< CubeGeometry::MAX_CUBES;i++)
         {
-            m_IndiceData[i*CubeGeometry::NUMBER_OF_INDICES+0] = i*4+0;
-            m_IndiceData[i*CubeGeometry::NUMBER_OF_INDICES+1] = i*4+1;
-            m_IndiceData[i*CubeGeometry::NUMBER_OF_INDICES+2] = i*4+2;
+            m_IndiceData[i*numberOfIndices()+0] = i*4+0;
+            m_IndiceData[i*numberOfIndices()+1] = i*4+1;
+            m_IndiceData[i*numberOfIndices()+2] = i*4+2;
             
-            m_IndiceData[i*CubeGeometry::NUMBER_OF_INDICES+5] = i*4+2;
-            m_IndiceData[i*CubeGeometry::NUMBER_OF_INDICES+4] = i*4+3;
-            m_IndiceData[i*CubeGeometry::NUMBER_OF_INDICES+3] = i*4+1;
+            m_IndiceData[i*numberOfIndices()+5] = i*4+2;
+            m_IndiceData[i*numberOfIndices()+4] = i*4+3;
+            m_IndiceData[i*numberOfIndices()+3] = i*4+1;
         }
 
     }
@@ -353,7 +353,7 @@ namespace njli
 
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
 
-            glDrawElements(GL_TRIANGLES, CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_INDICES, GL_UNSIGNED_SHORT, (const GLvoid*)0);
+            glDrawElements(GL_TRIANGLES, CubeGeometry::MAX_CUBES * numberOfIndices(), GL_UNSIGNED_SHORT, (const GLvoid*)0);
 
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
             glBindVertexArrayOES(0);
@@ -419,6 +419,21 @@ namespace njli
         }
     }
     
+    unsigned long CubeGeometry::numberOfVertices()const
+    {
+        return Sprite::NUMBER_OF_VERTICES;
+    }
+    
+    unsigned long CubeGeometry::numberOfIndices()const
+    {
+        return Sprite::NUMBER_OF_INDICES;
+    }
+    
+    unsigned long CubeGeometry::maxNumberOfObjects()const
+    {
+        return MAX_CUBES;
+    }
+    
     const void *CubeGeometry::getModelViewTransformArrayBufferPtr()const
     {
         return m_ModelViewTransformData;
@@ -426,7 +441,7 @@ namespace njli
     
     GLsizeiptr CubeGeometry::getModelViewTransformArrayBufferSize()const
     {
-        GLsizeiptr size = sizeof(GLfloat) * CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_VERTICES * 16;
+        GLsizeiptr size = sizeof(GLfloat) * CubeGeometry::MAX_CUBES * numberOfVertices() * 16;
         return size;
     }
     
@@ -437,7 +452,7 @@ namespace njli
     
     GLsizeiptr CubeGeometry::getColorTransformArrayBufferSize()const
     {
-        GLsizeiptr size = sizeof(GLfloat) * CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_VERTICES * 16;
+        GLsizeiptr size = sizeof(GLfloat) * CubeGeometry::MAX_CUBES * numberOfVertices() * 16;
         return size;
     }
     
@@ -448,7 +463,7 @@ namespace njli
     
     GLsizeiptr CubeGeometry::getNormalMatrixTransformArrayBufferSize()const
     {
-        GLsizeiptr size = sizeof(GLfloat) * CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_VERTICES * 16;
+        GLsizeiptr size = sizeof(GLfloat) * CubeGeometry::MAX_CUBES * numberOfVertices() * 16;
         return size;
     }
     
@@ -459,7 +474,7 @@ namespace njli
     
     GLsizeiptr CubeGeometry::getVertexArrayBufferSize()const
     {
-        GLsizeiptr size = sizeof(SpriteQuad) * CubeGeometry::MAX_CUBES;
+        GLsizeiptr size = sizeof(Sprite) * CubeGeometry::MAX_CUBES;
         return size;
     }
     
@@ -470,7 +485,7 @@ namespace njli
     
     GLsizeiptr CubeGeometry::getElementArrayBufferSize()const
     {
-        GLsizeiptr size = sizeof(GLushort) * CubeGeometry::MAX_CUBES * CubeGeometry::NUMBER_OF_INDICES;
+        GLsizeiptr size = sizeof(GLushort) * CubeGeometry::MAX_CUBES * numberOfIndices();
         return size;
     }
     
@@ -514,7 +529,7 @@ namespace njli
             
             transform.getOpenGLMatrix(m_MatrixBuffer);
             
-            for (int currentVertex = 0; currentVertex < CubeGeometry::NUMBER_OF_VERTICES; currentVertex++)
+            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
             {
                 unsigned long p = ((index * STRIDE) + (16 * currentVertex));
                 int cmp = memcmp(m_ModelViewTransformData + p,
@@ -536,7 +551,7 @@ namespace njli
         {
             const GLuint STRIDE = 64;
             
-            for (int currentVertex = 0; currentVertex < CubeGeometry::NUMBER_OF_VERTICES; currentVertex++)
+            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
             {
                 unsigned long p = ((index * STRIDE) + (16 * currentVertex));
                 memcpy(m_MatrixBuffer,
@@ -557,7 +572,7 @@ namespace njli
             
             transform.getOpenGLMatrix(m_MatrixBuffer);
             
-            for (int currentVertex = 0; currentVertex < CubeGeometry::NUMBER_OF_VERTICES; currentVertex++)
+            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
             {
                 unsigned long p = ((index * STRIDE) + (16 * currentVertex));
                 
@@ -582,7 +597,7 @@ namespace njli
         {
             const GLuint STRIDE = 64;
             
-            for (int currentVertex = 0; currentVertex < CubeGeometry::NUMBER_OF_VERTICES; currentVertex++)
+            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
             {
                 unsigned long p = ((index * STRIDE) + (16 * currentVertex));
                 memcpy(m_MatrixBuffer,
@@ -603,7 +618,7 @@ namespace njli
             
             transform.getOpenGLMatrix(m_MatrixBuffer);
             
-            for (int currentVertex = 0; currentVertex < CubeGeometry::NUMBER_OF_VERTICES; currentVertex++)
+            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
             {
                 unsigned long p = ((index * STRIDE) + (16 * currentVertex));
                 
@@ -628,7 +643,7 @@ namespace njli
         {
             const GLuint STRIDE = 64;
             
-            for (int currentVertex = 0; currentVertex < CubeGeometry::NUMBER_OF_VERTICES; currentVertex++)
+            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
             {
                 unsigned long p = ((index * STRIDE) + (16 * currentVertex));
                 memcpy(m_MatrixBuffer,

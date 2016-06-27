@@ -52,13 +52,6 @@ namespace njli
         GLfloat opacity;
         GLfloat hidden;
         
-//        operator std::string() const
-//        {
-//            char buffer[2048];
-//            sprintf(buffer, "{{%f, %f, %f}, {%f, %f}, {%f, %f, %f, %f}}", vertex.x(), vertex.y(), vertex.z(), texture.x(), texture.y(), color.x(), color.y(), color.z(), color.w());
-//            return std::string(buffer);
-//        }
-        
         TexturedColoredVertex& operator=(const TexturedColoredVertex& rhs)
         {
             if (this != &rhs) {
@@ -73,7 +66,7 @@ namespace njli
         }
     };
     
-    class SpriteQuad
+    class Sprite
     {
     public:
         TexturedColoredVertex bl;
@@ -81,19 +74,10 @@ namespace njli
         TexturedColoredVertex tl;
         TexturedColoredVertex tr;
         
-//        operator std::string() const
-//        {
-//            std::string bottomLeft(bl);
-//            std::string bottomRight(br);
-//            std::string topLeft(tl);
-//            std::string topRight(tr);
-//            
-//            return std::string("\nbl: ") + bottomLeft +
-//            std::string("\nbr: ") + bottomRight +
-//            std::string("\ntl: ") + topLeft +
-//            std::string("\ntr: ") + topRight;
-//        }
-        SpriteQuad &operator=(const SpriteQuad &rhs)
+        static const unsigned int NUMBER_OF_VERTICES = 4;
+        static const unsigned int NUMBER_OF_INDICES = 6;
+        
+        Sprite &operator=(const Sprite &rhs)
         {
             if(this != &rhs)
             {
@@ -101,6 +85,38 @@ namespace njli
                 br = rhs.br;
                 tl = rhs.tl;
                 tr = rhs.tr;
+            }
+            return *this;
+        }
+    };
+    
+    class Cube
+    {
+    public:
+        TexturedColoredVertex blf; //bottom, left, front
+        TexturedColoredVertex brf; //bottom, right, front
+        TexturedColoredVertex tlf; //top, left, front
+        TexturedColoredVertex trf; //top, right, front
+        
+        TexturedColoredVertex blb; //bottom, left, back
+        TexturedColoredVertex brb; //bottom, right, back
+        TexturedColoredVertex tlb; //bottom, left, back
+        TexturedColoredVertex trb; //bottom, right, back
+        
+        Cube &operator=(const Cube &rhs)
+        {
+            if(this != &rhs)
+            {
+                blf = rhs.blf;
+                brf = rhs.brf;
+                tlf = rhs.tlf;
+                trf = rhs.trf;
+                
+                blb = rhs.blb;
+                brb = rhs.brb;
+                tlb = rhs.tlb;
+                trb = rhs.trb;
+
             }
             return *this;
         }
@@ -135,8 +151,7 @@ namespace njli
         void render(Camera *camera);
         
         static const unsigned int MAX_CUBES = 10000;
-        static const unsigned int NUMBER_OF_VERTICES = 4;
-        static const unsigned int NUMBER_OF_INDICES = 6;
+        
     protected:
         const void *getModelViewTransformArrayBufferPtr()const;
         GLsizeiptr getModelViewTransformArrayBufferSize()const;
@@ -170,6 +185,9 @@ namespace njli
         void setHidden(Node *node);
         void setColorBase(Node *node);
         
+        unsigned long numberOfVertices()const;
+        unsigned long numberOfIndices()const;
+        unsigned long maxNumberOfObjects()const;
     private:
         
         
@@ -177,7 +195,8 @@ namespace njli
         GLfloat *m_ColorTransformData;
         GLfloat *m_NormalMatrixTransformData;
         
-        SpriteQuad *m_VertexData;
+        Sprite *m_VertexData;
+//        Cube *m_VertexData;
         GLushort *m_IndiceData;
         
         GLuint m_VertexArray;
