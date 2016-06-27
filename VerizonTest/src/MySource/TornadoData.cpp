@@ -18,7 +18,7 @@ namespace njli
     m_MaxDegrees(10.0f),
     m_BaseDegrees(0.0f)
     {
-        
+        m_BaseTranslation->setOrigin(*m_TranslationOffset);
     }
     
     TornadoData::~TornadoData()
@@ -32,13 +32,9 @@ namespace njli
     
     void TornadoData::update(float timestep)
     {
-        *m_BaseTranslation = btTransform::getIdentity();
-        m_BaseTranslation->setOrigin(*m_TranslationOffset);
-        
-        m_BaseTranslation->setRotation(m_BaseTranslation->getRotation() * btQuaternion(btVector3(0.0f, 1.0f, 0.0f), m_Rotation));
+        m_BaseTranslation->setRotation(btQuaternion(btVector3(0.0f, 1.0f, 0.0f), m_Rotation));
         
         m_Rotation += (timestep * 0.1f);
-        
         if(m_Rotation > btRadians(m_MaxDegrees))
             m_Rotation = btRadians(m_MaxDegrees);
     }
@@ -46,6 +42,7 @@ namespace njli
     void TornadoData::setTranslationOffset(const btVector3 &offset)
     {
         *m_TranslationOffset = offset;
+        m_BaseTranslation->setOrigin(*m_TranslationOffset);
     }
     
     const btTransform &TornadoData::getBaseTransform()const

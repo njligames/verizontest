@@ -1,6 +1,6 @@
 #version 100
 attribute vec4 inPosition;
-attribute vec2 inTexCoord;
+//attribute vec2 inTexCoord;
 attribute vec4 inNormal;
 attribute vec4 inColor;
 attribute mat4 inTransform;
@@ -11,7 +11,7 @@ attribute mat4 inNormalMatrix;
 
 
 varying vec4 destinationColor;
-varying vec2 destinationTexCoord2D;
+//varying vec2 destinationTexCoord2D;
 //varying mat4 destinationColorTransform;
 uniform mat4 modelView;
 uniform mat4 projection;
@@ -41,7 +41,7 @@ void main ()
     color.a = inOpacity;
     
     destinationColor = color;
-    destinationTexCoord2D = inTexCoord;
+//    destinationTexCoord2D = inTexCoord;
 //    destinationColorTransform = inColorTransform;
     gl_Position = (((projection * modelView) * inTransform) * position);
 }

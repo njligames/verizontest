@@ -5,10 +5,10 @@ precision mediump float;
 #endif
 
 varying vec4 destinationColor;
-varying vec2 destinationTexCoord2D;
+//varying vec2 destinationTexCoord2D;
 //varying mat4 destinationColorTransform;
 
-uniform sampler2D diffuseTexture2D;
+//uniform sampler2D diffuseTexture2D;
 
 uniform int opacityModifyRGB;
 
@@ -26,7 +26,7 @@ void main(void)
     vec4 color = destinationColor;
     int modifyRGB = opacityModifyRGB;
     
-    vec4 diffuseColor = texture2D(diffuseTexture2D, destinationTexCoord2D);
+//    vec4 diffuseColor = texture2D(diffuseTexture2D, destinationTexCoord2D);
     
     if (modifyRGB == 1)
     {
