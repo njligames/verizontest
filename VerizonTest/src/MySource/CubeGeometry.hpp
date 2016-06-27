@@ -103,6 +103,9 @@ namespace njli
         TexturedColoredVertex tlb; //bottom, left, back
         TexturedColoredVertex trb; //bottom, right, back
         
+        static const unsigned int NUMBER_OF_VERTICES = 8;
+        static const unsigned int NUMBER_OF_INDICES = 36;
+        
         Cube &operator=(const Cube &rhs)
         {
             if(this != &rhs)
@@ -170,7 +173,6 @@ namespace njli
         
         void addReference(Node *node);
         void removeReference(Node *node);
-        void hideGeometry(Node *node);
         
         void setTransform(const unsigned long index, const btTransform &transform);
         btTransform getTransform(const unsigned long index);
@@ -195,8 +197,8 @@ namespace njli
         GLfloat *m_ColorTransformData;
         GLfloat *m_NormalMatrixTransformData;
         
-        Sprite *m_VertexData;
-//        Cube *m_VertexData;
+//        Sprite *m_VertexData;
+        Cube *m_VertexData;
         GLushort *m_IndiceData;
         
         GLuint m_VertexArray;

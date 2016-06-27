@@ -40,7 +40,28 @@ namespace njli
     
     static const btVector4 DEFAULTCOLOR = {1.0f, 1.0f, 1.0f, 1.0f};
     
-    static const btVector2 DEFAULTPIVOT = btVector2(0.5f, 0.5f);
+    
+    
+    static const float N3 = 0.57735f;
+    
+    static const btVector3 BLF_NORMAL = { -N3,  -N3,  -N3 };
+    static const btVector3 BRF_NORMAL = {  N3,  -N3,  -N3 };
+    static const btVector3 TLF_NORMAL = { -N3,   N3,  -N3 };
+    static const btVector3 TRF_NORMAL = {  N3,   N3,  -N3 };
+    static const btVector3 BLB_NORMAL = { -N3,  -N3,   N3 };
+    static const btVector3 BRB_NORMAL = {  N3,  -N3,   N3 };
+    static const btVector3 TLB_NORMAL = { -N3,   N3,   N3 };
+    static const btVector3 TRB_NORMAL = {  N3,   N3,   N3 };
+    
+    static const btVector3 BLF_VERTEX = { -0.5f, -0.5f, -0.5f };
+    static const btVector3 BRF_VERTEX = {  0.5f, -0.5f, -0.5f };
+    static const btVector3 TLF_VERTEX = { -0.5f,  0.5f, -0.5f };
+    static const btVector3 TRF_VERTEX = {  0.5f,  0.5f, -0.5f };
+    static const btVector3 BLB_VERTEX = { -0.5f, -0.5f, 0.5f };
+    static const btVector3 BRB_VERTEX = {  0.5f, -0.5f, 0.5f };
+    static const btVector3 TLB_VERTEX = { -0.5f,  0.5f, 0.5f };
+    static const btVector3 TRB_VERTEX = {  0.5f,  0.5f, 0.5f };
+    
     
     static const GLfloat TRANSFORM_IDENTITY_MATRIX[] =
     {
@@ -63,7 +84,8 @@ namespace njli
     m_ModelViewTransformData(new GLfloat[CubeGeometry::MAX_CUBES * numberOfVertices() * 16]),
     m_ColorTransformData(new GLfloat[CubeGeometry::MAX_CUBES * numberOfVertices() * 16]),
     m_NormalMatrixTransformData(new GLfloat[CubeGeometry::MAX_CUBES * numberOfVertices() * 16]),
-    m_VertexData(new Sprite[CubeGeometry::MAX_CUBES]),
+//    m_VertexData(new Sprite[CubeGeometry::MAX_CUBES]),
+    m_VertexData(new Cube[CubeGeometry::MAX_CUBES]),
     m_IndiceData(new GLushort[CubeGeometry::MAX_CUBES * numberOfIndices()]),
     m_VertexArray(0),
     m_ModelViewBuffer(0),
@@ -100,20 +122,21 @@ namespace njli
         
         for(i=0; i<CubeGeometry::MAX_CUBES; i++)
         {
-            m_VertexData[i].bl.vertex = BL_VERTEX;
-            m_VertexData[i].br.vertex = BR_VERTEX;
-            m_VertexData[i].tl.vertex = TL_VERTEX;
-            m_VertexData[i].tr.vertex = TR_VERTEX;
+         
+            /*m_VertexData[i].bl.vertex = BLF_VERTEX;
+            m_VertexData[i].br.vertex = BRF_VERTEX;
+            m_VertexData[i].tl.vertex = TLF_VERTEX;
+            m_VertexData[i].tr.vertex = TRF_VERTEX;
             
-//            m_VertexData[i].bl.texture = BL_TEXTURECOORD;
-//            m_VertexData[i].br.texture = BR_TEXTURECOORD;
-//            m_VertexData[i].tl.texture = TL_TEXTURECOORD;
-//            m_VertexData[i].tr.texture = TR_TEXTURECOORD;
+//            m_VertexData[i].bl.texture = BLF_TEXTURECOORD;
+//            m_VertexData[i].br.texture = BRF_TEXTURECOORD;
+//            m_VertexData[i].tl.texture = TLF_TEXTURECOORD;
+//            m_VertexData[i].tr.texture = TRF_TEXTURECOORD;
             
-            m_VertexData[i].bl.normal = BL_NORMAL;
-            m_VertexData[i].br.normal = BR_NORMAL;
-            m_VertexData[i].tl.normal = TL_NORMAL;
-            m_VertexData[i].tr.normal = TR_NORMAL;
+            m_VertexData[i].bl.normal = BLF_NORMAL;
+            m_VertexData[i].br.normal = BRF_NORMAL;
+            m_VertexData[i].tl.normal = TLF_NORMAL;
+            m_VertexData[i].tr.normal = TRF_NORMAL;
             
             m_VertexData[i].bl.color = DEFAULTCOLOR;
             m_VertexData[i].br.color = DEFAULTCOLOR;
@@ -128,20 +151,131 @@ namespace njli
             m_VertexData[i].bl.hidden = 0;
             m_VertexData[i].br.hidden = 0;
             m_VertexData[i].tl.hidden = 0;
-            m_VertexData[i].tr.hidden = 0;
+            m_VertexData[i].tr.hidden = 0;*/
+            
+            
+            
+            
+            
+            
+            
+            
+            m_VertexData[i].blf.vertex = BLF_VERTEX;
+            m_VertexData[i].brf.vertex = BRF_VERTEX;
+            m_VertexData[i].tlf.vertex = TLF_VERTEX;
+            m_VertexData[i].trf.vertex = TRF_VERTEX;
+            m_VertexData[i].blb.vertex = BLB_VERTEX;
+            m_VertexData[i].brb.vertex = BRB_VERTEX;
+            m_VertexData[i].tlb.vertex = TLB_VERTEX;
+            m_VertexData[i].trb.vertex = TRB_VERTEX;
+            
+//            m_VertexData[i].blf.texture = BLF_TEXTURECOORD;
+//            m_VertexData[i].brf.texture = BRF_TEXTURECOORD;
+//            m_VertexData[i].tlf.texture = TLF_TEXTURECOORD;
+//            m_VertexData[i].trf.texture = TRF_TEXTURECOORD;
+//            m_VertexData[i].blb.texture = BLB_TEXTURECOORD;
+//            m_VertexData[i].brb.texture = BRB_TEXTURECOORD;
+//            m_VertexData[i].tlb.texture = TLB_TEXTURECOORD;
+//            m_VertexData[i].trb.texture = TRB_TEXTURECOORD;
+
+            m_VertexData[i].blf.normal = BLF_NORMAL;
+            m_VertexData[i].brf.normal = BRF_NORMAL;
+            m_VertexData[i].tlf.normal = TLF_NORMAL;
+            m_VertexData[i].trf.normal = TRF_NORMAL;
+            m_VertexData[i].blb.normal = BLB_NORMAL;
+            m_VertexData[i].brb.normal = BRB_NORMAL;
+            m_VertexData[i].tlb.normal = TLB_NORMAL;
+            m_VertexData[i].trb.normal = TRB_NORMAL;
+            
+            m_VertexData[i].blf.color = DEFAULTCOLOR;
+            m_VertexData[i].brf.color = DEFAULTCOLOR;
+            m_VertexData[i].tlf.color = DEFAULTCOLOR;
+            m_VertexData[i].trf.color = DEFAULTCOLOR;
+            m_VertexData[i].blb.color = DEFAULTCOLOR;
+            m_VertexData[i].brb.color = DEFAULTCOLOR;
+            m_VertexData[i].tlb.color = DEFAULTCOLOR;
+            m_VertexData[i].trb.color = DEFAULTCOLOR;
+            
+            m_VertexData[i].blf.opacity = 1.0f;
+            m_VertexData[i].brf.opacity = 1.0f;
+            m_VertexData[i].tlf.opacity = 1.0f;
+            m_VertexData[i].trf.opacity = 1.0f;
+            m_VertexData[i].blb.opacity = 1.0f;
+            m_VertexData[i].brb.opacity = 1.0f;
+            m_VertexData[i].tlb.opacity = 1.0f;
+            m_VertexData[i].trb.opacity = 1.0f;
+            
+            m_VertexData[i].blf.hidden = 0;
+            m_VertexData[i].brf.hidden = 0;
+            m_VertexData[i].tlf.hidden = 0;
+            m_VertexData[i].trf.hidden = 0;
+            m_VertexData[i].blb.hidden = 0;
+            m_VertexData[i].brb.hidden = 0;
+            m_VertexData[i].tlb.hidden = 0;
+            m_VertexData[i].trb.hidden = 0;
         }
         
+        /*
         for(i=0;i< CubeGeometry::MAX_CUBES;i++)
         {
             m_IndiceData[i*numberOfIndices()+0] = i*4+0;
             m_IndiceData[i*numberOfIndices()+1] = i*4+1;
             m_IndiceData[i*numberOfIndices()+2] = i*4+2;
-            
-            m_IndiceData[i*numberOfIndices()+5] = i*4+2;
-            m_IndiceData[i*numberOfIndices()+4] = i*4+3;
             m_IndiceData[i*numberOfIndices()+3] = i*4+1;
+            m_IndiceData[i*numberOfIndices()+4] = i*4+3;
+            m_IndiceData[i*numberOfIndices()+5] = i*4+2;
+        }*/
+        
+        for(i=0;i< CubeGeometry::MAX_CUBES;i++)
+        {
+//            0, 1, 2, 1, 3, 2
+            m_IndiceData[i*numberOfIndices()+0] = i*8+0;
+            m_IndiceData[i*numberOfIndices()+1] = i*8+1;
+            m_IndiceData[i*numberOfIndices()+2] = i*8+2;
+            m_IndiceData[i*numberOfIndices()+3] = i*8+1;
+            m_IndiceData[i*numberOfIndices()+4] = i*8+3;
+            m_IndiceData[i*numberOfIndices()+5] = i*8+2;
+            
+//            4, 5, 6, 5, 7, 6
+            m_IndiceData[i*numberOfIndices()+6]  = i*8+4;
+            m_IndiceData[i*numberOfIndices()+7]  = i*8+5;
+            m_IndiceData[i*numberOfIndices()+8]  = i*8+6;
+            m_IndiceData[i*numberOfIndices()+9]  = i*8+5;
+            m_IndiceData[i*numberOfIndices()+10] = i*8+7;
+            m_IndiceData[i*numberOfIndices()+11] = i*8+6;
+            
+//            1, 5, 3, 5, 7, 3
+            m_IndiceData[i*numberOfIndices()+12]  = i*8+1;
+            m_IndiceData[i*numberOfIndices()+13]  = i*8+5;
+            m_IndiceData[i*numberOfIndices()+14]  = i*8+3;
+            m_IndiceData[i*numberOfIndices()+15]  = i*8+5;
+            m_IndiceData[i*numberOfIndices()+16]  = i*8+7;
+            m_IndiceData[i*numberOfIndices()+17]  = i*8+3;
+            
+//            0, 4, 1, 4, 5, 1
+            m_IndiceData[i*numberOfIndices()+18]  = i*8+0;
+            m_IndiceData[i*numberOfIndices()+19]  = i*8+4;
+            m_IndiceData[i*numberOfIndices()+20]  = i*8+1;
+            m_IndiceData[i*numberOfIndices()+21]  = i*8+4;
+            m_IndiceData[i*numberOfIndices()+22]  = i*8+5;
+            m_IndiceData[i*numberOfIndices()+23]  = i*8+1;
+            
+//            4, 0, 6, 0, 2, 6
+            m_IndiceData[i*numberOfIndices()+24]  = i*8+4;
+            m_IndiceData[i*numberOfIndices()+25]  = i*8+0;
+            m_IndiceData[i*numberOfIndices()+26]  = i*8+6;
+            m_IndiceData[i*numberOfIndices()+27]  = i*8+0;
+            m_IndiceData[i*numberOfIndices()+28]  = i*8+2;
+            m_IndiceData[i*numberOfIndices()+29]  = i*8+6;
+            
+//            6, 2, 7, 2, 3, 7
+            m_IndiceData[i*numberOfIndices()+30]  = i*8+6;
+            m_IndiceData[i*numberOfIndices()+31]  = i*8+2;
+            m_IndiceData[i*numberOfIndices()+32]  = i*8+7;
+            m_IndiceData[i*numberOfIndices()+33]  = i*8+2;
+            m_IndiceData[i*numberOfIndices()+34]  = i*8+3;
+            m_IndiceData[i*numberOfIndices()+35]  = i*8+7;
         }
-
     }
     
     
@@ -369,10 +503,20 @@ namespace njli
             float opacity = node->getOpacity();
             float o = (opacity > 1.0f)?1.0f:((opacity<0.0f)?0.0f:opacity);
             
-            m_VertexData[index].bl.opacity = o;
+            /*m_VertexData[index].bl.opacity = o;
             m_VertexData[index].br.opacity = o;
             m_VertexData[index].tl.opacity = o;
-            m_VertexData[index].tr.opacity = o;
+            m_VertexData[index].tr.opacity = o;*/
+            
+            m_VertexData[index].blf.opacity = o;
+            m_VertexData[index].brf.opacity = o;
+            m_VertexData[index].tlf.opacity = o;
+            m_VertexData[index].trf.opacity = o;
+            
+            m_VertexData[index].blb.opacity = o;
+            m_VertexData[index].brb.opacity = o;
+            m_VertexData[index].tlb.opacity = o;
+            m_VertexData[index].trb.opacity = o;
         }
     }
     
@@ -386,7 +530,7 @@ namespace njli
             
             float h = (hidden)?1.0f:0.0f;
             
-            if(m_VertexData[index].bl.hidden != (h) ||
+            /*if(m_VertexData[index].bl.hidden != (h) ||
                m_VertexData[index].br.hidden != (h) ||
                m_VertexData[index].tl.hidden != (h) ||
                m_VertexData[index].tr.hidden != (h))
@@ -395,6 +539,26 @@ namespace njli
                 m_VertexData[index].br.hidden = (hidden)?1.0f:0.0f;
                 m_VertexData[index].tl.hidden = (hidden)?1.0f:0.0f;
                 m_VertexData[index].tr.hidden = (hidden)?1.0f:0.0f;
+            }*/
+            
+            if(m_VertexData[index].blf.hidden != (h) ||
+               m_VertexData[index].brf.hidden != (h) ||
+               m_VertexData[index].tlf.hidden != (h) ||
+               m_VertexData[index].trf.hidden != (h) ||
+               m_VertexData[index].blb.hidden != (h) ||
+               m_VertexData[index].brb.hidden != (h) ||
+               m_VertexData[index].tlb.hidden != (h) ||
+               m_VertexData[index].trb.hidden != (h))
+            {
+                m_VertexData[index].blf.hidden = (hidden)?1.0f:0.0f;
+                m_VertexData[index].brf.hidden = (hidden)?1.0f:0.0f;
+                m_VertexData[index].tlf.hidden = (hidden)?1.0f:0.0f;
+                m_VertexData[index].trf.hidden = (hidden)?1.0f:0.0f;
+                
+                m_VertexData[index].blb.hidden = (hidden)?1.0f:0.0f;
+                m_VertexData[index].brb.hidden = (hidden)?1.0f:0.0f;
+                m_VertexData[index].tlb.hidden = (hidden)?1.0f:0.0f;
+                m_VertexData[index].trb.hidden = (hidden)?1.0f:0.0f;
             }
         }
     }
@@ -412,21 +576,32 @@ namespace njli
                         btFabs(node->getColorBase().z()),
                         btFabs(node->getColorBase().w()));
             
-            m_VertexData[index].bl.color = c;
+            /*m_VertexData[index].bl.color = c;
             m_VertexData[index].br.color = c;
             m_VertexData[index].tl.color = c;
-            m_VertexData[index].tr.color = c;
+            m_VertexData[index].tr.color = c;*/
+            
+            m_VertexData[index].blf.color = c;
+            m_VertexData[index].brf.color = c;
+            m_VertexData[index].tlf.color = c;
+            m_VertexData[index].trf.color = c;
+            m_VertexData[index].blb.color = c;
+            m_VertexData[index].brb.color = c;
+            m_VertexData[index].tlb.color = c;
+            m_VertexData[index].trb.color = c;
         }
     }
     
     unsigned long CubeGeometry::numberOfVertices()const
     {
-        return Sprite::NUMBER_OF_VERTICES;
+//        return Sprite::NUMBER_OF_VERTICES;
+        return Cube::NUMBER_OF_VERTICES;
     }
     
     unsigned long CubeGeometry::numberOfIndices()const
     {
-        return Sprite::NUMBER_OF_INDICES;
+//        return Sprite::NUMBER_OF_INDICES;
+        return Cube::NUMBER_OF_INDICES;
     }
     
     unsigned long CubeGeometry::maxNumberOfObjects()const
@@ -474,7 +649,8 @@ namespace njli
     
     GLsizeiptr CubeGeometry::getVertexArrayBufferSize()const
     {
-        GLsizeiptr size = sizeof(Sprite) * CubeGeometry::MAX_CUBES;
+//        GLsizeiptr size = sizeof(Sprite) * CubeGeometry::MAX_CUBES;
+        GLsizeiptr size = sizeof(Cube) * CubeGeometry::MAX_CUBES;
         return size;
     }
     
@@ -510,22 +686,16 @@ namespace njli
         {
             m_References[index] = 0;
             
-            hideGeometry(node);
+            setHidden(node);
         }
-    }
-    
-    void CubeGeometry::hideGeometry(Node *node)
-    {
-        unsigned long i = node->getGeometryIndex();
-        
-        //!!!:TODO
     }
     
     void CubeGeometry::setTransform(const unsigned long index, const btTransform &transform)
     {
         if (index < CubeGeometry::MAX_CUBES)
         {
-            const GLuint STRIDE = 64;
+//            const GLuint STRIDE = 64;
+            const GLuint STRIDE = 16 * numberOfVertices();
             
             transform.getOpenGLMatrix(m_MatrixBuffer);
             
@@ -549,7 +719,8 @@ namespace njli
         btTransform transform(btTransform::getIdentity());
         if (index < CubeGeometry::MAX_CUBES)
         {
-            const GLuint STRIDE = 64;
+//            const GLuint STRIDE = 64;
+            const GLuint STRIDE = 16 * numberOfVertices();
             
             for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
             {
@@ -568,7 +739,8 @@ namespace njli
     {
         if (index < CubeGeometry::MAX_CUBES)
         {
-            const GLuint STRIDE = 64;
+//            const GLuint STRIDE = 64;
+            const GLuint STRIDE = 16 * numberOfVertices();
             
             transform.getOpenGLMatrix(m_MatrixBuffer);
             
@@ -595,7 +767,8 @@ namespace njli
         btTransform transform(btTransform::getIdentity());
         if (index < CubeGeometry::MAX_CUBES)
         {
-            const GLuint STRIDE = 64;
+//            const GLuint STRIDE = 64;
+            const GLuint STRIDE = 16 * numberOfVertices();
             
             for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
             {
@@ -614,7 +787,8 @@ namespace njli
     {
         if (index < CubeGeometry::MAX_CUBES)
         {
-            const GLuint STRIDE = 64;
+//            const GLuint STRIDE = 64;
+            const GLuint STRIDE = 16 * numberOfVertices();
             
             transform.getOpenGLMatrix(m_MatrixBuffer);
             
@@ -641,7 +815,8 @@ namespace njli
         btTransform transform(btTransform::getIdentity());
         if (index < CubeGeometry::MAX_CUBES)
         {
-            const GLuint STRIDE = 64;
+//            const GLuint STRIDE = 64;
+            const GLuint STRIDE = 16 * numberOfVertices();
             
             for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
             {
