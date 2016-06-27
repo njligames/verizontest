@@ -60,6 +60,7 @@ namespace njli
     
     Cubenado::Cubenado():
     m_Shader(new Shader()),
+    m_ToonShader(new Shader()),
     m_CubeGeometry(new CubeGeometry()),
     m_Camera(new Camera()),
     m_CameraNode(new Node()),
@@ -93,6 +94,9 @@ namespace njli
         delete m_CubeGeometry;
         m_CubeGeometry = NULL;
         
+        delete m_ToonShader;
+        m_ToonShader = NULL;
+        
         delete m_Shader;
         m_Shader = NULL;
     }
@@ -109,6 +113,8 @@ namespace njli
         m_Scene->getRootNode()->setOrigin(btVector3(0.0f, 0.0f, 40.0f));
         
         assert(m_Shader->load(loadFile("shaders/Shader.vsh"), loadFile("shaders/Shader.fsh")));
+        
+        assert(m_ToonShader->load(loadFile("shaders/Toon.vsh"), loadFile("shaders/Toon.fsh")));
         
         m_CubeGeometry->load(m_Shader);
         
@@ -147,6 +153,8 @@ namespace njli
             node->setColorBase(btVector4(randomFloat(0.0f, 1.0f),
                                          randomFloat(0.0f, 1.0f),
                                          randomFloat(0.0f, 1.0f), 1.0f));
+            
+            node->setScale(randomFloat(0.1f, 1.1f));
             
             xx+=xinc;
             yy+=yinc;

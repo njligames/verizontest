@@ -55,6 +55,7 @@ namespace njli
         /* members */
         
         Shader *m_Shader;
+        Shader *m_ToonShader;
         CubeGeometry *m_CubeGeometry;
         Camera *m_Camera;
         Node *m_CameraNode;
