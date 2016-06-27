@@ -143,7 +143,10 @@ namespace njli
             
             node->getTornadoData()->setMaxDegreesPerTimestep(randomFloat(1.0f, 45.0f) + (randomFloat(1.0f, 45.0f) * m_Randomness));
             
-            node->setColorBase(btVector4(0.0f, 1.0f, 0.0f, 1.0f));
+            
+            node->setColorBase(btVector4(randomFloat(0.0f, 1.0f),
+                                         randomFloat(0.0f, 1.0f),
+                                         randomFloat(0.0f, 1.0f), 1.0f));
             
             xx+=xinc;
             yy+=yinc;
