@@ -27,27 +27,6 @@ namespace njli
     
     void Scene::update(float timeStep, const unsigned int numSubSteps)
     {
-        for(std::vector<Node*>::iterator i = m_ActiveNodes.begin();
-            i != m_ActiveNodes.end();
-            i++)
-        {
-            Node *node = *i;
-            
-            
-//            node->update(timeStep);
-            
-            CubeGeometry *geometry = node->getGeometry();
-            if(geometry)
-            {
-                const unsigned long geometryIndex = node->getGeometryIndex();
-                geometry->setTransform(geometryIndex, node->getWorldTransform());
-                geometry->setColorTransform(geometryIndex, node->getColorTransform());
-                geometry->setNormalMatrixTransform(geometryIndex, btTransform(node->getNormalMatrix()));
-                geometry->setHidden(node);
-                geometry->setOpacity(node);
-                geometry->setColorBase(node);
-            }
-        }
     }
     
     void Scene::render()
@@ -70,6 +49,14 @@ namespace njli
                 
                 if(geometry)
                 {
+                    const unsigned long geometryIndex = node->getGeometryIndex();
+                    geometry->setTransform(geometryIndex, node->getWorldTransform());
+                    geometry->setColorTransform(geometryIndex, node->getColorTransform());
+                    geometry->setNormalMatrixTransform(geometryIndex, btTransform(node->getNormalMatrix()));
+                    geometry->setHidden(node);
+                    geometry->setOpacity(node);
+                    geometry->setColorBase(node);
+                    
                     if(m_ActiveGeometries.end() == std::find(m_ActiveGeometries.begin(), m_ActiveGeometries.end(), geometry))
                     {
                         m_ActiveGeometries.push_back(geometry);

@@ -12,7 +12,17 @@
 #include "Node.hpp"
 #include "CubeGeometry.hpp"
 
+#include <pthread.h>
+
+struct thread_data{
+    float timeSinceLastUpdate;
+    float aspect;
+};
+
 @interface GameViewController ()
+{
+    struct thread_data threadData;
+}
 @property (strong, nonatomic) EAGLContext *context;
 
 @property (weak, nonatomic) IBOutlet UILabel *lblNumberOfCubes;
@@ -117,10 +127,12 @@
 
 #pragma mark - GLKView and GLKViewController delegate methods
 
-- (void)update
+void *_update(void *threadarg)
 {
-    float aspect = fabs(self.view.bounds.size.width / self.view.bounds.size.height);
-    njli::Cubenado::getInstance()->getCamera()->setAspectRatio(aspect);
+    struct thread_data *my_data;
+    my_data = (struct thread_data *) threadarg;
+    
+    njli::Cubenado::getInstance()->getCamera()->setAspectRatio(my_data->aspect);
     
     if(njli::Cubenado::getInstance()->getCamera()->getNodeOwner())
     {
@@ -129,8 +141,25 @@
         njli::Cubenado::getInstance()->getCamera()->getNodeOwner()->setTransform(cameraTransform);
     }
     
+    njli::Cubenado::getInstance()->update(my_data->timeSinceLastUpdate);
     
-    njli::Cubenado::getInstance()->update(self.timeSinceLastUpdate);
+    pthread_exit(NULL);
+}
+
+- (void)update
+{
+    threadData.timeSinceLastUpdate = self.timeSinceLastUpdate;
+    threadData.aspect = fabs(self.view.bounds.size.width / self.view.bounds.size.height);
+    
+    pthread_t threads;
+    int rc;
+    rc = pthread_create(&threads, NULL, _update, (void *)&threadData);
+    if (rc){
+        printf("ERROR; return code from pthread_create() is %d\n", rc);
+        exit(-1);
+    }
+    
+//    njli::Cubenado::getInstance()->update(self.timeSinceLastUpdate);
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
