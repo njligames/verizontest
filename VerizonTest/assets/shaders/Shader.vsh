@@ -43,6 +43,7 @@ void main ()
     destinationColor = color;
 //    destinationTexCoord2D = inTexCoord;
 //    destinationColorTransform = inColorTransform;
-    gl_Position = (((projection * modelView) * inTransform) * position);
+//    gl_Position = (((projection * modelView) * inTransform) * position);
+    gl_Position = (((modelView * projection) * inTransform) * position);
 }
 

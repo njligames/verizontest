@@ -10,6 +10,7 @@
 
 #include "Shader.hpp"
 #include "CubeGeometry.hpp"
+#include "RectangleGeometry.hpp"
 #include "Node.hpp"
 #include "Scene.hpp"
 #include "TornadoData.hpp"
@@ -61,15 +62,16 @@ namespace njli
     Cubenado::Cubenado():
     m_Shader(new Shader()),
     m_ToonShader(new Shader()),
-    m_CubeGeometry(new CubeGeometry()),
+    m_Geometry(new CubeGeometry()),
+//    m_Geometry(new RectangleGeometry()),
     m_Camera(new Camera()),
     m_CameraNode(new Node()),
     m_Scene(new Scene()),
     m_Randomness(0.0f),
-    m_NumberOfCubes(CubeGeometry::MAX_CUBES),
+    m_NumberOfCubes(Geometry::MAX_CUBES),
     m_Rotation(0.0f)
     {
-        for (unsigned long i = 0; i < CubeGeometry::MAX_CUBES; i++)
+        for (unsigned long i = 0; i < Geometry::MAX_CUBES; i++)
             m_CubeNodes.push_back(new Node());
     }
     
@@ -91,8 +93,8 @@ namespace njli
         delete m_Camera;
         m_Camera = NULL;
         
-        delete m_CubeGeometry;
-        m_CubeGeometry = NULL;
+        delete m_Geometry;
+        m_Geometry = NULL;
         
         delete m_ToonShader;
         m_ToonShader = NULL;
@@ -116,7 +118,7 @@ namespace njli
         
         assert(m_ToonShader->load(loadFile("shaders/Toon.vsh"), loadFile("shaders/Toon.fsh")));
         
-        m_CubeGeometry->load(m_Shader);
+        m_Geometry->load(m_Shader);
         
         float min_y = -7.0f;
         float xinc = 0.00001f;
@@ -139,7 +141,7 @@ namespace njli
             m_Scene->addActiveNode(node);
             m_Scene->getRootNode()->addChildNode(node);
             
-            node->addGeometry(m_CubeGeometry);
+            node->addGeometry(m_Geometry);
             
             node->setOrigin(btVector3(0.0f, yy, 0.0f));
             
@@ -164,7 +166,7 @@ namespace njli
     
     void Cubenado::destroy()
     {
-        m_CubeGeometry->unLoad();
+        m_Geometry->unLoad();
         m_Shader->unLoad();
     }
     
@@ -221,9 +223,9 @@ namespace njli
     
     void Cubenado::setNumberOfCubes(const unsigned int amount)
     {
-        if (amount > CubeGeometry::MAX_CUBES)
+        if (amount > Geometry::MAX_CUBES)
         {
-            m_NumberOfCubes = CubeGeometry::MAX_CUBES;
+            m_NumberOfCubes = Geometry::MAX_CUBES;
         }
         m_NumberOfCubes = amount;
     }

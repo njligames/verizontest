@@ -13,7 +13,7 @@
 
 namespace njli
 {
-    class CubeGeometry;
+    class Geometry;
     class Camera;
     class Node;
     
@@ -38,7 +38,7 @@ namespace njli
         Node *const getRootNode()const;
     protected:
     private:
-        std::vector<CubeGeometry*> m_ActiveGeometries;
+        std::vector<Geometry*> m_ActiveGeometries;
         std::vector<Camera*> m_ActiveCameras;
         std::vector<Node*> m_ActiveNodes;
         Node *m_RootNode;

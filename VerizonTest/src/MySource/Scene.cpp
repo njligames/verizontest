@@ -8,7 +8,7 @@
 
 #include "Scene.hpp"
 #include "Node.hpp"
-#include "CubeGeometry.hpp"
+#include "Geometry.hpp"
 
 #include <assert.h>
 
@@ -45,7 +45,7 @@ namespace njli
             {
                 Node *node = *j;
                 
-                CubeGeometry *geometry = node->getGeometry();
+                Geometry *geometry = node->getGeometry();
                 
                 if(geometry)
                 {
@@ -64,11 +64,11 @@ namespace njli
                 }
             }
             
-            for(std::vector<CubeGeometry*>::iterator j = m_ActiveGeometries.begin();
+            for(std::vector<Geometry*>::iterator j = m_ActiveGeometries.begin();
                 j != m_ActiveGeometries.end();
                 j++)
             {
-                CubeGeometry *geometry = *j;
+                Geometry *geometry = *j;
                 
                 geometry->render(camera);
             }

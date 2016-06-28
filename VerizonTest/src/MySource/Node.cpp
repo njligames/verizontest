@@ -7,7 +7,7 @@
 //
 
 #include "Node.hpp"
-#include "CubeGeometry.hpp"
+#include "Geometry.hpp"
 #include "TornadoData.hpp"
 #include "Camera.hpp"
 
@@ -88,7 +88,7 @@ namespace njli
         return m_Camera;
     }
     
-    void Node::addGeometry(CubeGeometry * geometry)
+    void Node::addGeometry(Geometry * geometry)
     {
         assert(geometry);
         
@@ -100,12 +100,12 @@ namespace njli
     
     void Node::removeGeometry()
     {
-        CubeGeometry *geometry = getGeometry();
+        Geometry *geometry = getGeometry();
         if(geometry)
             geometry->removeReference(this);
     }
     
-    CubeGeometry *const Node::getGeometry()const
+    Geometry *const Node::getGeometry()const
     {
         return m_Geometry;
     }
@@ -478,7 +478,7 @@ namespace njli
     
     void Node::setGeometryIndex(unsigned long index)
     {
-        assert(index >= 0 && index < CubeGeometry::MAX_CUBES);
+        assert(index >= 0 && index < Geometry::MAX_CUBES);
         
         m_GeometryIndex = index;
     }

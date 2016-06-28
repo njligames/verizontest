@@ -19,12 +19,12 @@
 namespace njli
 {
     class Camera;
-    class CubeGeometry;
+    class Geometry;
     class TornadoData;
     
     class Node
     {
-        friend class CubeGeometry;
+        friend class Geometry;
         friend class Scene;
         
     public:
@@ -41,9 +41,9 @@ namespace njli
         void removeCamera();
         Camera* getCamera();
         
-        void addGeometry(CubeGeometry * body);
+        void addGeometry(Geometry * body);
         void removeGeometry();
-        CubeGeometry *const getGeometry()const;
+        Geometry *const getGeometry()const;
         
         void enableHideGeometry(bool hidden = true);
         bool isHiddenGeometry()const;
@@ -113,7 +113,7 @@ namespace njli
         std::vector<Node*> m_ChildrenNodes;
         
         Camera *m_Camera;
-        CubeGeometry *m_Geometry;
+        Geometry *m_Geometry;
         unsigned long m_GeometryIndex;
         
         TornadoData *m_TornadoData;

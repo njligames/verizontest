@@ -70,10 +70,10 @@ struct thread_data{
     [_sldRandomnessPercent setMaximumValue:100];
     [_sldRandomnessPercent setValue:njli::Cubenado::getInstance()->getRandomness()];
     
-    s = [NSString stringWithFormat:@"Number of Cubes: %d", njli::CubeGeometry::MAX_CUBES];
+    s = [NSString stringWithFormat:@"Number of Cubes: %d", njli::Geometry::MAX_CUBES];
     [_lblNumberOfCubes setText:s];
     [_sldNumberOfCubes setMinimumValue:10];
-    [_sldNumberOfCubes setMaximumValue:njli::CubeGeometry::MAX_CUBES];
+    [_sldNumberOfCubes setMaximumValue:njli::Geometry::MAX_CUBES];
     [_sldNumberOfCubes setValue:10000];
 }
 
@@ -159,7 +159,12 @@ void *_update(void *threadarg)
         exit(-1);
     }
     
-//    njli::Cubenado::getInstance()->update(self.timeSinceLastUpdate);
+    if(pthread_join(threads, NULL))
+    {
+        
+        fprintf(stderr, "Error joining thread\n");
+        exit(-1);
+    }
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect

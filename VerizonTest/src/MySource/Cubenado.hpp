@@ -9,7 +9,8 @@
 namespace njli
 {
     class Shader;
-    class CubeGeometry;
+    class Geometry;
+    class RectangleGeometry;
     class Node;
     class Scene;
     
@@ -56,7 +57,7 @@ namespace njli
         
         Shader *m_Shader;
         Shader *m_ToonShader;
-        CubeGeometry *m_CubeGeometry;
+        Geometry *m_Geometry;
         Camera *m_Camera;
         Node *m_CameraNode;
         Scene *m_Scene;
