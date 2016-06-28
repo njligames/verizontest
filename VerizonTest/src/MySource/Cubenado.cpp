@@ -112,7 +112,7 @@ namespace njli
         
         m_Scene->addActiveNode(m_CameraNode);
         m_Scene->addActiveCamera(m_Camera);
-        m_Scene->getRootNode()->setOrigin(btVector3(0.0f, 0.0f, 40.0f));
+        m_Scene->getRootNode()->setOrigin(btVector3(0.0f, -100.0f, 900.0f));
         
         assert(m_Shader->load(loadFile("shaders/Shader.vsh"), loadFile("shaders/Shader.fsh")));
         
@@ -120,9 +120,9 @@ namespace njli
         
         m_Geometry->load(m_Shader);
         
-        float min_y = -7.0f;
-        float xinc = 0.00001f;
-        float yinc = 0.0014f;
+        float min_y = 0.0f;
+        float xinc = 0.00114285714286f;//0.00001f;
+        float yinc = .05f;//0.0014f;
         
         btTransform baseTransform(btTransform::getIdentity());
         baseTransform.setOrigin(btVector3(0.0f, 0.0f, 2.0f));
@@ -145,7 +145,7 @@ namespace njli
             
             node->setOrigin(btVector3(0.0f, yy, 0.0f));
             
-            node->getTornadoData()->setTranslationOffset(btVector3(xx, 0.0f, 0.0f));
+            node->getTornadoData()->setTranslationOffset(btVector3(randomFloat(0.0f, xx), 0.0f, 0.0f));
             
             node->getTornadoData()->setBaseDegreesPerTimeStep(randomFloat(1.0f, 90.0f));
             

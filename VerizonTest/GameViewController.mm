@@ -200,13 +200,6 @@ void *_update(void *threadarg)
     njli::Cubenado::getInstance()->setRandomness(randomness/100.0f);
     NSString *s = [NSString stringWithFormat:@"Randomness: %.0f%%", njli::Cubenado::getInstance()->getRandomness()*100];
     [_lblRandomnessPercent setText:s];
-
-    
-//    NSString *s = [NSString stringWithFormat:@"Randomness: %.3f%%", njli::Cubenado::getInstance()->getRandomness()*100];
-//    [_lblRandomnessPercent setText:s];
-//    [_sldRandomnessPercent setMinimumValue:0];
-//    [_sldRandomnessPercent setMaximumValue:100];
-//    [_sldRandomnessPercent setValue:njli::Cubenado::getInstance()->getRandomness()];
 }
 
 @end
