@@ -57,7 +57,9 @@ namespace njli
         
         Shader *m_Shader;
         Shader *m_ToonShader;
-        Geometry *m_Geometry;
+        Geometry *m_CubeGeometry;
+        Geometry *m_RectangleGeometry;
+        Geometry *m_MeshGeometry;
         Camera *m_Camera;
         Node *m_CameraNode;
         Scene *m_Scene;

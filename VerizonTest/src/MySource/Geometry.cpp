@@ -72,7 +72,7 @@ namespace njli
         m_MatrixBuffer = NULL;
     }
     
-    void Geometry::load(Shader *shader)
+    void Geometry::load(Shader *shader, const std::string &filecontent, MeshType type)
     {
         assert(shader);
         

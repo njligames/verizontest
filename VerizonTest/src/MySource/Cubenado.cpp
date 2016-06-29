@@ -11,6 +11,7 @@
 #include "Shader.hpp"
 #include "CubeGeometry.hpp"
 #include "RectangleGeometry.hpp"
+#include "MeshGeometry.hpp"
 #include "Node.hpp"
 #include "Scene.hpp"
 #include "TornadoData.hpp"
@@ -62,8 +63,9 @@ namespace njli
     Cubenado::Cubenado():
     m_Shader(new Shader()),
     m_ToonShader(new Shader()),
-    m_Geometry(new CubeGeometry()),
-//    m_Geometry(new RectangleGeometry()),
+    m_CubeGeometry(new CubeGeometry()),
+    m_RectangleGeometry(new RectangleGeometry()),
+    m_MeshGeometry(new MeshGeometry()),
     m_Camera(new Camera()),
     m_CameraNode(new Node()),
     m_Scene(new Scene()),
@@ -93,8 +95,14 @@ namespace njli
         delete m_Camera;
         m_Camera = NULL;
         
-        delete m_Geometry;
-        m_Geometry = NULL;
+        delete m_MeshGeometry;
+        m_MeshGeometry = NULL;
+        
+        delete m_RectangleGeometry;
+        m_RectangleGeometry = NULL;
+        
+        delete m_CubeGeometry;
+        m_CubeGeometry = NULL;
         
         delete m_ToonShader;
         m_ToonShader = NULL;
@@ -118,7 +126,9 @@ namespace njli
         
         assert(m_ToonShader->load(loadFile("shaders/Toon.vsh"), loadFile("shaders/Toon.fsh")));
         
-        m_Geometry->load(m_Shader);
+//        m_MeshGeometry->load(m_Shader, loadFile("models/cube.obj"));
+//        m_RectangleGeometry->load(m_Shader);
+        m_CubeGeometry->load(m_Shader);
         
         float min_y = 0.0f;
         float xinc = 0.00114285714286f;//0.00001f;
@@ -141,7 +151,7 @@ namespace njli
             m_Scene->addActiveNode(node);
             m_Scene->getRootNode()->addChildNode(node);
             
-            node->addGeometry(m_Geometry);
+            node->addGeometry(m_CubeGeometry);
             
             node->setOrigin(btVector3(0.0f, yy, 0.0f));
             
@@ -166,7 +176,9 @@ namespace njli
     
     void Cubenado::destroy()
     {
-        m_Geometry->unLoad();
+        m_MeshGeometry->unLoad();
+        m_RectangleGeometry->unLoad();
+        m_CubeGeometry->unLoad();
         m_Shader->unLoad();
     }
     

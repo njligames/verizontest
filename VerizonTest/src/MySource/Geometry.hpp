@@ -76,6 +76,10 @@ namespace njli
         friend class Scene;
         
     public:
+        enum MeshType
+        {
+            MeshType_Obj
+        };
         
         /* members */
         Geometry();
@@ -83,7 +87,7 @@ namespace njli
         const Geometry &operator=(const Geometry &rhs);
         virtual ~Geometry();
         
-        void load(Shader *shader);
+        virtual void load(Shader *shader, const std::string &filecontent="", MeshType type = MeshType_Obj);
         void unLoad();
         bool isLoaded()const;
         

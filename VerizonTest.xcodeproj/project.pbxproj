@@ -148,6 +148,7 @@
 		C149C1801D221A1F00988F89 /* Geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C149C17E1D221A1F00988F89 /* Geometry.cpp */; };
 		C149C1831D221A3400988F89 /* CubeGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C149C1811D221A3400988F89 /* CubeGeometry.cpp */; };
 		C149C1861D221A4000988F89 /* RectangleGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C149C1841D221A4000988F89 /* RectangleGeometry.cpp */; };
+		C149C18D1D2338A700988F89 /* MeshGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C149C18B1D2338A700988F89 /* MeshGeometry.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -500,6 +501,8 @@
 		C149C1821D221A3400988F89 /* CubeGeometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CubeGeometry.hpp; sourceTree = "<group>"; };
 		C149C1841D221A4000988F89 /* RectangleGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RectangleGeometry.cpp; sourceTree = "<group>"; };
 		C149C1851D221A4000988F89 /* RectangleGeometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RectangleGeometry.hpp; sourceTree = "<group>"; };
+		C149C18B1D2338A700988F89 /* MeshGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeshGeometry.cpp; sourceTree = "<group>"; };
+		C149C18C1D2338A700988F89 /* MeshGeometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MeshGeometry.hpp; sourceTree = "<group>"; };
 		C5BBBB5F935C45E7A9F8EA84 /* Pods-VerizonTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VerizonTest.release.xcconfig"; path = "Pods/Target Support Files/Pods-VerizonTest/Pods-VerizonTest.release.xcconfig"; sourceTree = "<group>"; };
 		C7A9C7528DDDC86DAAD0C386 /* Pods-VerizonTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VerizonTest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VerizonTest/Pods-VerizonTest.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1059,6 +1062,8 @@
 				C149C1811D221A3400988F89 /* CubeGeometry.cpp */,
 				C149C1851D221A4000988F89 /* RectangleGeometry.hpp */,
 				C149C1841D221A4000988F89 /* RectangleGeometry.cpp */,
+				C149C18C1D2338A700988F89 /* MeshGeometry.hpp */,
+				C149C18B1D2338A700988F89 /* MeshGeometry.cpp */,
 			);
 			name = Geometry;
 			sourceTree = "<group>";
@@ -1329,6 +1334,7 @@
 				C1242C9F1D1A008C00CEABBF /* btInternalEdgeUtility.cpp in Sources */,
 				C1242CC11D1A008C00CEABBF /* btConvexHullShape.cpp in Sources */,
 				C1242D401D1A008C00CEABBF /* btSolve2LinearConstraint.cpp in Sources */,
+				C149C18D1D2338A700988F89 /* MeshGeometry.cpp in Sources */,
 				C1242D2C1D1A008C00CEABBF /* btContactConstraint.cpp in Sources */,
 				C1242D101D1A008C00CEABBF /* btConvexCast.cpp in Sources */,
 				C1242CC91D1A008C00CEABBF /* btConvexShape.cpp in Sources */,
