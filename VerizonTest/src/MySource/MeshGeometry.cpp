@@ -12,6 +12,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <map>
 
 namespace njli
 {
@@ -59,6 +60,8 @@ namespace njli
             std::stringstream ss_token(line);
             std::string token;
             int tokencount = 0;
+            vec3 = btVector3(0,0,0);
+            vec2 = btVector2(0,0);
             
             while(std::getline(ss_token, token, ' '))
             {
@@ -114,8 +117,6 @@ namespace njli
                 tokencount++;
             }
             
-            
-            
             switch (mode)
             {
                 case v:
@@ -129,12 +130,6 @@ namespace njli
                     break;
                 case f:
                 {
-//                        for (std::vector<std::string>::iterator i = faces.begin();
-//                             i != faces.end();
-//                             i++)
-//                        {
-//                            std::cout << *i << std::endl;
-//                        }
                 }
                     break;
                     
@@ -146,16 +141,17 @@ namespace njli
         
         m_NumberOfIndices = (GLsizei)faces.size();
         m_NumberOfVertices = (GLsizei)faces.size();
-        
-        unsigned long vertexIndex = 0;
         TexturedColoredVertex *vertexData = new TexturedColoredVertex[numberOfVertices()];
-        for (std::vector<std::string>::iterator i = faces.begin();
-             i != faces.end();
-             i++)
+        GLuint *indiceData = new GLuint[numberOfIndices()];
+        unsigned long idx = 0;
+        
+        for (std::vector<std::string>::iterator i = faces.begin(); i != faces.end(); i++,idx++)
         {
+            std::string faceString = *i;
             std::stringstream ss_faceData(*i);
             std::string faceData;
             int ii = 0;
+            TexturedColoredVertex t;
             
             while(std::getline(ss_faceData, faceData, '/'))
             {
@@ -167,7 +163,7 @@ namespace njli
                     case 0:
                         //vertex idx
                         assert(idx < vertices.size());
-                        vertexData[vertexIndex].vertex = vertices.at(idx);
+                        t.vertex = vertices.at(idx);
                         break;
                     case 1:
                         assert(idx < texture.size());
@@ -177,7 +173,7 @@ namespace njli
                     case 2:
                         assert(idx < normals.size());
                         //normal idx
-                        vertexData[vertexIndex].normal = normals.at(idx);
+                        t.normal = normals.at(idx);
                         break;
                         
                     default:
@@ -186,41 +182,44 @@ namespace njli
                 }
                 ii++;
             }
-            vertexData[vertexIndex].hidden = 0.0f;
-            vertexData[vertexIndex].opacity = 1.0f;
-            vertexData[vertexIndex].color = btVector4(1.0f, 1.0f, 1.0f, 1.0f);
-            vertexIndex++;
-        }
-        
-        GLushort *indiceData = new GLushort[numberOfIndices()];
-        for (unsigned long indiceIndex = 0; indiceIndex < numberOfIndices(); indiceIndex++)
-        {
-            indiceData[indiceIndex] = indiceIndex;
+            t.hidden = 0.0f;
+            t.opacity = 1.0f;
+            t.color = btVector4(1.0f, 1.0f, 1.0f, 1.0f);
+            
+            vertexData[idx] = t;
+            indiceData[idx] = idx;
         }
         
         Geometry::loadData();
         
-        if(m_VertexData)
-            delete [] m_VertexData;
+        assert(m_VertexData == NULL);
         m_VertexData = new TexturedColoredVertex[numberOfVertices() * maxNumberOfObjects()];
+//        memset(m_VertexData, 0, numberOfVertices() * maxNumberOfObjects());
+
+        assert(m_IndiceData == NULL);
+        m_IndiceData = new GLuint[numberOfIndices() * maxNumberOfObjects()];
+//        memset(m_IndiceData, 0, numberOfIndices() * maxNumberOfObjects());
         
-        if(m_IndiceData)
-            delete [] m_IndiceData;
-        m_IndiceData = new GLushort[numberOfIndices() * maxNumberOfObjects()];
-        
-        for (unsigned long meshIndex = 0; meshIndex < maxNumberOfObjects(); meshIndex++)
+        unsigned long vertexInstanceIndex = 0;
+        unsigned long indiceInstanceIndex = 0;
+        for (unsigned long meshIndex = 0;
+             meshIndex < maxNumberOfObjects();
+             meshIndex++)
         {
-            unsigned long offset = (meshIndex * numberOfVertices());
-            
-            for (unsigned long vertexIndex = 0; vertexIndex < numberOfVertices(); vertexIndex++)
+            for (unsigned long verticeIndex = 0;
+                 verticeIndex < numberOfVertices();
+                 verticeIndex++)
             {
-                m_VertexData[meshIndex + offset] = vertexData[vertexIndex];
+                m_VertexData[vertexInstanceIndex] = vertexData[verticeIndex];
+                vertexInstanceIndex++;
             }
             
-            offset = (meshIndex * numberOfIndices());
-            for (unsigned long indiceIndex = 0; indiceIndex < numberOfIndices(); indiceIndex++)
+            for (unsigned long indiceIndex = 0;
+                 indiceIndex < numberOfIndices();
+                 indiceIndex++)
             {
-                m_IndiceData[indiceIndex + offset] = indiceData[indiceIndex];
+                m_IndiceData[indiceInstanceIndex] = (meshIndex * numberOfVertices()) + indiceData[indiceIndex] ;
+                indiceInstanceIndex++;
             }
         }
         
@@ -251,7 +250,7 @@ namespace njli
     
     GLsizeiptr MeshGeometry::getVertexArrayBufferSize()const
     {
-        GLsizeiptr size = sizeof(TexturedColoredVertex) * numberOfVertices() * maxNumberOfObjects();
+        GLsizeiptr size = sizeof(TexturedColoredVertex) * numberOfVertices() * Geometry::MAX_CUBES;
         return size;
     }
     
@@ -262,24 +261,30 @@ namespace njli
     
     GLsizeiptr MeshGeometry::getElementArrayBufferSize()const
     {
-        GLsizeiptr size = sizeof(GLushort) * numberOfIndices() * maxNumberOfObjects();
+        GLsizeiptr size = sizeof(GLuint) * Geometry::MAX_CUBES * numberOfIndices();
         return size;
+    }
+    
+    GLenum MeshGeometry::getElementIndexType()const
+    {
+        return GL_UNSIGNED_INT;
     }
     
     void MeshGeometry::setOpacity(Node *node)
     {
         unsigned long index = getGeometryIndex(node);
         
-//        if(m_VertexData)
-//        {
-//            float opacity = node->getOpacity();
-//            float o = (opacity > 1.0f)?1.0f:((opacity<0.0f)?0.0f:opacity);
-//            
-//            m_VertexData[index].bl.opacity = o;
-//            m_VertexData[index].br.opacity = o;
-//            m_VertexData[index].tl.opacity = o;
-//            m_VertexData[index].tr.opacity = o;
-//        }
+        if(m_VertexData)
+        {
+            float opacity = node->getOpacity();
+            float o = (opacity > 1.0f)?1.0f:((opacity<0.0f)?0.0f:opacity);
+            
+            unsigned long offset = index * numberOfVertices();
+            for (unsigned long vertexIndex = 0; vertexIndex < numberOfVertices(); vertexIndex++)
+            {
+                m_VertexData[vertexIndex + offset].opacity = o;
+            }
+        }
     }
     
     void MeshGeometry::setHidden(Node *node)
@@ -292,16 +297,11 @@ namespace njli
             
             float h = (hidden)?1.0f:0.0f;
             
-//            if(m_VertexData[index].bl.hidden != (h) ||
-//               m_VertexData[index].br.hidden != (h) ||
-//               m_VertexData[index].tl.hidden != (h) ||
-//               m_VertexData[index].tr.hidden != (h))
-//            {
-//                m_VertexData[index].bl.hidden = (hidden)?1.0f:0.0f;
-//                m_VertexData[index].br.hidden = (hidden)?1.0f:0.0f;
-//                m_VertexData[index].tl.hidden = (hidden)?1.0f:0.0f;
-//                m_VertexData[index].tr.hidden = (hidden)?1.0f:0.0f;
-//            }
+            unsigned long offset = index * numberOfVertices();
+            for (unsigned long vertexIndex = 0; vertexIndex < numberOfVertices(); vertexIndex++)
+            {
+                m_VertexData[vertexIndex + offset].hidden = h;
+            }
         }
     }
     
@@ -318,10 +318,13 @@ namespace njli
                         btFabs(node->getColorBase().z()),
                         btFabs(node->getColorBase().w()));
             
-//            m_VertexData[index].bl.color = c;
-//            m_VertexData[index].br.color = c;
-//            m_VertexData[index].tl.color = c;
-//            m_VertexData[index].tr.color = c;
+            unsigned long offset = index * numberOfVertices();
+            for (unsigned long vertexIndex = 0;
+                 vertexIndex < numberOfVertices();
+                 vertexIndex++)
+            {
+                m_VertexData[offset + vertexIndex].color = c;
+            }
         }
     }
     

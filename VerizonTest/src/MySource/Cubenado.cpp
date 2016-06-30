@@ -115,32 +115,30 @@ namespace njli
     {
         glEnable(GL_DEPTH_TEST);
         
+        srand((unsigned int)time(0));
+        
         m_CameraNode->addCamera(m_Camera);
         m_CameraNode->setOrigin(btVector3(0.0f, 0.0f, 0.0f));
         
         m_Scene->addActiveNode(m_CameraNode);
         m_Scene->addActiveCamera(m_Camera);
-        m_Scene->getRootNode()->setOrigin(btVector3(0.0f, -100.0f, 900.0f));
+        m_Scene->getRootNode()->setOrigin(btVector3(0.0f, -10.0f, 150.0f));
         
         assert(m_Shader->load(loadFile("shaders/Shader.vsh"), loadFile("shaders/Shader.fsh")));
         
         assert(m_ToonShader->load(loadFile("shaders/Toon.vsh"), loadFile("shaders/Toon.fsh")));
         
-//        m_MeshGeometry->load(m_Shader, loadFile("models/cube.obj"));
+        m_MeshGeometry->load(m_Shader, loadFile("models/cube.obj"));
 //        m_RectangleGeometry->load(m_Shader);
         m_CubeGeometry->load(m_Shader);
         
-        float min_y = 0.0f;
-        float xinc = 0.00114285714286f;//0.00001f;
-        float yinc = .05f;//0.0014f;
+        setStartPositions();
+        
         
         btTransform baseTransform(btTransform::getIdentity());
         baseTransform.setOrigin(btVector3(0.0f, 0.0f, 2.0f));
         
         btQuaternion rot(btVector3(0.0f, 1.0f, 0.0f), m_Rotation);
-        
-        float xx = 0.0f;
-        float yy = min_y;
         
         for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
              i != m_CubeNodes.end();
@@ -151,25 +149,19 @@ namespace njli
             m_Scene->addActiveNode(node);
             m_Scene->getRootNode()->addChildNode(node);
             
-            node->addGeometry(m_CubeGeometry);
+            node->addGeometry(m_MeshGeometry);
             
-            node->setOrigin(btVector3(0.0f, yy, 0.0f));
-            
-            node->getTornadoData()->setTranslationOffset(btVector3(randomFloat(0.0f, xx), 0.0f, 0.0f));
-            
-            node->getTornadoData()->setBaseDegreesPerTimeStep(randomFloat(1.0f, 90.0f));
-            
-            node->getTornadoData()->setMaxDegreesPerTimestep(randomFloat(1.0f, 45.0f) + (randomFloat(1.0f, 45.0f) * m_Randomness));
+//            node->getTornadoData()->setBaseDegreesPerTimeStep(randomFloat(1.0f, 90.0f));
+//            
+//            node->getTornadoData()->setMaxDegreesPerTimestep(1.0f);
+//            node->getTornadoData()->setMaxDegreesPerTimestep(randomFloat(1.0f, 45.0f) + (randomFloat(1.0f, 45.0f) * m_Randomness));
             
             
             node->setColorBase(btVector4(randomFloat(0.0f, 1.0f),
                                          randomFloat(0.0f, 1.0f),
                                          randomFloat(0.0f, 1.0f), 1.0f));
             
-            node->setScale(randomFloat(0.8f, 1.1f));
-            
-            xx+=xinc;
-            yy+=yinc;
+//            node->setScale(randomFloat(0.8f, 1.1f));
         }
         
     }
@@ -203,7 +195,7 @@ namespace njli
             
             
             btVector3 axis = randomPosition(btVector3(0.0f, 0.0f, 0.0f), btVector3(1.0f, 1.0f, 1.0f)).normalized();
-            node->setRotation(node->getRotation() * btQuaternion(axis, step + (step * m_Randomness)));
+//            node->setRotation(node->getRotation() * btQuaternion(axis, step + (step * m_Randomness)));
             
             node->setTransform(node->getTornadoData()->getBaseTransform() * node->getTransform());
             
@@ -287,6 +279,86 @@ namespace njli
         }
         
         return filedata;
+    }
+    
+    void Cubenado::setStartPositions()
+    {
+        float startX = 0.0f;
+        float startY = 0.0f;
+        float startZ = 0.0f;
+        
+        float xinc = 2.0f;
+        float xmargin = 0.1;
+        
+        float yinc = 2.0f;
+        float ymargin = 0.1f;
+        
+        float zinc = 2.0f;
+        float zmargin = 0.1;
+        
+        
+//        int currentIndex = 1;
+//        int amountHigh = sqrt(Geometry::MAX_CUBES);
+//        int currentIndexIncrement = 1;
+        
+        float currentX = startX;
+        float currentY = startY;
+        float currentZ = startZ;
+        
+//        float currentBaseX = 0.0f;
+//        float currentBaseZ = 0.0f;
+        
+        float dim = m_CubeNodes.size();
+//        dim = sqrt(dim);
+        dim = pow(dim, 1.0/3.0);
+        unsigned long idx = 0;
+        
+        for (int x = 0; x < dim; x++)
+        {
+            for (int y = 0; y < dim; y++)
+            {
+                for (int z = 0; z < dim; z++)
+                {
+                    if(idx < m_CubeNodes.size())
+                    {
+                        Node *node = m_CubeNodes.at(idx++);
+                        if(node)
+                            node->setOrigin(btVector3(currentX, currentY, currentZ));
+                    }
+                    currentZ += (zinc + zmargin);
+                }
+                currentZ = startZ;
+                currentY += (yinc + ymargin);
+            }
+            currentY = startY;
+            currentX += (xinc + xmargin);
+        }
+//        for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
+//             i != m_CubeNodes.end();
+//             i++)
+//        {
+//            Node *node = *i;
+//            
+//            node->setOrigin(btVector3(0.0f, currentY, 0.0f));
+////            while(currentIndex <= (currentIndexIncrement * currentIndexIncrement))
+////            {
+////                while(currentX <  )
+////                node->setOrigin(btVector3(0.0f, currentY, 0.0f));
+////                node->getTornadoData()->setTranslationOffset(btVector3(currentX, 0.0f, currentZ));
+////                currentIndex++;
+////            }
+////            
+////            currentIndexIncrement++;
+////            
+////            currentBaseX -= (xinc + xmargin);
+////            currentBaseZ -= (zinc + zmargin);
+////            
+////            currentX = currentBaseX;
+//            currentY += (yinc + ymargin);
+////            currentZ = currentBaseZ;
+//            
+//            
+//        }
     }
     
     btVector3 Cubenado::randomPosition(const btVector3 &min, const btVector3 &max)const

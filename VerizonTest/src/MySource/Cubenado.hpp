@@ -44,6 +44,7 @@ namespace njli
         
         std::string loadFile(const std::string filepath);
     protected:
+        void setStartPositions();
         btVector3 randomPosition(const btVector3 &min, const btVector3 &max)const;
         btQuaternion randomRotation(const btVector3 &axis, const float degreesMin, const float degreesMax)const;
         btQuaternion randomRotation(const float degreesMin, const float degreesMax)const;

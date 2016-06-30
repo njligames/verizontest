@@ -35,6 +35,8 @@ namespace njli
         virtual const void *getElementArrayBufferPtr()const;
         virtual GLsizeiptr getElementArrayBufferSize()const;
         
+        virtual GLenum getElementIndexType()const;
+        
         virtual void setOpacity(Node *node);
         virtual void setHidden(Node *node);
         virtual void setColorBase(Node *node);
@@ -44,7 +46,7 @@ namespace njli
         
     private:
         TexturedColoredVertex *m_VertexData;
-        GLushort *m_IndiceData;
+        GLuint *m_IndiceData;
         
         std::string m_Filedata;
         GLsizei m_NumberOfVertices;

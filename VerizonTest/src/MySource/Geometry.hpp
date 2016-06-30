@@ -64,6 +64,19 @@ namespace njli
             }
             return *this;
         }
+        
+        operator std::string() const
+        {
+            char buffer[2048];
+//            sprintf(buffer, "{{%f, %f, %f}, {%f, %f}, {%f, %f, %f, %f}}", vertex.x(), vertex.y(), vertex.z(), texture.x(), texture.y(), color.x(), color.y(), color.z(), color.w());
+            sprintf(buffer, "{{%f, %f, %f}, {%f, %f, %f, %f}, {%f, %f, %f}, %f, %f}",
+                    vertex.x(), vertex.y(), vertex.z(),
+                    color.x(), color.y(), color.z(), color.w(),
+                    normal.x(), normal.y(), normal.z(),
+                    opacity,
+                    hidden);
+            return std::string(buffer);
+        }
     };
     
     class Shader;
@@ -115,6 +128,8 @@ namespace njli
         
         virtual const void *getElementArrayBufferPtr()const = 0;
         virtual GLsizeiptr getElementArrayBufferSize()const = 0;
+        
+        virtual GLenum getElementIndexType()const = 0;
         
         void addReference(Node *node);
         void removeReference(Node *node);

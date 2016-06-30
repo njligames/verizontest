@@ -209,6 +209,11 @@ namespace njli
         return size;
     }
     
+    GLenum CubeGeometry::getElementIndexType()const
+    {
+        return GL_UNSIGNED_SHORT;
+    }
+    
     void CubeGeometry::setOpacity(Node *node)
     {
         unsigned long index = getGeometryIndex(node);

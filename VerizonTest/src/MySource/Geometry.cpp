@@ -260,7 +260,7 @@ namespace njli
             
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
             
-            glDrawElements(GL_TRIANGLES, maxNumberOfObjects() * numberOfIndices(), GL_UNSIGNED_SHORT, (const GLvoid*)0);
+            glDrawElements(GL_TRIANGLES, maxNumberOfObjects() * numberOfIndices(), getElementIndexType(), (const GLvoid*)0);
             
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
             glBindVertexArrayOES(0);

@@ -34,7 +34,7 @@ namespace njli
     {
         m_BaseTranslation->setRotation(btQuaternion(btVector3(0.0f, 1.0f, 0.0f), m_Rotation));
         
-        m_Rotation += (timestep * 0.1f);
+        m_Rotation += (timestep * 0.001f);
         if(m_Rotation > btRadians(m_MaxDegrees))
             m_Rotation = btRadians(m_MaxDegrees);
     }

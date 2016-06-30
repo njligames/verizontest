@@ -142,6 +142,11 @@ namespace njli
         return size;
     }
     
+    GLenum RectangleGeometry::getElementIndexType()const
+    {
+        return GL_UNSIGNED_SHORT;
+    }
+    
     void RectangleGeometry::setOpacity(Node *node)
     {
         unsigned long index = getGeometryIndex(node);
