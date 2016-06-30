@@ -51,7 +51,7 @@ namespace njli
         GLfloat *const getProjectionMatrixPtr()const;
         
         Node *const getNodeOwner()const;
-        void setNodeOwner(Node *node);
+        void setNodeOwner(Node *const node);
         
         void lookAt(const btVector3& pos, const btVector3& up = btVector3(0, 1.0f, 0));
     protected:

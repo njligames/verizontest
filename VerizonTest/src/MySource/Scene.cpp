@@ -9,19 +9,22 @@
 #include "Scene.hpp"
 #include "Node.hpp"
 #include "Geometry.hpp"
+#include "PhysicsWorld.hpp"
 
 #include <assert.h>
 
 namespace njli
 {
     Scene::Scene():
-    m_RootNode(new Node())
+    m_RootNode(new Node()),
+    m_PhysicsWorld(new PhysicsWorld())
     {
         
     }
     
     Scene::~Scene()
     {
+        delete m_PhysicsWorld;
         delete m_RootNode;
     }
     
@@ -114,6 +117,11 @@ namespace njli
     Node *const Scene::getRootNode()const
     {
         return m_RootNode;
+    }
+    
+    PhysicsWorld *const Scene::getPhysicsWorld()const
+    {
+        return m_PhysicsWorld;
     }
 }
 

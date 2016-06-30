@@ -16,6 +16,7 @@ namespace njli
     class Geometry;
     class Camera;
     class Node;
+    class PhysicsWorld;
     
     class Scene
     {
@@ -36,12 +37,15 @@ namespace njli
         void removeActiveNode(Node * node);
         
         Node *const getRootNode()const;
+        
+        PhysicsWorld *const getPhysicsWorld()const;
     protected:
     private:
         std::vector<Geometry*> m_ActiveGeometries;
         std::vector<Camera*> m_ActiveCameras;
         std::vector<Node*> m_ActiveNodes;
         Node *m_RootNode;
+        PhysicsWorld* m_PhysicsWorld;
     };
 }
 

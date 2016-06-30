@@ -10,6 +10,7 @@
 #include "Geometry.hpp"
 #include "TornadoData.hpp"
 #include "Camera.hpp"
+#include "PhysicsBody.hpp"
 
 #include <assert.h>
 
@@ -29,7 +30,8 @@ namespace njli
     m_HideGeometry(false),
     m_Opacity(1.0f),
     m_NormalMatrix(new btMatrix3x3(btMatrix3x3::getIdentity())),
-    m_Colorbase(new btVector4(1, 1, 1, 1))
+    m_Colorbase(new btVector4(1, 1, 1, 1)),
+    m_PhysicsBody(NULL)
     {
         
     }
@@ -470,6 +472,49 @@ namespace njli
         btVector3 _scale(scale,scale,scale);
         Node::setScale(_scale);
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    void Node::addPhysicsBody(PhysicsBody *const body)
+    {
+        assert(body != NULL);
+        
+        removePhysicsBody();
+        
+        m_PhysicsBody = body;
+        
+        getPhysicsBody()->addPhysicsBody(getTransform());
+    }
+    
+    void Node::removePhysicsBody()
+    {
+        PhysicsBody *physicsBody = getPhysicsBody();
+        
+        if(physicsBody)
+        {
+            physicsBody->removePhysicsBody();
+        }
+        
+        m_PhysicsBody = NULL;
+    }
+    
+    PhysicsBody *const Node::getPhysicsBody()const
+    {
+        return m_PhysicsBody;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     
     TornadoData *const Node::getTornadoData()const
     {

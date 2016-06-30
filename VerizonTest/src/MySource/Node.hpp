@@ -20,6 +20,8 @@ namespace njli
 {
     class Camera;
     class Geometry;
+    class PhysicsBody;
+    
     class TornadoData;
     
     class Node
@@ -96,6 +98,10 @@ namespace njli
         const btVector3 &getScale()const;
         void setScale(const btVector3 &scale);
         void setScale(const float scale);
+    public:
+        void addPhysicsBody(PhysicsBody *const body);
+        void removePhysicsBody();
+        PhysicsBody *const getPhysicsBody()const;
         
         TornadoData *const getTornadoData()const;
     protected:
@@ -121,6 +127,8 @@ namespace njli
         float m_Opacity;
         btMatrix3x3 *m_NormalMatrix;
         btVector4 *m_Colorbase;
+        
+        PhysicsBody *m_PhysicsBody;
     };
 }
 

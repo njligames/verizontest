@@ -252,7 +252,7 @@ namespace njli
         return m_NodeOwner;
     }
     
-    void Camera::setNodeOwner(Node *node)
+    void Camera::setNodeOwner(Node *const node)
     {
         m_NodeOwner = node;
     }
