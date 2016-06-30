@@ -122,7 +122,7 @@ namespace njli
         
         m_Scene->addActiveNode(m_CameraNode);
         m_Scene->addActiveCamera(m_Camera);
-        m_Scene->getRootNode()->setOrigin(btVector3(0.0f, -10.0f, 150.0f));
+        m_Scene->getRootNode()->setOrigin(btVector3(-10.0f, -10.0f, 130.0f));
         
         assert(m_Shader->load(loadFile("shaders/Shader.vsh"), loadFile("shaders/Shader.fsh")));
         
@@ -181,33 +181,33 @@ namespace njli
                 
     void Cubenado::update(float step)
     {
-        long cubesToDraw = m_NumberOfCubes;
-        
-        for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
-             i != m_CubeNodes.end();
-             i++)
-        {
-            Node *node = *i;
-            
-//            node->getTornadoData()->setMaxDegreesPerTimestep(randomFloat(1.0f, 45.0f) + (randomFloat(1.0f, 45.0f) * m_Randomness));
-            
-            node->getTornadoData()->update(step);
-            
-            
-            btVector3 axis = randomPosition(btVector3(0.0f, 0.0f, 0.0f), btVector3(1.0f, 1.0f, 1.0f)).normalized();
-//            node->setRotation(node->getRotation() * btQuaternion(axis, step + (step * m_Randomness)));
-            
-            node->setTransform(node->getTornadoData()->getBaseTransform() * node->getTransform());
-            
-            
-            node->setNormalMatrix(node->getTransform().getBasis().inverse().transpose());
-            
-            node->enableHideGeometry(false);
-            if(cubesToDraw < 0)
-                node->enableHideGeometry();
-            cubesToDraw--;
-                
-        }
+//        long cubesToDraw = m_NumberOfCubes;
+//        
+//        for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
+//             i != m_CubeNodes.end();
+//             i++)
+//        {
+//            Node *node = *i;
+//            
+////            node->getTornadoData()->setMaxDegreesPerTimestep(randomFloat(1.0f, 45.0f) + (randomFloat(1.0f, 45.0f) * m_Randomness));
+//            
+//            node->getTornadoData()->update(step);
+//            
+//            
+//            btVector3 axis = randomPosition(btVector3(0.0f, 0.0f, 0.0f), btVector3(1.0f, 1.0f, 1.0f)).normalized();
+////            node->setRotation(node->getRotation() * btQuaternion(axis, step + (step * m_Randomness)));
+//            
+//            node->setTransform(node->getTornadoData()->getBaseTransform() * node->getTransform());
+//            
+//            
+//            node->setNormalMatrix(node->getTransform().getBasis().inverse().transpose());
+//            
+//            node->enableHideGeometry(false);
+//            if(cubesToDraw < 0)
+//                node->enableHideGeometry();
+//            cubesToDraw--;
+//                
+//        }
         
         m_Scene->update(step);
     }

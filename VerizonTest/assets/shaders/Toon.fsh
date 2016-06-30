@@ -28,7 +28,7 @@ void main(void)
     vec4 color = destinationColor;
     int modifyRGB = opacityModifyRGB;
     
-    highp vec4 lightPosition = vec4(0.5, 0.5, -2.0, 0.0);
+    highp vec4 lightPosition = vec4(0.5, 0.5, -1.0, 0.0);
     
     highp vec3 lightDirection;
     
