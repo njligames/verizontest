@@ -67,9 +67,7 @@ namespace njli
     Cubenado::Cubenado():
     m_Shader(new Shader()),
     m_ToonShader(new Shader()),
-    m_CubeGeometry(new CubeGeometry()),
-    m_RectangleGeometry(new RectangleGeometry()),
-    m_MeshGeometry(new MeshGeometry()),
+    m_Geometry(new MeshGeometry()),
     m_Camera(new Camera()),
     m_CameraNode(new Node()),
     m_Scene(new Scene()),
@@ -113,14 +111,8 @@ namespace njli
         delete m_Camera;
         m_Camera = NULL;
         
-        delete m_MeshGeometry;
-        m_MeshGeometry = NULL;
-        
-        delete m_RectangleGeometry;
-        m_RectangleGeometry = NULL;
-        
-        delete m_CubeGeometry;
-        m_CubeGeometry = NULL;
+        delete m_Geometry;
+        m_Geometry = NULL;
         
         delete m_ToonShader;
         m_ToonShader = NULL;
@@ -145,12 +137,12 @@ namespace njli
         m_Scene->getRootNode()->setOrigin(btVector3(-10.0f, -10.0f, 130.0f));
         
         assert(m_Shader->load(loadFile("shaders/Shader.vsh"), loadFile("shaders/Shader.fsh")));
-        
         assert(m_ToonShader->load(loadFile("shaders/Toon.vsh"), loadFile("shaders/Toon.fsh")));
         
-        m_MeshGeometry->load(m_Shader, loadFile("models/cube.obj"));
-//        m_RectangleGeometry->load(m_Shader);
-        m_CubeGeometry->load(m_Shader);
+        m_ShaderMap.insert(ShaderPair("Default", m_Shader));
+        m_ShaderMap.insert(ShaderPair("Toon", m_ToonShader));
+        
+        m_Geometry->load(m_Shader, loadFile("models/cube.obj"));
         
         
         setStartPositions();
@@ -170,7 +162,7 @@ namespace njli
             m_Scene->addActiveNode(node);
             m_Scene->getRootNode()->addChildNode(node);
             
-            node->addGeometry(m_MeshGeometry);
+            node->addGeometry(m_Geometry);
             
 //            node->getTornadoData()->setBaseDegreesPerTimeStep(randomFloat(1.0f, 90.0f));
 //            
@@ -182,6 +174,8 @@ namespace njli
                                          randomFloat(0.0f, 1.0f),
                                          randomFloat(0.0f, 1.0f), 1.0f));
             
+            
+            
 //            node->setScale(randomFloat(0.8f, 1.1f));
         }
         
@@ -190,9 +184,7 @@ namespace njli
     
     void Cubenado::destroy()
     {
-        m_MeshGeometry->unLoad();
-        m_RectangleGeometry->unLoad();
-        m_CubeGeometry->unLoad();
+        m_Geometry->unLoad();
         m_Shader->unLoad();
     }
     
@@ -203,6 +195,15 @@ namespace njli
                 
     void Cubenado::update(float step)
     {
+        for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
+             i != m_CubeNodes.end();
+             i++)
+        {
+            Node *node = *i;
+            node->addImpulseForce(btVector3(randomFloat(0.0f, 1.0f),
+                                        randomFloat(0.0f, 1.0f),
+                                        randomFloat(0.0f, 1.0f)).normalized() * randomFloat(-1.0f, 1.0f));
+        }
 //        long cubesToDraw = m_NumberOfCubes;
 //        
 //        for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
@@ -273,6 +274,30 @@ namespace njli
     float Cubenado::getRandomness()const
     {
         return m_Randomness;
+    }
+    
+    std::vector<std::string> Cubenado::getShaderNames()const
+    {
+        std::vector<std::string> shaderNames;
+        
+        for (ShaderMap::const_iterator i = m_ShaderMap.begin(); i != m_ShaderMap.end(); i++)
+        {
+            shaderNames.push_back((*i).first);
+        }
+        return shaderNames;
+    }
+    
+    void Cubenado::setShader(const std::string &shader)
+    {
+        ShaderMap::iterator i = m_ShaderMap.find(shader);
+        if(i != m_ShaderMap.end())
+        {
+            Shader *shader = (*i).second;
+            
+//            m_Geometry->unLoad();
+            m_Geometry->load(shader, loadFile("models/cube.obj"));
+            setStartPositions();
+        }
     }
     
     std::string Cubenado::loadFile(const std::string filepath)

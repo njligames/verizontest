@@ -19,7 +19,7 @@ struct thread_data{
     float aspect;
 };
 
-@interface GameViewController ()
+@interface GameViewController   ()
 {
     struct thread_data threadData;
 }
@@ -29,6 +29,8 @@ struct thread_data{
 @property (weak, nonatomic) IBOutlet UISlider *sldNumberOfCubes;
 @property (weak, nonatomic) IBOutlet UILabel *lblRandomnessPercent;
 @property (weak, nonatomic) IBOutlet UISlider *sldRandomnessPercent;
+@property (weak, nonatomic) IBOutlet UITextField *tf;
+@property (strong,nonatomic) NSMutableArray *theData;
 - (void)setupGL;
 - (void)tearDownGL;
 
@@ -73,7 +75,52 @@ struct thread_data{
     [_sldNumberOfCubes setMinimumValue:10];
     [_sldNumberOfCubes setMaximumValue:njli::Geometry::MAX_CUBES];
     [_sldNumberOfCubes setValue:10000];
+    
+    UIPickerView *picker = [[UIPickerView alloc] init];
+    picker.dataSource = self;
+    picker.delegate = self;
+    self.tf.inputView = picker;
+    
+    
+    std::vector<std::string> names = njli::Cubenado::getInstance()->getShaderNames();
+    
+    self.theData = [[NSMutableArray alloc] initWithCapacity:names.size()];
+    
+    NSUInteger idx = 0;
+    for (std::vector<std::string>::iterator i = names.begin(); i != names.end(); i++)
+    {
+        [self.theData insertObject:[NSString stringWithUTF8String:(*i).c_str()] atIndex:idx];
+        idx++;
+    }
+//    self.theData = @[@"one",@"two",@"three",@"four"];
 }
+
+-(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    return self.theData.count;
+}
+
+-(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    return  1;
+}
+
+-(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    return self.theData[row];
+}
+
+-(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    self.tf.text = self.theData[row];
+    
+    std::string s([self.theData[row] UTF8String]);
+    njli::Cubenado::getInstance()->setShader(s);
+    
+    [self.tf resignFirstResponder];
+}
+
+
+
+
+
+
 
 - (void)dealloc
 {    

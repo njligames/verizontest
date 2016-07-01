@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "Camera.hpp"
 
@@ -43,6 +44,8 @@ namespace njli
         void setNumberOfCubes(const unsigned int amount);
         void setRandomness(const float percent);
         float getRandomness()const;
+        std::vector<std::string> getShaderNames()const;
+        void setShader(const std::string &shader);
         
         std::string loadFile(const std::string filepath);
     protected:
@@ -61,9 +64,7 @@ namespace njli
         
         Shader *m_Shader;
         Shader *m_ToonShader;
-        Geometry *m_CubeGeometry;
-        Geometry *m_RectangleGeometry;
-        Geometry *m_MeshGeometry;
+        Geometry *m_Geometry;
         Camera *m_Camera;
         Node *m_CameraNode;
         Scene *m_Scene;
@@ -73,6 +74,11 @@ namespace njli
         float m_Randomness;
         unsigned long m_NumberOfCubes;
         float m_Rotation;
+        
+        typedef std::map<std::string, Shader*> ShaderMap;
+        typedef std::pair<std::string, Shader*> ShaderPair;
+        
+        ShaderMap m_ShaderMap;
     };
 }
 

@@ -13,6 +13,7 @@
 #include "PhysicsBody.hpp"
 
 #include <assert.h>
+#include <iostream>
 
 namespace njli
 {
@@ -637,6 +638,7 @@ namespace njli
         btVector3 acceleration((*m_ImpulseForce) / mass);
         
         *m_CurrentVelocity = (*m_CurrentVelocity) + acceleration * timestep;
+//        std::cout << m_CurrentVelocity->x() << ", " << m_CurrentVelocity->y() << ", " << m_CurrentVelocity->z() << std::endl;
         
         if(m_CurrentVelocity->length() > getMaxSpeed())
             *m_CurrentVelocity = m_CurrentVelocity->normalized() * getMaxSpeed();
@@ -647,7 +649,7 @@ namespace njli
         {
             *m_HeadingVector = m_CurrentVelocity->normalized();
         }
-        *m_ImpulseForce = btVector3(0,0,0);
+//        *m_ImpulseForce = btVector3(0,0,0);
     }
     void Node::render(Geometry *const geometry)
     {

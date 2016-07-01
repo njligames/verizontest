@@ -44,6 +44,15 @@
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Touch to Select Shader" placeholder="Touch to Select Shader" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ku0-Q8-PCZ">
+                                <rect key="frame" x="20" y="28" width="560" height="58"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="58" id="XNG-uK-wj2"/>
+                                </constraints>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -52,9 +61,12 @@
                             <constraint firstItem="fmj-YH-oJB" firstAttribute="trailing" secondItem="v3L-oS-ze4" secondAttribute="trailing" id="31N-wh-M08"/>
                             <constraint firstItem="Wws-g3-xLf" firstAttribute="trailing" secondItem="fmj-YH-oJB" secondAttribute="trailing" id="5Ym-6o-ndQ"/>
                             <constraint firstItem="fmj-YH-oJB" firstAttribute="leading" secondItem="v3L-oS-ze4" secondAttribute="leading" id="8Cx-PS-oZ9"/>
+                            <constraint firstItem="ku0-Q8-PCZ" firstAttribute="leading" secondItem="yYR-Qm-OY8" secondAttribute="leading" id="Bg3-xw-fgn"/>
                             <constraint firstItem="v3L-oS-ze4" firstAttribute="top" secondItem="fmj-YH-oJB" secondAttribute="bottom" constant="8" symbolic="YES" id="GsJ-lM-LtN"/>
                             <constraint firstItem="yYR-Qm-OY8" firstAttribute="trailing" secondItem="Wws-g3-xLf" secondAttribute="trailing" id="Hpe-5q-oeZ"/>
+                            <constraint firstItem="ku0-Q8-PCZ" firstAttribute="trailing" secondItem="yYR-Qm-OY8" secondAttribute="trailing" id="KDl-FC-wAx"/>
                             <constraint firstItem="Wws-g3-xLf" firstAttribute="top" secondItem="yYR-Qm-OY8" secondAttribute="bottom" constant="8" symbolic="YES" id="VY8-BC-yG8"/>
+                            <constraint firstItem="ku0-Q8-PCZ" firstAttribute="top" secondItem="8aa-yV-Osq" secondAttribute="bottom" constant="8" symbolic="YES" id="Wx2-ow-K6b"/>
                             <constraint firstItem="yYR-Qm-OY8" firstAttribute="leading" secondItem="Wws-g3-xLf" secondAttribute="leading" id="c9d-mc-0jJ"/>
                             <constraint firstItem="yYR-Qm-OY8" firstAttribute="leading" secondItem="3se-qz-xqx" secondAttribute="leadingMargin" id="fyN-wx-Ktm"/>
                             <constraint firstItem="fmj-YH-oJB" firstAttribute="top" secondItem="Wws-g3-xLf" secondAttribute="bottom" constant="8" symbolic="YES" id="ldr-D8-vIq"/>
@@ -66,6 +78,7 @@
                         <outlet property="lblRandomnessPercent" destination="fmj-YH-oJB" id="lJJ-UJ-8nx"/>
                         <outlet property="sldNumberOfCubes" destination="Wws-g3-xLf" id="H27-eb-FIE"/>
                         <outlet property="sldRandomnessPercent" destination="v3L-oS-ze4" id="b16-kn-Sip"/>
+                        <outlet property="tf" destination="ku0-Q8-PCZ" id="7hW-9y-SYZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
