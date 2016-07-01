@@ -247,7 +247,7 @@ namespace njli
             {
                 glBindBuffer(GL_ARRAY_BUFFER, m_ModelViewBuffer);
                 glBufferSubData(GL_ARRAY_BUFFER, 0, getModelViewTransformArrayBufferSize(), getModelViewTransformArrayBufferPtr());
-                enableModelViewBufferChanged(true);
+                enableModelViewBufferChanged(false);
             }
             
 //            glBindBuffer(GL_ARRAY_BUFFER, m_ColorTransformBuffer);

@@ -104,6 +104,10 @@ namespace njli
         PhysicsBody *const getPhysicsBody()const;
         
         TornadoData *const getTornadoData()const;
+        
+        void addForce(const btVector3 &vec);
+        void setMaxSpeed(float speed);
+        float getMaxSpeed()const;
     protected:
         void setGeometryIndex(unsigned long index);
         unsigned long getGeometryIndex() const;
@@ -112,6 +116,7 @@ namespace njli
         bool isTransformDirty()const;
         void resetTransformDirty();
         
+        void update(float timestep);
         void render(Geometry *const geometry);
     private:
         std::string m_Name;
@@ -141,6 +146,11 @@ namespace njli
         bool m_OpacityDirty;
         bool m_HiddenDirty;
         bool m_ColorBaseDirty;
+        
+        btVector3 *m_CurrentForce;
+        btVector3 *m_CurrentVelocity;
+        btVector3 *m_HeadingVector;
+        float m_MaxSpeed;
         
     };
 }

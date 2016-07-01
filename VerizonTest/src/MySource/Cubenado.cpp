@@ -304,7 +304,7 @@ namespace njli
     
     void Cubenado::setupPhysics()
     {
-        m_Scene->getPhysicsWorld()->setGravity(btVector3(0,-9.81,0));
+//        m_Scene->getPhysicsWorld()->setGravity(btVector3(0,-9.81,0));
         m_PhysicsShapeCube->setHalfExtends(btVector3(1.0f, 1.0f, 1.0f));
         
         unsigned long idx = 0;

@@ -37,13 +37,26 @@ namespace njli
 //    m_ColorTransformDirty(true),
     m_OpacityDirty(true),
     m_HiddenDirty(true),
-    m_ColorBaseDirty(true)
+    m_ColorBaseDirty(true),
+    m_CurrentForce(new btVector3(btVector3(0,0,0))),
+    m_CurrentVelocity(new btVector3(btVector3(0,0,0))),
+    m_HeadingVector(new btVector3(btVector3(0,0,0))),
+    m_MaxSpeed(std::numeric_limits<float>::max())
     {
         
     }
     
     Node::~Node()
     {
+        delete m_HeadingVector;
+        m_HeadingVector = NULL;
+        
+        delete m_CurrentVelocity;
+        m_CurrentVelocity = NULL;
+        
+        delete m_CurrentForce;
+        m_CurrentForce = NULL;
+        
         delete m_Colorbase;
         m_Colorbase = NULL;
         
@@ -360,20 +373,20 @@ namespace njli
     
     btTransform Node::getWorldTransform() const
     {
-        const PhysicsBody *physicsBody = m_PhysicsBody;
-
-        if(physicsBody)
-        {
-            btTransform transform(physicsBody->getWorldTransform());
-
-            transform.setBasis(transform.getBasis().scaled(getScale()));
-
-            if(getParentNode())
-            {
-                return (getParentNode()->getWorldTransform() * transform);
-            }
-            return (transform);
-        }
+//        const PhysicsBody *physicsBody = m_PhysicsBody;
+//
+//        if(physicsBody)
+//        {
+//            btTransform transform(physicsBody->getWorldTransform());
+//
+//            transform.setBasis(transform.getBasis().scaled(getScale()));
+//
+//            if(getParentNode())
+//            {
+//                return (getParentNode()->getWorldTransform() * transform);
+//            }
+//            return (transform);
+//        }
         
         btTransform transform(getTransform());
         
@@ -566,21 +579,21 @@ namespace njli
     
     bool Node::isTransformDirty()const
     {
-        if(m_PhysicsBody)
-        {
-            if (m_PhysicsBody->isKinematicPhysics() || m_PhysicsBody->isStaticPhysics())
-            {
-                if(getParentNode())
-                    return m_TransformDirty || getParentNode()->isTransformDirty();
-                return m_TransformDirty;
-            }
-            
-            if(getParentNode())
-            {
-                return m_PhysicsBody->isActive() || getParentNode()->isTransformDirty();
-            }
-            return m_PhysicsBody->isActive() || getParentNode()->isTransformDirty();
-        }
+//        if(m_PhysicsBody)
+//        {
+//            if (m_PhysicsBody->isKinematicPhysics() || m_PhysicsBody->isStaticPhysics())
+//            {
+//                if(getParentNode())
+//                    return m_TransformDirty || getParentNode()->isTransformDirty();
+//                return m_TransformDirty;
+//            }
+//            
+//            if(getParentNode())
+//            {
+//                return m_PhysicsBody->isActive() || getParentNode()->isTransformDirty();
+//            }
+//            return m_PhysicsBody->isActive() || getParentNode()->isTransformDirty();
+//        }
         
         if(getParentNode())
             return m_TransformDirty || getParentNode()->isTransformDirty();
@@ -592,6 +605,39 @@ namespace njli
         m_TransformDirty = false;
     }
     
+    void Node::addForce(const btVector3 &vec)
+    {
+        *m_CurrentForce += vec;
+    }
+    
+    void Node::setMaxSpeed(float speed)
+    {
+        m_MaxSpeed = speed;
+    }
+    
+    float Node::getMaxSpeed()const
+    {
+        return m_MaxSpeed;
+    }
+    
+    void Node::update(float timestep)
+    {
+        float mass = 1.0f;
+        
+        btVector3 acceleration((*m_CurrentForce) / mass);
+        
+        *m_CurrentVelocity = (*m_CurrentVelocity) + acceleration * timestep;
+        
+        if(m_CurrentVelocity->length() > getMaxSpeed())
+            *m_CurrentVelocity = m_CurrentVelocity->normalized() * getMaxSpeed();
+        
+//        setOrigin(getOrigin() + (*m_CurrentVelocity) * timestep);
+        
+        if(m_CurrentVelocity->length() > 0.00000001)
+        {
+            *m_HeadingVector = m_CurrentVelocity->normalized();
+        }
+    }
     void Node::render(Geometry *const geometry)
     {
         if(geometry)

@@ -30,6 +30,13 @@ namespace njli
     
     void Scene::update(float timeStep,int maxSubSteps, float fixedTimeStep)
     {
+        for(std::vector<Node*>::iterator j = m_ActiveNodes.begin();
+            j != m_ActiveNodes.end();
+            j++)
+        {
+            Node *node = *j;
+            node->update(timeStep);
+        }
 //        getPhysicsWorld()->update(timeStep, maxSubSteps, fixedTimeStep);
     }
     
