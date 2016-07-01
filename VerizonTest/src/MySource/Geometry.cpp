@@ -89,7 +89,7 @@ namespace njli
             {
                 glGenBuffers(1, &m_ModelViewBuffer);
                 glBindBuffer(GL_ARRAY_BUFFER, m_ModelViewBuffer);
-                glBufferData(GL_ARRAY_BUFFER, getModelViewTransformArrayBufferSize(), getModelViewTransformArrayBufferPtr(), GL_DYNAMIC_DRAW);
+                glBufferData(GL_ARRAY_BUFFER, getModelViewTransformArrayBufferSize(), getModelViewTransformArrayBufferPtr(), GL_STREAM_DRAW);
                 int inTransformAttrib = getShader()->getAttributeLocation("inTransform");
                 glEnableVertexAttribArray(inTransformAttrib + 0);
                 glEnableVertexAttribArray(inTransformAttrib + 1);
@@ -105,7 +105,7 @@ namespace njli
 //            {
 //                glGenBuffers(1, &m_ColorTransformBuffer);
 //                glBindBuffer(GL_ARRAY_BUFFER, m_ColorTransformBuffer);
-//                glBufferData(GL_ARRAY_BUFFER, getColorTransformArrayBufferSize(), getColorTransformArrayBufferPtr(), GL_DYNAMIC_DRAW);
+//                glBufferData(GL_ARRAY_BUFFER, getColorTransformArrayBufferSize(), getColorTransformArrayBufferPtr(), GL_STREAM_DRAW);
 //                int inColorTransform = getShader()->getAttributeLocation("inColorTransform");
 //                glEnableVertexAttribArray(inColorTransform + 0);
 //                glEnableVertexAttribArray(inColorTransform + 1);
@@ -121,7 +121,7 @@ namespace njli
             {
                 glGenBuffers(1, &m_NormalMatrixTransformBuffer);
                 glBindBuffer(GL_ARRAY_BUFFER, m_NormalMatrixTransformBuffer);
-                glBufferData(GL_ARRAY_BUFFER, getNormalMatrixTransformArrayBufferSize(), getNormalMatrixTransformArrayBufferPtr(), GL_DYNAMIC_DRAW);
+                glBufferData(GL_ARRAY_BUFFER, getNormalMatrixTransformArrayBufferSize(), getNormalMatrixTransformArrayBufferPtr(), GL_STREAM_DRAW);
                 int inNormalMatrixAttrib = getShader()->getAttributeLocation("inNormalMatrix");
                 glEnableVertexAttribArray(inNormalMatrixAttrib + 0);
                 glEnableVertexAttribArray(inNormalMatrixAttrib + 1);
@@ -136,7 +136,7 @@ namespace njli
             {
                 glGenBuffers(1, &m_VerticesBuffer);
                 glBindBuffer(GL_ARRAY_BUFFER, m_VerticesBuffer);
-                glBufferData(GL_ARRAY_BUFFER, getVertexArrayBufferSize(), getVertexArrayBufferPtr(), GL_DYNAMIC_DRAW);
+                glBufferData(GL_ARRAY_BUFFER, getVertexArrayBufferSize(), getVertexArrayBufferPtr(), GL_STREAM_DRAW);
                 int inPositionAttrib = getShader()->getAttributeLocation("inPosition");
                 int inColorAttrib = getShader()->getAttributeLocation("inColor");
                 int inNormalAttrib = getShader()->getAttributeLocation("inNormal");

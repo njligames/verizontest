@@ -38,9 +38,10 @@ namespace njli
     m_OpacityDirty(true),
     m_HiddenDirty(true),
     m_ColorBaseDirty(true),
-    m_CurrentForce(new btVector3(btVector3(0,0,0))),
-    m_CurrentVelocity(new btVector3(btVector3(0,0,0))),
-    m_HeadingVector(new btVector3(btVector3(0,0,0))),
+    m_GravityForce(new btVector3(0.0f, 0.0f, 0.0f)),
+    m_ImpulseForce(new btVector3(0.0f, 0.0f, 0.0f)),
+    m_CurrentVelocity(new btVector3(0.0f, 0.0f, 0.0f)),
+    m_HeadingVector(new btVector3(0.0f, 0.0f, 0.0f)),
     m_MaxSpeed(std::numeric_limits<float>::max())
     {
         
@@ -54,8 +55,11 @@ namespace njli
         delete m_CurrentVelocity;
         m_CurrentVelocity = NULL;
         
-        delete m_CurrentForce;
-        m_CurrentForce = NULL;
+        delete m_ImpulseForce;
+        m_ImpulseForce = NULL;
+        
+        delete m_GravityForce;
+        m_GravityForce = NULL;
         
         delete m_Colorbase;
         m_Colorbase = NULL;
@@ -605,9 +609,13 @@ namespace njli
         m_TransformDirty = false;
     }
     
-    void Node::addForce(const btVector3 &vec)
+    void Node::setGravity(const btVector3 &vec)
     {
-        *m_CurrentForce += vec;
+        *m_GravityForce = vec;
+    }
+    void Node::addImpulseForce(const btVector3 &vec)
+    {
+        *m_ImpulseForce += vec;
     }
     
     void Node::setMaxSpeed(float speed)
@@ -624,19 +632,22 @@ namespace njli
     {
         float mass = 1.0f;
         
-        btVector3 acceleration((*m_CurrentForce) / mass);
+        *m_ImpulseForce += *m_GravityForce;
+        
+        btVector3 acceleration((*m_ImpulseForce) / mass);
         
         *m_CurrentVelocity = (*m_CurrentVelocity) + acceleration * timestep;
         
         if(m_CurrentVelocity->length() > getMaxSpeed())
             *m_CurrentVelocity = m_CurrentVelocity->normalized() * getMaxSpeed();
         
-//        setOrigin(getOrigin() + (*m_CurrentVelocity) * timestep);
+        setOrigin(getTransform().getOrigin() + (*m_CurrentVelocity) * timestep);
         
         if(m_CurrentVelocity->length() > 0.00000001)
         {
             *m_HeadingVector = m_CurrentVelocity->normalized();
         }
+        *m_ImpulseForce = btVector3(0,0,0);
     }
     void Node::render(Geometry *const geometry)
     {

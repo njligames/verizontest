@@ -105,7 +105,8 @@ namespace njli
         
         TornadoData *const getTornadoData()const;
         
-        void addForce(const btVector3 &vec);
+        void setGravity(const btVector3 &vec);
+        void addImpulseForce(const btVector3 &vec);
         void setMaxSpeed(float speed);
         float getMaxSpeed()const;
     protected:
@@ -147,7 +148,8 @@ namespace njli
         bool m_HiddenDirty;
         bool m_ColorBaseDirty;
         
-        btVector3 *m_CurrentForce;
+        btVector3 *m_GravityForce;
+        btVector3 *m_ImpulseForce;
         btVector3 *m_CurrentVelocity;
         btVector3 *m_HeadingVector;
         float m_MaxSpeed;
