@@ -347,6 +347,11 @@ namespace njli
         m_RestingAllowed = enable;
     }
     
+    bool PhysicsBody::isActive()const
+    {
+        return getCollisionObject()->isActive();
+    }
+    
     Node *const PhysicsBody::getNodeOwner()const
     {
         return m_NodeOwner;

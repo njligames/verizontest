@@ -113,6 +113,7 @@ namespace njli
         bool isDynamicPhysics() const;
         virtual bool isResting() const;
         virtual void enableResting(bool enable = true);
+        bool isActive()const;
         virtual const btVector3& getVelocity() const = 0;
         virtual const btVector3& getAngularVelocity() const = 0;
         virtual bool isInWorld() const = 0;

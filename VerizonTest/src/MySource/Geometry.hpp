@@ -113,18 +113,24 @@ namespace njli
     protected:
         const void *getModelViewTransformArrayBufferPtr()const;
         GLsizeiptr getModelViewTransformArrayBufferSize()const;
+        bool isModelViewBufferChanged()const;
+        void enableModelViewBufferChanged(bool changed = true);
         
-        const void *getColorTransformArrayBufferPtr()const;
-        GLsizeiptr getColorTransformArrayBufferSize()const;
+//        const void *getColorTransformArrayBufferPtr()const;
+//        GLsizeiptr getColorTransformArrayBufferSize()const;
         
         const void *getNormalMatrixTransformArrayBufferPtr()const;
         GLsizeiptr getNormalMatrixTransformArrayBufferSize()const;
+        bool isNormalMatrixBufferChanged()const;
+        void enableNormalMatrixBufferChanged(bool changed = true);
         
         virtual void loadData();
         virtual void unLoadData();
         
         virtual const void *getVertexArrayBufferPtr()const = 0;
         virtual GLsizeiptr getVertexArrayBufferSize()const = 0;
+        bool isVertexArrayBufferChanged()const;
+        void enableVertexArrayBufferChanged(bool changed = true);
         
         virtual const void *getElementArrayBufferPtr()const = 0;
         virtual GLsizeiptr getElementArrayBufferSize()const = 0;
@@ -137,8 +143,8 @@ namespace njli
         void setTransform(const unsigned long index, const btTransform &transform);
         btTransform getTransform(const unsigned long index);
         
-        void setColorTransform(const unsigned long index, const btTransform &transform);
-        btTransform getColorTransform(const unsigned long index);
+//        void setColorTransform(const unsigned long index, const btTransform &transform);
+//        btTransform getColorTransform(const unsigned long index);
         
         void setNormalMatrixTransform(const unsigned long index, const btTransform &transform);
         btTransform getNormalMatrixTransform(const unsigned long index);
@@ -158,12 +164,12 @@ namespace njli
     private:
         
         GLfloat *m_ModelViewTransformData;
-        GLfloat *m_ColorTransformData;
+//        GLfloat *m_ColorTransformData;
         GLfloat *m_NormalMatrixTransformData;
         
         GLuint m_VertexArray;
         GLuint m_ModelViewBuffer;
-        GLuint m_ColorTransformBuffer;
+//        GLuint m_ColorTransformBuffer;
         GLuint m_NormalMatrixTransformBuffer;
         GLuint m_VerticesBuffer;
         GLuint m_IndexBuffer;
@@ -173,7 +179,9 @@ namespace njli
         Shader *m_Shader;
         
         bool m_OpacityModifyRGB;
-        
+        bool m_VertexBufferChanged;
+        bool m_NormalMatrixBufferChanged;
+        bool m_ModelViewBufferChanged;
         
         
     };

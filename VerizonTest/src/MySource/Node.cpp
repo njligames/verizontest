@@ -31,7 +31,13 @@ namespace njli
     m_Opacity(1.0f),
     m_NormalMatrix(new btMatrix3x3(btMatrix3x3::getIdentity())),
     m_Colorbase(new btVector4(1, 1, 1, 1)),
-    m_PhysicsBody(NULL)
+    m_PhysicsBody(NULL),
+    m_TransformDirty(true),
+    m_NormalMatrixDirty(true),
+//    m_ColorTransformDirty(true),
+    m_OpacityDirty(true),
+    m_HiddenDirty(true),
+    m_ColorBaseDirty(true)
     {
         
     }
@@ -114,7 +120,10 @@ namespace njli
     
     void Node::enableHideGeometry(bool hidden)
     {
+        if(hidden != m_HideGeometry)
+            m_HiddenDirty = true;
         m_HideGeometry = hidden;
+        
     }
     
     bool Node::isHiddenGeometry()const
@@ -124,6 +133,9 @@ namespace njli
     
     void Node::setOpacity(float opacity)
     {
+        if(opacity != m_Opacity)
+            m_OpacityDirty = true;
+        
         if(opacity<0.0f)
             m_Opacity = 0.0f;
         else if(opacity > 1.0f)
@@ -140,6 +152,7 @@ namespace njli
     void Node::setNormalMatrix(const btMatrix3x3 &mtx)
     {
         *m_NormalMatrix = mtx;
+        m_NormalMatrixDirty = true;
     }
     
     const btMatrix3x3 &Node::getNormalMatrix()const
@@ -149,6 +162,8 @@ namespace njli
     
     void Node::setColorBase(const btVector4 &color)
     {
+        if(*m_Colorbase != color)
+            m_ColorBaseDirty = true;
         *m_Colorbase = color;
     }
     
@@ -345,20 +360,20 @@ namespace njli
     
     btTransform Node::getWorldTransform() const
     {
-//        const PhysicsBody *physicsBody = getPhysicsBody();
-//
-//        if(physicsBody)
-//        {
-//            btTransform transform(physicsBody->getWorldTransform());
-//
-//            transform.setBasis(transform.getBasis().scaled(getScale()));
-//
-//            if(getParentNode())
-//            {
-//                return (transform * getParentNode()->getWorldTransform());
-//            }
-//            return (transform);
-//        }
+        const PhysicsBody *physicsBody = m_PhysicsBody;
+
+        if(physicsBody)
+        {
+            btTransform transform(physicsBody->getWorldTransform());
+
+            transform.setBasis(transform.getBasis().scaled(getScale()));
+
+            if(getParentNode())
+            {
+                return (getParentNode()->getWorldTransform() * transform);
+            }
+            return (transform);
+        }
         
         btTransform transform(getTransform());
         
@@ -371,15 +386,16 @@ namespace njli
         return (transform);
     }
     
-    const btTransform& Node::getColorTransform() const
-    {
-        return *m_ColorTransform;
-    }
-    
-    void Node::setColorTransform(const btTransform& transform)
-    {
-        *m_ColorTransform = transform;
-    }
+//    const btTransform& Node::getColorTransform() const
+//    {
+//        return *m_ColorTransform;
+//    }
+//    
+//    void Node::setColorTransform(const btTransform& transform)
+//    {
+//        *m_ColorTransform = transform;
+//        m_ColorTransformDirty = true;
+//    }
     
     const btTransform &Node::getTransform()const
     {
@@ -388,14 +404,16 @@ namespace njli
     
     void Node::setTransform(const btTransform &transform)
     {
+        m_TransformDirty = true;
+        
         *m_Transform = transform;
         
-//        PhysicsBody *physicsBody = getPhysicsBody();
-//        
-//        if(physicsBody)
-//        {
-//            physicsBody->setWorldTransform(getTransform());
-//        }
+        PhysicsBody *physicsBody = m_PhysicsBody;
+        
+        if(physicsBody)
+        {
+            physicsBody->setWorldTransform(getTransform());
+        }
     }
     
     btVector3 Node::getOrigin()const
@@ -480,24 +498,26 @@ namespace njli
     
     
     
-    void Node::addPhysicsBody(PhysicsBody *const body)
+    bool Node::addPhysicsBody(PhysicsBody *const body)
     {
         assert(body != NULL);
         
         removePhysicsBody();
         
         m_PhysicsBody = body;
+        m_PhysicsBody->setNodeOwner(this);
         
-        getPhysicsBody()->addPhysicsBody(getTransform());
+        return getPhysicsBody()->addPhysicsBody(getTransform());
     }
     
     void Node::removePhysicsBody()
     {
-        PhysicsBody *physicsBody = getPhysicsBody();
+        PhysicsBody *physicsBody = m_PhysicsBody;
         
         if(physicsBody)
         {
             physicsBody->removePhysicsBody();
+            physicsBody->setNodeOwner(NULL);
         }
         
         m_PhysicsBody = NULL;
@@ -526,6 +546,12 @@ namespace njli
         assert(index >= 0 && index < Geometry::MAX_CUBES);
         
         m_GeometryIndex = index;
+        
+        m_NormalMatrixDirty= true;
+//        m_ColorTransformDirty = true;
+        m_OpacityDirty = true;
+        m_HiddenDirty = true;
+        m_ColorBaseDirty = true;
     }
     
     unsigned long Node::getGeometryIndex()const
@@ -536,5 +562,75 @@ namespace njli
     void Node::clearGeometryIndex()
     {
         m_GeometryIndex = -1;
+    }
+    
+    bool Node::isTransformDirty()const
+    {
+        if(m_PhysicsBody)
+        {
+            if (m_PhysicsBody->isKinematicPhysics() || m_PhysicsBody->isDynamicPhysics())
+            {
+                if(getParentNode())
+                    return m_TransformDirty || getParentNode()->isTransformDirty();
+                return m_TransformDirty;
+            }
+            
+            if(getParentNode())
+            {
+                return m_PhysicsBody->isActive() || getParentNode()->isTransformDirty();
+            }
+            return m_PhysicsBody->isActive() || getParentNode()->isTransformDirty();
+        }
+        
+        if(getParentNode())
+            return m_TransformDirty || getParentNode()->isTransformDirty();
+        return m_TransformDirty;
+    }
+    
+    void Node::resetTransformDirty()
+    {
+        m_TransformDirty = false;
+    }
+    
+    void Node::render(Geometry *const geometry)
+    {
+        if(geometry)
+        {
+            const unsigned long geometryIndex = getGeometryIndex();
+            
+            if(isTransformDirty())
+                geometry->setTransform(geometryIndex, getWorldTransform());
+            
+//            if(m_ColorTransformDirty)
+//            {
+//                geometry->setColorTransform(geometryIndex, getColorTransform());
+//                m_ColorTransformDirty = false;
+//            }
+            
+            if(m_NormalMatrixDirty)
+            {
+                geometry->setNormalMatrixTransform(geometryIndex, btTransform(getNormalMatrix()));
+                m_NormalMatrixDirty = false;
+            }
+            
+            if(m_HiddenDirty)
+            {
+                geometry->setHidden(this);
+                m_HiddenDirty = false;
+            }
+            
+            if(m_OpacityDirty)
+            {
+                geometry->setOpacity(this);
+                m_OpacityDirty = false;
+            }
+            
+            if(m_ColorBaseDirty)
+            {
+                geometry->setColorBase(this);
+                m_ColorBaseDirty = false;
+            }
+            
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace njli
     m_RootNode(new Node()),
     m_PhysicsWorld(new PhysicsWorld())
     {
-        
+        addActiveNode(m_RootNode);
     }
     
     Scene::~Scene()
@@ -28,8 +28,9 @@ namespace njli
         delete m_RootNode;
     }
     
-    void Scene::update(float timeStep, const unsigned int numSubSteps)
+    void Scene::update(float timeStep,int maxSubSteps, float fixedTimeStep)
     {
+//        getPhysicsWorld()->update(timeStep, maxSubSteps, fixedTimeStep);
     }
     
     void Scene::render()
@@ -52,13 +53,7 @@ namespace njli
                 
                 if(geometry)
                 {
-                    const unsigned long geometryIndex = node->getGeometryIndex();
-                    geometry->setTransform(geometryIndex, node->getWorldTransform());
-                    geometry->setColorTransform(geometryIndex, node->getColorTransform());
-                    geometry->setNormalMatrixTransform(geometryIndex, btTransform(node->getNormalMatrix()));
-                    geometry->setHidden(node);
-                    geometry->setOpacity(node);
-                    geometry->setColorBase(node);
+                    node->render(geometry);
                     
                     if(m_ActiveGeometries.end() == std::find(m_ActiveGeometries.begin(), m_ActiveGeometries.end(), geometry))
                     {
@@ -75,6 +70,10 @@ namespace njli
                 
                 geometry->render(camera);
             }
+            for(std::vector<Node*>::iterator j = m_ActiveNodes.begin();
+                j != m_ActiveNodes.end();
+                j++)
+                (*j)->resetTransformDirty();
         }
     }
     

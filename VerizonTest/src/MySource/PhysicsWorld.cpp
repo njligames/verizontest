@@ -34,6 +34,9 @@ namespace njli
 {
     void DefaultCustomPreTickCallback (btDynamicsWorld *world, btScalar timeStep)
     {
+        btDiscreteDynamicsWorld *discreteDynamicsWorld = reinterpret_cast<btDiscreteDynamicsWorld*>(world);
+        PhysicsWorld *physicsWorld = reinterpret_cast<PhysicsWorld*>(discreteDynamicsWorld->getWorldUserInfo());
+        physicsWorld->ghostObjectCollisionTest();
     }
     
     
@@ -231,6 +234,7 @@ namespace njli
         m_dynamicsWorld->setInternalTickCallback(DefaultCustomPostTickCallback,NULL,false);
         m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(m_btGhostPairCallback);
         
+        m_dynamicsWorld->setWorldUserInfo(this);
         
 //        m_dynamicsWorld->setDebugDrawer(njli::World::getInstance()->getDebugDrawer());
     }
@@ -273,7 +277,7 @@ namespace njli
         delete m_collisionConfiguration;m_collisionConfiguration=NULL;
     }
     
-    void PhysicsWorld::update(float timeStep)
+    void PhysicsWorld::update(float timeStep,int maxSubSteps, float fixedTimeStep)
     {
         BT_PROFILE("PhysicsWorld::update");
         
@@ -284,7 +288,7 @@ namespace njli
         m_TimeStep = timeStep;
         
         if(!m_Paused)
-            m_dynamicsWorld->stepSimulation(m_TimeStep * m_SimulationSpeed);//, 32);
+            m_dynamicsWorld->stepSimulation(m_TimeStep * m_SimulationSpeed, maxSubSteps, fixedTimeStep);
     }
     
     void PhysicsWorld::render(Camera *camera)
@@ -412,6 +416,7 @@ namespace njli
         {
             if(!body->isInWorld())
             {
+                
                 assert(body->getBody());
                 assert(body->getNodeOwner());
                 

@@ -40,9 +40,6 @@ struct thread_data{
 {
     [super viewDidLoad];
     
-    
-    
-    
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 
     self.preferredFramesPerSecond = 60;
@@ -53,7 +50,8 @@ struct thread_data{
     
     GLKView *view = (GLKView *)self.view;
     view.context = self.context;
-    view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
+    view.drawableDepthFormat = GLKViewDrawableDepthFormat16;
+    view.contentScaleFactor = [UIScreen mainScreen].scale;
     
     njli::Cubenado::createInstance();
     
@@ -116,6 +114,13 @@ struct thread_data{
     
     GLKView *view = (GLKView *)self.view;
     njli::Cubenado::getInstance()->create(0, 0, view.frame.size.width * view.contentScaleFactor, view.frame.size.height * view.contentScaleFactor);
+    
+    if(njli::Cubenado::getInstance()->getCamera()->getNodeOwner())
+    {
+        btTransform cameraTransform(btTransform::getIdentity());
+        cameraTransform.setOrigin(btVector3(0,0,0));
+        njli::Cubenado::getInstance()->getCamera()->getNodeOwner()->setTransform(cameraTransform);
+    }
 }
 
 - (void)tearDownGL
@@ -132,15 +137,6 @@ void *_update(void *threadarg)
     struct thread_data *my_data;
     my_data = (struct thread_data *) threadarg;
     
-    njli::Cubenado::getInstance()->getCamera()->setAspectRatio(my_data->aspect);
-    
-    if(njli::Cubenado::getInstance()->getCamera()->getNodeOwner())
-    {
-        btTransform cameraTransform(btTransform::getIdentity());
-        cameraTransform.setOrigin(btVector3(0,0,0));
-        njli::Cubenado::getInstance()->getCamera()->getNodeOwner()->setTransform(cameraTransform);
-    }
-    
     njli::Cubenado::getInstance()->update(my_data->timeSinceLastUpdate);
     
     pthread_exit(NULL);
@@ -148,23 +144,24 @@ void *_update(void *threadarg)
 
 - (void)update
 {
-    threadData.timeSinceLastUpdate = self.timeSinceLastUpdate;
-    threadData.aspect = fabs(self.view.bounds.size.width / self.view.bounds.size.height);
+    njli::Cubenado::getInstance()->update(self.timeSinceLastUpdate);
     
-    pthread_t threads;
-    int rc;
-    rc = pthread_create(&threads, NULL, _update, (void *)&threadData);
-    if (rc){
-        printf("ERROR; return code from pthread_create() is %d\n", rc);
-        exit(-1);
-    }
-    
-    if(pthread_join(threads, NULL))
-    {
-        
-        fprintf(stderr, "Error joining thread\n");
-        exit(-1);
-    }
+//    threadData.timeSinceLastUpdate = self.timeSinceLastUpdate;
+//    
+//    pthread_t threads;
+//    int rc;
+//    rc = pthread_create(&threads, NULL, _update, (void *)&threadData);
+//    if (rc){
+//        printf("ERROR; return code from pthread_create() is %d\n", rc);
+//        exit(-1);
+//    }
+//    
+//    if(pthread_join(threads, NULL))
+//    {
+//        
+//        fprintf(stderr, "Error joining thread\n");
+//        exit(-1);
+//    }
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
@@ -177,6 +174,8 @@ void *_update(void *threadarg)
     [super viewDidLayoutSubviews];
     
     GLKView *view = (GLKView *)self.view;
+    
+    njli::Cubenado::getInstance()->getCamera()->setAspectRatio(fabs(self.view.bounds.size.width / self.view.bounds.size.height));
     
     njli::Cubenado::getInstance()->resize(0, 0, view.frame.size.width * view.contentScaleFactor, view.frame.size.height * view.contentScaleFactor);
 }

@@ -18,6 +18,7 @@ class btVector3;
 class btDefaultCollisionConfiguration;
 class btCollisionDispatcher;
 class btBroadphaseInterface;
+
 class btSequentialImpulseConstraintSolver;
 class btDiscreteDynamicsWorld;
 struct btOverlapFilterCallback;
@@ -63,7 +64,7 @@ namespace njli
             virtual bool needBroadphaseCollision(btBroadphaseProxy* proxy0, btBroadphaseProxy* proxy1) const;
         };
         
-        void update(float timeStep);
+        void update(float timeStep,int maxSubSteps=1, float fixedTimeStep=float(1.)/float(60.));
         void render(Camera * camera);
         void setGravity(const btVector3& gravity);
         btVector3 getGravity() const;
@@ -87,6 +88,7 @@ namespace njli
         void enablePause(bool enable = true);
         bool isPaused() const;
         
+        void ghostObjectCollisionTest();
     protected:
         void debugDrawWorld();
         
@@ -97,7 +99,7 @@ namespace njli
         
         
     private:
-        void ghostObjectCollisionTest();
+        
         
         float m_SimulationSpeed;
         float m_TimeStep;

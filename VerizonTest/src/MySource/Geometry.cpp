@@ -40,15 +40,18 @@ namespace njli
     Geometry::Geometry():
     m_MatrixBuffer(new GLfloat[16]),
     m_ModelViewTransformData(NULL),
-    m_ColorTransformData(NULL),
+//    m_ColorTransformData(NULL),
     m_NormalMatrixTransformData(NULL),
     m_VertexArray(0),
     m_ModelViewBuffer(0),
-    m_ColorTransformBuffer(0),
+//    m_ColorTransformBuffer(0),
     m_VerticesBuffer(0),
     m_IndexBuffer(0),
     m_Shader(NULL),
-    m_OpacityModifyRGB(false)
+    m_OpacityModifyRGB(false),
+    m_VertexBufferChanged(true),
+    m_NormalMatrixBufferChanged(true),
+    m_ModelViewBufferChanged(true)
     {
         assert(m_MatrixBuffer);
     }
@@ -60,9 +63,9 @@ namespace njli
             delete [] m_NormalMatrixTransformData;
         m_NormalMatrixTransformData = NULL;
         
-        if(m_ColorTransformData)
-            delete [] m_ColorTransformData;
-        m_ColorTransformData = NULL;
+//        if(m_ColorTransformData)
+//            delete [] m_ColorTransformData;
+//        m_ColorTransformData = NULL;
         
         if(m_ModelViewTransformData)
             delete [] m_ModelViewTransformData;
@@ -210,9 +213,9 @@ namespace njli
             glDeleteBuffers(1, &m_VerticesBuffer);
         m_VerticesBuffer = 0;
         
-        if (m_ColorTransformBuffer)
-            glDeleteBuffers(1, &m_ColorTransformBuffer);
-        m_ColorTransformBuffer = 0;
+//        if (m_ColorTransformBuffer)
+//            glDeleteBuffers(1, &m_ColorTransformBuffer);
+//        m_ColorTransformBuffer = 0;
         
         if (m_ModelViewBuffer)
             glDeleteBuffers(1, &m_ModelViewBuffer);
@@ -236,34 +239,41 @@ namespace njli
         {
             assert(shader->use());
             
-            assert(shader->setUniformValue("modelView", camera->getModelView()));
-            assert(shader->setUniformValue("projection", camera->getProjectionMatrixPtr()));
-            assert(shader->setUniformValue("opacityModifyRGB", m_OpacityModifyRGB));
+            camera->render(shader);
             
             glBindVertexArrayOES(m_VertexArray);
             
-            glBindBuffer(GL_ARRAY_BUFFER, m_ModelViewBuffer);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, getModelViewTransformArrayBufferSize(), getModelViewTransformArrayBufferPtr());
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            if(isModelViewBufferChanged())
+            {
+                glBindBuffer(GL_ARRAY_BUFFER, m_ModelViewBuffer);
+                glBufferSubData(GL_ARRAY_BUFFER, 0, getModelViewTransformArrayBufferSize(), getModelViewTransformArrayBufferPtr());
+                enableModelViewBufferChanged(true);
+            }
             
 //            glBindBuffer(GL_ARRAY_BUFFER, m_ColorTransformBuffer);
 //            glBufferSubData(GL_ARRAY_BUFFER, 0, getColorTransformArrayBufferSize(), getColorTransformArrayBufferPtr());
 //            glBindBuffer(GL_ARRAY_BUFFER, 0);
             
-            glBindBuffer(GL_ARRAY_BUFFER, m_NormalMatrixTransformBuffer);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, getNormalMatrixTransformArrayBufferSize(), getNormalMatrixTransformArrayBufferPtr());
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            if(isNormalMatrixBufferChanged())
+            {
+                glBindBuffer(GL_ARRAY_BUFFER, m_NormalMatrixTransformBuffer);
+                glBufferSubData(GL_ARRAY_BUFFER, 0, getNormalMatrixTransformArrayBufferSize(), getNormalMatrixTransformArrayBufferPtr());
+                enableNormalMatrixBufferChanged(false);
+            }
             
-            glBindBuffer(GL_ARRAY_BUFFER, m_VerticesBuffer);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, getVertexArrayBufferSize(), getVertexArrayBufferPtr());
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            if(isVertexArrayBufferChanged())
+            {
+                glBindBuffer(GL_ARRAY_BUFFER, m_VerticesBuffer);
+                glBufferSubData(GL_ARRAY_BUFFER, 0, getVertexArrayBufferSize(), getVertexArrayBufferPtr());
+                enableVertexArrayBufferChanged(false);
+            }
             
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
             
             glDrawElements(GL_TRIANGLES, maxNumberOfObjects() * numberOfIndices(), getElementIndexType(), (const GLvoid*)0);
             
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-            glBindVertexArrayOES(0);
+//            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+//            glBindVertexArrayOES(0);
         }
     }
     
@@ -290,18 +300,28 @@ namespace njli
         return size;
     }
     
-    const void *Geometry::getColorTransformArrayBufferPtr()const
+    bool Geometry::isModelViewBufferChanged()const
     {
-        assert(m_ColorTransformData);
-        
-        return m_ColorTransformData;
+        return m_ModelViewBufferChanged;
     }
     
-    GLsizeiptr Geometry::getColorTransformArrayBufferSize()const
+    void Geometry::enableModelViewBufferChanged(bool changed)
     {
-        GLsizeiptr size = sizeof(GLfloat) * maxNumberOfObjects() * numberOfVertices() * 16;
-        return size;
+        m_ModelViewBufferChanged = changed;
     }
+    
+//    const void *Geometry::getColorTransformArrayBufferPtr()const
+//    {
+//        assert(m_ColorTransformData);
+//        
+//        return m_ColorTransformData;
+//    }
+//    
+//    GLsizeiptr Geometry::getColorTransformArrayBufferSize()const
+//    {
+//        GLsizeiptr size = sizeof(GLfloat) * maxNumberOfObjects() * numberOfVertices() * 16;
+//        return size;
+//    }
     
     const void *Geometry::getNormalMatrixTransformArrayBufferPtr()const
     {
@@ -316,16 +336,27 @@ namespace njli
         return size;
     }
     
+    bool Geometry::isNormalMatrixBufferChanged()const
+    {
+        return m_NormalMatrixBufferChanged;
+    }
+    
+    void Geometry::enableNormalMatrixBufferChanged(bool changed)
+    {
+        m_NormalMatrixBufferChanged = changed;
+    }
+    
     void Geometry::loadData()
     {
         unLoadData();
         
         m_ModelViewTransformData = new GLfloat[maxNumberOfObjects() * numberOfVertices() * 16];
-        m_ColorTransformData = new GLfloat[maxNumberOfObjects() * numberOfVertices() * 16];
+//        m_ColorTransformData = new GLfloat[maxNumberOfObjects() * numberOfVertices() * 16];
         m_NormalMatrixTransformData = new GLfloat[maxNumberOfObjects() * numberOfVertices() * 16];
+        enableNormalMatrixBufferChanged(true);
         
         assert(m_ModelViewTransformData);
-        assert(m_ColorTransformData);
+//        assert(m_ColorTransformData);
         assert(m_NormalMatrixTransformData);
         
         unsigned long i;
@@ -335,15 +366,18 @@ namespace njli
              i += 16)
             memcpy(m_ModelViewTransformData + i, TRANSFORM_IDENTITY_MATRIX, sizeof(TRANSFORM_IDENTITY_MATRIX));
         
-        for (i = 0;
-             i < (maxNumberOfObjects() * numberOfVertices() * 16);
-             i += 16)
-            memcpy(m_ColorTransformData + i, COLOR_IDENTITY_MATRIX, sizeof(COLOR_IDENTITY_MATRIX));
+//        for (i = 0;
+//             i < (maxNumberOfObjects() * numberOfVertices() * 16);
+//             i += 16)
+//            memcpy(m_ColorTransformData + i, COLOR_IDENTITY_MATRIX, sizeof(COLOR_IDENTITY_MATRIX));
         
         for (i = 0;
              i < (maxNumberOfObjects() * numberOfVertices() * 16);
              i += 16)
             memcpy(m_NormalMatrixTransformData + i, TRANSFORM_IDENTITY_MATRIX, sizeof(TRANSFORM_IDENTITY_MATRIX));
+        
+        enableModelViewBufferChanged(true);
+        enableNormalMatrixBufferChanged(true);
     }
     
     void Geometry::unLoadData()
@@ -352,13 +386,23 @@ namespace njli
             delete [] m_NormalMatrixTransformData;
         m_NormalMatrixTransformData = NULL;
         
-        if(m_ColorTransformData)
-            delete [] m_ColorTransformData;
-        m_ColorTransformData = NULL;
+//        if(m_ColorTransformData)
+//            delete [] m_ColorTransformData;
+//        m_ColorTransformData = NULL;
         
         if(m_ModelViewTransformData)
             delete [] m_ModelViewTransformData;
         m_ModelViewTransformData = NULL;
+    }
+    
+    bool Geometry::isVertexArrayBufferChanged()const
+    {
+        return m_VertexBufferChanged;
+    }
+    
+    void Geometry::enableVertexArrayBufferChanged(bool changed)
+    {
+        m_VertexBufferChanged = changed;
     }
     
     void Geometry::addReference(Node *node)
@@ -406,6 +450,7 @@ namespace njli
                     memcpy(m_ModelViewTransformData + p, m_MatrixBuffer, sizeof(float) * 16);
                 }
             }
+            enableModelViewBufferChanged(true);
         }
     }
     
@@ -429,51 +474,51 @@ namespace njli
         return transform;
     }
     
-    void Geometry::setColorTransform(const unsigned long index, const btTransform &transform)
-    {
-        if (index < maxNumberOfObjects())
-        {
-            const unsigned long STRIDE = 16 * numberOfVertices();
-            
-            transform.getOpenGLMatrix(m_MatrixBuffer);
-            
-            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
-            {
-                unsigned long p = ((index * STRIDE) + (16 * currentVertex));
-                
-                int cmp = memcmp(m_ColorTransformData + p,
-                                 m_MatrixBuffer,
-                                 sizeof(float) * 16);
-                
-                if(0 != cmp)
-                {
-                    memcpy(m_ColorTransformData + p,
-                           m_MatrixBuffer,
-                           sizeof(float) * 16);
-                }
-            }
-        }
-    }
-    
-    btTransform Geometry::getColorTransform(const unsigned long index)
-    {
-        btTransform transform(btTransform::getIdentity());
-        if (index < maxNumberOfObjects())
-        {
-            const unsigned long STRIDE = 16 * numberOfVertices();
-            
-            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
-            {
-                unsigned long p = ((index * STRIDE) + (16 * currentVertex));
-                memcpy(m_MatrixBuffer,
-                       m_ColorTransformData + p,
-                       sizeof(float) * 16);
-            }
-            
-            transform.setFromOpenGLMatrix(m_MatrixBuffer);
-        }
-        return transform;
-    }
+//    void Geometry::setColorTransform(const unsigned long index, const btTransform &transform)
+//    {
+//        if (index < maxNumberOfObjects())
+//        {
+//            const unsigned long STRIDE = 16 * numberOfVertices();
+//            
+//            transform.getOpenGLMatrix(m_MatrixBuffer);
+//            
+//            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
+//            {
+//                unsigned long p = ((index * STRIDE) + (16 * currentVertex));
+//                
+//                int cmp = memcmp(m_ColorTransformData + p,
+//                                 m_MatrixBuffer,
+//                                 sizeof(float) * 16);
+//                
+//                if(0 != cmp)
+//                {
+//                    memcpy(m_ColorTransformData + p,
+//                           m_MatrixBuffer,
+//                           sizeof(float) * 16);
+//                }
+//            }
+//        }
+//    }
+//    
+//    btTransform Geometry::getColorTransform(const unsigned long index)
+//    {
+//        btTransform transform(btTransform::getIdentity());
+//        if (index < maxNumberOfObjects())
+//        {
+//            const unsigned long STRIDE = 16 * numberOfVertices();
+//            
+//            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
+//            {
+//                unsigned long p = ((index * STRIDE) + (16 * currentVertex));
+//                memcpy(m_MatrixBuffer,
+//                       m_ColorTransformData + p,
+//                       sizeof(float) * 16);
+//            }
+//            
+//            transform.setFromOpenGLMatrix(m_MatrixBuffer);
+//        }
+//        return transform;
+//    }
     
     void Geometry::setNormalMatrixTransform(const unsigned long index, const btTransform &transform)
     {
@@ -498,6 +543,7 @@ namespace njli
                            sizeof(float) * 16);
                 }
             }
+            enableNormalMatrixBufferChanged(true);
         }
     }
     

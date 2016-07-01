@@ -24,17 +24,17 @@ vec4 transformRGB(vec4 color, mat4 matrix)
 void main(void)
 {
     vec4 color = destinationColor;
-    int modifyRGB = opacityModifyRGB;
+//    int modifyRGB = opacityModifyRGB;
     
 //    vec4 diffuseColor = texture2D(diffuseTexture2D, destinationTexCoord2D);
     
-    if (modifyRGB == 1)
-    {
-        color = vec4(destinationColor.r * destinationColor.a,
-                     destinationColor.g * destinationColor.a,
-                     destinationColor.b * destinationColor.a,
-                     destinationColor.a);
-    }
+//    if (modifyRGB == 1)
+//    {
+//        color = vec4(destinationColor.r * destinationColor.a,
+//                     destinationColor.g * destinationColor.a,
+//                     destinationColor.b * destinationColor.a,
+//                     destinationColor.a);
+//    }
     
 //    color = (color * diffuseColor);
     

@@ -27,7 +27,7 @@ namespace njli
         const Scene &operator=(const Scene &rhs);
         ~Scene();
         
-        void update(float timeStep, const unsigned int numSubSteps = 2);
+        void update(float timeStep,int maxSubSteps=1, float fixedTimeStep=float(1.)/float(60.));
         void render();
         
         void addActiveCamera(Camera * camera);

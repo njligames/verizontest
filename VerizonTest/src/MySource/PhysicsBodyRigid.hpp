@@ -69,8 +69,7 @@ namespace njli
         virtual btCollisionObject *const getCollisionObject() const;
         virtual void setCollisionObject(const btCollisionObject &obj, PhysicsShape *const shape);
         
-        virtual const btRigidBody* getBody() const;
-        virtual btRigidBody* getBody();
+        virtual btRigidBody *const getBody() const;
         
         virtual void applyFinalForce();
         virtual void applyFinalAngularForce();

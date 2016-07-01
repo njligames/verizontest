@@ -96,7 +96,10 @@ namespace njli
     {
         if(m_Program)
         {
-            glUseProgram(m_Program);
+            GLint id;
+            glGetIntegerv(GL_CURRENT_PROGRAM,&id);
+            if(id != m_Program)
+                glUseProgram(m_Program);
             return true;
         }
         return false;

@@ -13,6 +13,8 @@ namespace njli
     class RectangleGeometry;
     class Node;
     class Scene;
+    class PhysicsBodyRigid;
+    class PhysicsShapeCube;
     
     class Cubenado
     {
@@ -44,6 +46,7 @@ namespace njli
         
         std::string loadFile(const std::string filepath);
     protected:
+        void setupPhysics();
         void setStartPositions();
         btVector3 randomPosition(const btVector3 &min, const btVector3 &max)const;
         btQuaternion randomRotation(const btVector3 &axis, const float degreesMin, const float degreesMax)const;
@@ -65,6 +68,8 @@ namespace njli
         Node *m_CameraNode;
         Scene *m_Scene;
         std::vector<Node*> m_CubeNodes;
+        std::vector<PhysicsBodyRigid*> m_PhysicsBodies;
+        PhysicsShapeCube *m_PhysicsShapeCube;
         float m_Randomness;
         unsigned long m_NumberOfCubes;
         float m_Rotation;

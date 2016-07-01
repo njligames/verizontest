@@ -14,6 +14,10 @@
 #include "MeshGeometry.hpp"
 #include "Node.hpp"
 #include "Scene.hpp"
+#include "PhysicsBodyRigid.hpp"
+#include "PhysicsShapeCube.hpp"
+#include "PhysicsWorld.hpp"
+
 #include "TornadoData.hpp"
 
 #include "btQuaternion.h"
@@ -71,19 +75,33 @@ namespace njli
     m_Scene(new Scene()),
     m_Randomness(0.0f),
     m_NumberOfCubes(Geometry::MAX_CUBES),
-    m_Rotation(0.0f)
+    m_Rotation(0.0f),
+    m_PhysicsShapeCube(new PhysicsShapeCube())
     {
+        for (unsigned long i = 0; i < Geometry::MAX_CUBES; i++)
+            m_PhysicsBodies.push_back(new PhysicsBodyRigid());
+        
         for (unsigned long i = 0; i < Geometry::MAX_CUBES; i++)
             m_CubeNodes.push_back(new Node());
     }
     
     Cubenado::~Cubenado()
     {
+        delete m_PhysicsShapeCube;
+        m_PhysicsShapeCube = NULL;
+        
         while (!m_CubeNodes.empty())
         {
             Node *node = m_CubeNodes.back();
             m_CubeNodes.pop_back();
             delete node;
+        }
+        
+        while (!m_PhysicsBodies.empty())
+        {
+            PhysicsBodyRigid *rigidBody = m_PhysicsBodies.back();
+            m_PhysicsBodies.pop_back();
+            delete rigidBody;
         }
         
         delete m_Scene;
@@ -113,6 +131,8 @@ namespace njli
     
     void Cubenado::create(int x, int y, int width, int height)
     {
+        glClearColor(0.52, 0.86, 0.99, 1.0f);
+        
         glEnable(GL_DEPTH_TEST);
         
         srand((unsigned int)time(0));
@@ -131,6 +151,7 @@ namespace njli
         m_MeshGeometry->load(m_Shader, loadFile("models/cube.obj"));
 //        m_RectangleGeometry->load(m_Shader);
         m_CubeGeometry->load(m_Shader);
+        
         
         setStartPositions();
         
@@ -164,6 +185,7 @@ namespace njli
 //            node->setScale(randomFloat(0.8f, 1.1f));
         }
         
+        setupPhysics();
     }
     
     void Cubenado::destroy()
@@ -176,7 +198,7 @@ namespace njli
     
     void Cubenado::resize(int x, int y, int width, int height)
     {
-        glViewport(x, y, width, height);
+//        glViewport(x, y, width, height);
     }
                 
     void Cubenado::update(float step)
@@ -209,12 +231,11 @@ namespace njli
 //                
 //        }
         
-        m_Scene->update(step);
+        m_Scene->update(step, 1, 1.0f/30.0f);
     }
     
     void Cubenado::render()
     {
-        glClearColor(0.52, 0.86, 0.99, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         
         m_Scene->render();
@@ -279,6 +300,39 @@ namespace njli
         }
         
         return filedata;
+    }
+    
+    void Cubenado::setupPhysics()
+    {
+        m_Scene->getPhysicsWorld()->setGravity(btVector3(0,-9.81,0));
+        m_PhysicsShapeCube->setHalfExtends(btVector3(1.0f, 1.0f, 1.0f));
+        
+        unsigned long idx = 0;
+        for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
+             i != m_CubeNodes.end();
+             i++)
+        {
+            Node *node = *i;
+            
+            assert(idx < m_PhysicsBodies.size());
+            
+            PhysicsBodyRigid *rigidBody = m_PhysicsBodies.at(idx++);
+            
+            rigidBody->addPhysicsShape(m_PhysicsShapeCube);
+//            if(randomFloat(0.0, 1.0) < 0.01)
+//                rigidBody->setStaticPhysics();
+//            else
+                rigidBody->setDynamicPhysics();
+//            rigidBody->setKinematicPhysics();
+            rigidBody->setMass(1.0f);
+            rigidBody->setScene(m_Scene);
+            
+            assert(node->addPhysicsBody(rigidBody));
+            
+            assert(m_Scene);
+            assert(m_Scene->getPhysicsWorld());
+            assert(m_Scene->getPhysicsWorld()->addRigidBody(rigidBody));
+        }
     }
     
     void Cubenado::setStartPositions()

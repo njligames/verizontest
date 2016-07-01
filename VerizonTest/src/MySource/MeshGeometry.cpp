@@ -194,11 +194,10 @@ namespace njli
         
         assert(m_VertexData == NULL);
         m_VertexData = new TexturedColoredVertex[numberOfVertices() * maxNumberOfObjects()];
-//        memset(m_VertexData, 0, numberOfVertices() * maxNumberOfObjects());
-
+        enableVertexArrayBufferChanged(true);
+        
         assert(m_IndiceData == NULL);
         m_IndiceData = new GLuint[numberOfIndices() * maxNumberOfObjects()];
-//        memset(m_IndiceData, 0, numberOfIndices() * maxNumberOfObjects());
         
         unsigned long vertexInstanceIndex = 0;
         unsigned long indiceInstanceIndex = 0;
@@ -284,6 +283,7 @@ namespace njli
             {
                 m_VertexData[vertexIndex + offset].opacity = o;
             }
+            enableVertexArrayBufferChanged(true);
         }
     }
     
@@ -302,6 +302,7 @@ namespace njli
             {
                 m_VertexData[vertexIndex + offset].hidden = h;
             }
+            enableVertexArrayBufferChanged(true);
         }
     }
     
@@ -325,6 +326,7 @@ namespace njli
             {
                 m_VertexData[offset + vertexIndex].color = c;
             }
+            enableVertexArrayBufferChanged(true);
         }
     }
     

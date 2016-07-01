@@ -81,8 +81,8 @@ namespace njli
     public:
         btTransform getWorldTransform() const;
         
-        const btTransform& getColorTransform() const;
-        void setColorTransform(const btTransform& transform);
+//        const btTransform& getColorTransform() const;
+//        void setColorTransform(const btTransform& transform);
         const btTransform& getTransform() const;
         void setTransform(const btTransform& transform);
         btVector3 getOrigin() const;
@@ -99,7 +99,7 @@ namespace njli
         void setScale(const btVector3 &scale);
         void setScale(const float scale);
     public:
-        void addPhysicsBody(PhysicsBody *const body);
+        bool addPhysicsBody(PhysicsBody *const body);
         void removePhysicsBody();
         PhysicsBody *const getPhysicsBody()const;
         
@@ -108,6 +108,11 @@ namespace njli
         void setGeometryIndex(unsigned long index);
         unsigned long getGeometryIndex() const;
         void clearGeometryIndex();
+        
+        bool isTransformDirty()const;
+        void resetTransformDirty();
+        
+        void render(Geometry *const geometry);
     private:
         std::string m_Name;
         btVector3 *m_Scale;
@@ -129,6 +134,14 @@ namespace njli
         btVector4 *m_Colorbase;
         
         PhysicsBody *m_PhysicsBody;
+        
+        bool m_TransformDirty;
+        bool m_NormalMatrixDirty;
+//        bool m_ColorTransformDirty;
+        bool m_OpacityDirty;
+        bool m_HiddenDirty;
+        bool m_ColorBaseDirty;
+        
     };
 }
 

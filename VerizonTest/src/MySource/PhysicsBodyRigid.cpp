@@ -226,14 +226,9 @@ namespace njli
         //TODO: Implement....
     }
     
-    const btRigidBody* PhysicsBodyRigid::getBody() const
+    btRigidBody *const PhysicsBodyRigid::getBody() const
     {
-        return dynamic_cast<const btRigidBody*>(m_btRigidBody);
-    }
-    
-    btRigidBody* PhysicsBodyRigid::getBody()
-    {
-        return dynamic_cast<btRigidBody*>(m_btRigidBody);
+        return m_btRigidBody;
     }
     
     void PhysicsBodyRigid::applyFinalForce()

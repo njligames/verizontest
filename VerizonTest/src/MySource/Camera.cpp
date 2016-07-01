@@ -8,6 +8,7 @@
 
 #include "Camera.hpp"
 #include "Node.hpp"
+#include "Shader.hpp"
 
 namespace njli
 {
@@ -26,49 +27,6 @@ namespace njli
         
         return btTransform(basis, origin);
     }
-    
-//    btTransform Camera::makeFrustum(float *buffer, float fov, float aspect, float nearDist, float farDist, bool leftHanded)
-//    {
-//        assert(buffer);
-//        
-//        //
-//        // General form of the Projection Matrix
-//        //
-//        // uh = Cot( fov/2 ) == 1/Tan(fov/2)
-//        // uw / uh = 1/aspect
-//        //
-//        //   uw         0       0       0
-//        //    0        uh       0       0
-//        //    0         0      f/(f-n)  1
-//        //    0         0    -fn/(f-n)  0
-//        //
-//        // Make result to be identity first
-//        
-//        //    0         1       2       3
-//        //    4         5       6       7
-//        //    8         9      10      11
-//        //   12        13      14      15
-//        
-//        // check for bad parameters to avoid divide by zero:
-//        // if found, assert and return an identity matrix.
-//        if ( fov <= 0 || aspect == 0 )
-//        {
-//            assert( fov > 0 && aspect != 0 );
-//            return btTransform::getIdentity();
-//        }
-//        
-//        float frustumDepth = farDist - nearDist;
-//        float oneOverDepth = 1.0f / frustumDepth;
-//        
-//        buffer[5] = 1.0f / tan(0.5f * btRadians(fov));
-//        buffer[0] = (leftHanded ? 1.0f : -1.0f ) * buffer[5] / aspect;
-//        buffer[10] = farDist * oneOverDepth;
-//        buffer[14] = (-farDist * nearDist) * oneOverDepth;
-//        buffer[11] = 1.0f;
-//        buffer[15] = 0;
-//        
-//        return setFrom4x4Matrix(buffer);
-//    }
 
     btTransform Camera::makeFrustum(float *matrixBuffer, float fov, float aspect, float nearDist, float farDist, bool leftHanded )
     {
@@ -153,9 +111,12 @@ namespace njli
     m_Far(1000.0f),
     m_Fov(45.0f),
     m_AspectRatio(1.0f),
-    m_ProjectionMatrix(new btTransform())
+    m_ProjectionMatrix(new btTransform()),
+    m_ModelViewDirty(true),
+    m_ProjectionDirty(true)
     {
         *m_ProjectionMatrix = makeFrustum(m_ProjectionMatrixBuffer, getFov(), getAspectRatio(), getZNear(), getZFar());
+        m_ProjectionDirty = true;
     }
     
     Camera::~Camera()
@@ -177,7 +138,10 @@ namespace njli
         m_Near = val;
         
         if(changed)
+        {
             *m_ProjectionMatrix = makeFrustum(m_ProjectionMatrixBuffer, getFov(), getAspectRatio(), getZNear(), getZFar());
+            m_ProjectionDirty = true;
+        }
     }
     
     float Camera::getZNear() const
@@ -192,7 +156,10 @@ namespace njli
         m_Far = val;
         
         if(changed)
+        {
             *m_ProjectionMatrix = makeFrustum(m_ProjectionMatrixBuffer, getFov(), getAspectRatio(), getZNear(), getZFar());
+            m_ProjectionDirty = true;
+        }
     }
     
     float Camera::getZFar() const
@@ -207,7 +174,10 @@ namespace njli
         m_Fov = val;
         
         if(changed)
+        {
             *m_ProjectionMatrix = makeFrustum(m_ProjectionMatrixBuffer, getFov(), getAspectRatio(), getZNear(), getZFar());
+            m_ProjectionDirty = true;
+        }
     }
     
     float Camera::getFov() const
@@ -222,7 +192,10 @@ namespace njli
         m_AspectRatio = val;
         
         if(changed)
+        {
             *m_ProjectionMatrix = makeFrustum(m_ProjectionMatrixBuffer, getFov(), getAspectRatio(), getZNear(), getZFar());
+            m_ProjectionDirty = true;
+        }
     }
     
     float Camera::getAspectRatio()const
@@ -240,11 +213,6 @@ namespace njli
     btTransform Camera::getProjectionMatrix()const
     {
         return *m_ProjectionMatrix;
-    }
-    
-    GLfloat *const Camera::getProjectionMatrixPtr()const
-    {
-        return m_ProjectionMatrixBuffer;
     }
     
     Node *const Camera::getNodeOwner()const
@@ -273,5 +241,20 @@ namespace njli
         _btTransform.inverse().getBasis().getRotation(q);
         
         getNodeOwner()->setOrientation(q);
+    }
+    
+    void Camera::render(Shader *const shader)
+    {
+//        if(m_ModelViewDirty)
+        {
+            assert(shader->setUniformValue("modelView", getModelView()));
+            m_ModelViewDirty = false;
+        }
+        
+        if(m_ProjectionDirty)
+        {
+            assert(shader->setUniformValue("projection", m_ProjectionMatrixBuffer));
+            m_ProjectionDirty = false;
+        }
     }
 }

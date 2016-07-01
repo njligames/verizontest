@@ -11,10 +11,10 @@ attribute mat4 inNormalMatrix;
 
 
 varying vec4 destinationColor;
-//varying vec2 destinationTexCoord2D;
-//varying mat4 destinationColorTransform;
 uniform mat4 modelView;
 uniform mat4 projection;
+
+//uniform mat4 modelViewProjection;
 
 mat3 mat3_emu(mat4 m4) {
     return mat3(
@@ -41,9 +41,8 @@ void main ()
     color.a = inOpacity;
     
     destinationColor = color;
-//    destinationTexCoord2D = inTexCoord;
-//    destinationColorTransform = inColorTransform;
-//    gl_Position = (((projection * modelView) * inTransform) * position);
+    
     gl_Position = (((modelView * projection) * inTransform) * position);
+//    gl_Position = ((modelViewProjection * inTransform) * position);
 }
 

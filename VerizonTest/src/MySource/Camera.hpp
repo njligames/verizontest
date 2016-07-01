@@ -17,9 +17,12 @@
 namespace njli
 {
     class Node;
+    class Shader;
     
     class Camera
     {
+        friend class Geometry;
+        
     public:
         /* static */
         static btTransform makeFrustum(float *buffer, float fov, float aspect, float nearDist, float farDist, bool leftHanded = true );
@@ -48,14 +51,13 @@ namespace njli
         
         btTransform getModelView()const;
         btTransform getProjectionMatrix()const;
-        GLfloat *const getProjectionMatrixPtr()const;
         
         Node *const getNodeOwner()const;
         void setNodeOwner(Node *const node);
         
         void lookAt(const btVector3& pos, const btVector3& up = btVector3(0, 1.0f, 0));
     protected:
-        
+        void render(Shader *const shader);
     private:
         /* static */
         float *m_MatrixBuffer;
@@ -69,6 +71,8 @@ namespace njli
         float m_Fov;
         float m_AspectRatio;
         btTransform *m_ProjectionMatrix;
+        bool m_ModelViewDirty;
+        bool m_ProjectionDirty;
     };
 }
 
