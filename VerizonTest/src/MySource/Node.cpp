@@ -568,7 +568,7 @@ namespace njli
     {
         if(m_PhysicsBody)
         {
-            if (m_PhysicsBody->isKinematicPhysics() || m_PhysicsBody->isDynamicPhysics())
+            if (m_PhysicsBody->isKinematicPhysics() || m_PhysicsBody->isStaticPhysics())
             {
                 if(getParentNode())
                     return m_TransformDirty || getParentNode()->isTransformDirty();
