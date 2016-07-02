@@ -144,7 +144,6 @@ namespace njli
         
         m_Geometry->load(m_Shader, loadFile("models/cube.obj"));
         
-        
         setStartPositions();
         
         

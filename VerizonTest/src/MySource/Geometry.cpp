@@ -81,7 +81,7 @@ namespace njli
     {
         assert(shader);
         
-        m_Shader = shader;
+        setShader(shader);
         
         loadData();
         
