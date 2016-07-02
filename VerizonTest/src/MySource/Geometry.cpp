@@ -45,6 +45,7 @@ namespace njli
     m_VertexArray(0),
     m_ModelViewBuffer(0),
 //    m_ColorTransformBuffer(0),
+    m_NormalMatrixTransformBuffer(0),
     m_VerticesBuffer(0),
     m_IndexBuffer(0),
     m_Shader(NULL),
@@ -83,10 +84,12 @@ namespace njli
         
         loadData();
         
+        assert(m_VertexArray == 0);
         glGenVertexArraysOES(1, &m_VertexArray);
         glBindVertexArrayOES(m_VertexArray);
         {
             {
+                assert(m_ModelViewBuffer == 0);
                 glGenBuffers(1, &m_ModelViewBuffer);
                 glBindBuffer(GL_ARRAY_BUFFER, m_ModelViewBuffer);
                 glBufferData(GL_ARRAY_BUFFER, getModelViewTransformArrayBufferSize(), getModelViewTransformArrayBufferPtr(), GL_STREAM_DRAW);
@@ -103,6 +106,7 @@ namespace njli
             }
             
 //            {
+//            assert(m_ColorTransformBuffer == 0);
 //                glGenBuffers(1, &m_ColorTransformBuffer);
 //                glBindBuffer(GL_ARRAY_BUFFER, m_ColorTransformBuffer);
 //                glBufferData(GL_ARRAY_BUFFER, getColorTransformArrayBufferSize(), getColorTransformArrayBufferPtr(), GL_STREAM_DRAW);
@@ -119,6 +123,7 @@ namespace njli
 //            }
             
             {
+                assert(m_NormalMatrixTransformBuffer == 0);
                 glGenBuffers(1, &m_NormalMatrixTransformBuffer);
                 glBindBuffer(GL_ARRAY_BUFFER, m_NormalMatrixTransformBuffer);
                 glBufferData(GL_ARRAY_BUFFER, getNormalMatrixTransformArrayBufferSize(), getNormalMatrixTransformArrayBufferPtr(), GL_STREAM_DRAW);
@@ -134,6 +139,7 @@ namespace njli
                 glBindBuffer(GL_ARRAY_BUFFER, 0);
             }
             {
+                assert(m_VerticesBuffer == 0);
                 glGenBuffers(1, &m_VerticesBuffer);
                 glBindBuffer(GL_ARRAY_BUFFER, m_VerticesBuffer);
                 glBufferData(GL_ARRAY_BUFFER, getVertexArrayBufferSize(), getVertexArrayBufferPtr(), GL_STREAM_DRAW);
@@ -150,6 +156,7 @@ namespace njli
                                       GL_FALSE,
                                       sizeof(TexturedColoredVertex),
                                       (const GLvoid*) offsetof(TexturedColoredVertex, vertex));
+                
                 
 //                glEnableVertexAttribArray(inTexCoordAttrib);
 //                glVertexAttribPointer(inTexCoordAttrib,
@@ -213,6 +220,10 @@ namespace njli
             glDeleteBuffers(1, &m_VerticesBuffer);
         m_VerticesBuffer = 0;
         
+        if (m_NormalMatrixTransformBuffer)
+            glDeleteBuffers(1, &m_NormalMatrixTransformBuffer);
+        m_NormalMatrixTransformBuffer = 0;
+        
 //        if (m_ColorTransformBuffer)
 //            glDeleteBuffers(1, &m_ColorTransformBuffer);
 //        m_ColorTransformBuffer = 0;
@@ -220,6 +231,10 @@ namespace njli
         if (m_ModelViewBuffer)
             glDeleteBuffers(1, &m_ModelViewBuffer);
         m_ModelViewBuffer = 0;
+        
+        if (m_VertexArray)
+            glDeleteVertexArraysOES(1, &m_VertexArray);
+        m_VertexArray = 0;
     }
     
     bool Geometry::isLoaded()const
