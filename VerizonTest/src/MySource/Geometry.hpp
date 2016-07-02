@@ -106,6 +106,8 @@ namespace njli
         
         Shader *const getShader();
         
+        void setShader(Shader *const shader);
+        
         void render(Camera *camera);
         
         static const GLsizei MAX_CUBES = 10000;
@@ -182,6 +184,7 @@ namespace njli
         bool m_VertexBufferChanged;
         bool m_NormalMatrixBufferChanged;
         bool m_ModelViewBufferChanged;
+        bool m_ShaderChanged;
         
         
     };

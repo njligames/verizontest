@@ -294,9 +294,7 @@ namespace njli
         {
             Shader *shader = (*i).second;
             
-//            m_Geometry->unLoad();
-            m_Geometry->load(shader, loadFile("models/cube.obj"));
-            setStartPositions();
+            m_Geometry->setShader(shader);
         }
     }
     

@@ -52,7 +52,8 @@ namespace njli
     m_OpacityModifyRGB(false),
     m_VertexBufferChanged(true),
     m_NormalMatrixBufferChanged(true),
-    m_ModelViewBufferChanged(true)
+    m_ModelViewBufferChanged(true),
+    m_ShaderChanged(true)
     {
         assert(m_MatrixBuffer);
     }
@@ -247,6 +248,12 @@ namespace njli
         return m_Shader;
     }
     
+    void Geometry::setShader(Shader *const shader)
+    {
+        m_Shader = shader;
+        m_ShaderChanged = true;
+    }
+    
     void Geometry::render(Camera *camera)
     {
         Shader *shader = getShader();
@@ -254,7 +261,8 @@ namespace njli
         {
             assert(shader->use());
             
-            camera->render(shader);
+            camera->render(shader, m_ShaderChanged);
+            m_ShaderChanged = false;
             
             glBindVertexArrayOES(m_VertexArray);
             

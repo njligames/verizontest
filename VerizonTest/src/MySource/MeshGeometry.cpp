@@ -187,7 +187,7 @@ namespace njli
             t.color = btVector4(1.0f, 1.0f, 1.0f, 1.0f);
             
             vertexData[idx] = t;
-            indiceData[idx] = idx;
+            indiceData[idx] = (GLuint)idx;
         }
         
         Geometry::loadData();
@@ -217,7 +217,7 @@ namespace njli
                  indiceIndex < numberOfIndices();
                  indiceIndex++)
             {
-                m_IndiceData[indiceInstanceIndex] = (meshIndex * numberOfVertices()) + indiceData[indiceIndex] ;
+                m_IndiceData[indiceInstanceIndex] = (GLuint)((meshIndex * numberOfVertices()) + indiceData[indiceIndex]);
                 indiceInstanceIndex++;
             }
         }

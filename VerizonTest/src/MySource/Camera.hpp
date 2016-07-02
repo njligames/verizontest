@@ -57,7 +57,7 @@ namespace njli
         
         void lookAt(const btVector3& pos, const btVector3& up = btVector3(0, 1.0f, 0));
     protected:
-        void render(Shader *const shader);
+        void render(Shader *const shader, bool shouldRedraw = false);
     private:
         /* static */
         float *m_MatrixBuffer;

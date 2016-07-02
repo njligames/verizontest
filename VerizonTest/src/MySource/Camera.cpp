@@ -243,15 +243,15 @@ namespace njli
         getNodeOwner()->setOrientation(q);
     }
     
-    void Camera::render(Shader *const shader)
+    void Camera::render(Shader *const shader, bool shouldRedraw)
     {
-//        if(m_ModelViewDirty)
+        if(m_ModelViewDirty || shouldRedraw)
         {
             assert(shader->setUniformValue("modelView", getModelView()));
             m_ModelViewDirty = false;
         }
         
-        if(m_ProjectionDirty)
+        if(m_ProjectionDirty || shouldRedraw)
         {
             assert(shader->setUniformValue("projection", m_ProjectionMatrixBuffer));
             m_ProjectionDirty = false;
