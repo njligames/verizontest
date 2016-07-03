@@ -15,13 +15,112 @@
 #include <bitset>
 
 #include "btTransform.h"
-#include "btVector2.h"
+
+
+//#define USE_HALF_FLOAT
+
+
+#ifdef USE_HALF_FLOAT
+typedef GLhalf GLfptype;
+#define GL_INDEX_TYPE (GL_HALF_FLOAT_OES)
+
+#else
+typedef GLfloat GLfptype;
+#define GL_INDEX_TYPE (GL_FLOAT)
+#endif
 
 namespace njli
 {
     ATTRIBUTE_ALIGNED16(struct)
     TexturedColoredVertex
     {
+        struct vec2
+        {
+            vec2(){}
+            vec2(GLfptype x, GLfptype y)
+            {
+                v[0]=x;
+                v[1] = y;
+                v[2] = 0;
+                v[3] = 0;
+            }
+            const vec2 &operator=(const vec2 &rhs)
+            {
+                if(this != &rhs)
+                {
+                    v[0] = rhs.v[0];
+                    v[1] = rhs.v[1];
+                    v[2] = rhs.v[2];
+                    v[3] = rhs.v[3];
+                }
+                return *this;
+            }
+            GLfptype x()const{return v[0];}
+            GLfptype y()const{return v[1];}
+            void setX(GLfptype f){v[0] = f;}
+            void setY(GLfptype f){v[1] = f;}
+            GLfptype v[4];
+        };
+        struct vec3
+        {
+            vec3(){}
+            vec3(GLfptype x, GLfptype y, GLfptype z)
+            {
+                v[0]=x;
+                v[1] = y;
+                v[2] = z;
+                v[3] = 0;
+            }
+            const vec3 &operator=(const vec3 &rhs)
+            {
+                if(this != &rhs)
+                {
+                    v[0] = rhs.v[0];
+                    v[1] = rhs.v[1];
+                    v[2] = rhs.v[2];
+                    v[3] = rhs.v[3];
+                }
+                return *this;
+            }
+            GLfptype x()const{return v[0];}
+            GLfptype y()const{return v[1];}
+            GLfptype z()const{return v[2];}
+            void setX(GLfptype f){v[0] = f;}
+            void setY(GLfptype f){v[1] = f;}
+            void setZ(GLfptype f){v[2] = f;}
+            GLfptype v[4];
+        };
+        struct vec4
+        {
+            vec4(){}
+            vec4(GLfptype x, GLfptype y, GLfptype z, GLfptype w)
+            {
+                v[0]=x;
+                v[1] = y;
+                v[2] = z;
+                v[3] = w;
+            }
+            const vec4 &operator=(const vec4 &rhs)
+            {
+                if(this != &rhs)
+                {
+                    v[0] = rhs.v[0];
+                    v[1] = rhs.v[1];
+                    v[2] = rhs.v[2];
+                    v[3] = rhs.v[3];
+                }
+                return *this;
+            }
+            GLfptype x()const{return v[0];}
+            GLfptype y()const{return v[1];}
+            GLfptype z()const{return v[2];}
+            GLfptype w()const{return v[3];}
+            void setX(GLfptype f){v[0] = f;}
+            void setY(GLfptype f){v[1] = f;}
+            void setZ(GLfptype f){v[2] = f;}
+            void setW(GLfptype f){v[3] = f;}
+            GLfptype v[4];
+        };
         TexturedColoredVertex()
         : vertex(0, 0, 0)
         , color(1, 1, 1, 1)
@@ -31,12 +130,12 @@ namespace njli
         , hidden(0.0f)
         {
         }
-        TexturedColoredVertex(const btVector3 vertex,
-                              const btVector4 color,
-//                              const btVector2 texture,
-                              const btVector3 normal,
-                              const GLfloat opacity,
-                              const GLfloat hidden)
+        TexturedColoredVertex(const vec3 vertex,
+                              const vec4 color,
+//                              const vec2 texture,
+                              const vec3 normal,
+                              const GLfptype opacity,
+                              const GLfptype hidden)
         : vertex(vertex)
         , color(color)
 //        , texture(texture)
@@ -45,12 +144,12 @@ namespace njli
         , hidden(hidden)
         {
         }
-        btVector3 vertex;
-        btVector4 color;
-//        btVector2 texture;
-        btVector3 normal;
-        GLfloat opacity;
-        GLfloat hidden;
+        vec3 vertex;
+        vec4 color;
+//        vec2 texture;
+        vec3 normal;
+        GLfptype opacity;
+        GLfptype hidden;
         
         TexturedColoredVertex& operator=(const TexturedColoredVertex& rhs)
         {
@@ -161,13 +260,14 @@ namespace njli
         
         unsigned long getGeometryIndex(Node *const node)const;
         
-        GLfloat *m_MatrixBuffer;
+        GLfptype *m_MatrixBuffer;
+        btScalar *m_MatrixBufferFullSize;
         
     private:
         
-        GLfloat *m_ModelViewTransformData;
-//        GLfloat *m_ColorTransformData;
-        GLfloat *m_NormalMatrixTransformData;
+        GLfptype *m_ModelViewTransformData;
+//        GLfptype *m_ColorTransformData;
+        GLfptype *m_NormalMatrixTransformData;
         
         GLuint m_VertexArray;
         GLuint m_ModelViewBuffer;

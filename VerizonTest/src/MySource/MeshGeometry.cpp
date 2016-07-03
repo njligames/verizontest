@@ -42,9 +42,9 @@ namespace njli
     {
         
         
-        std::vector<btVector3> vertices;
-        std::vector<btVector3> normals;
-        std::vector<btVector2> texture;
+        std::vector<TexturedColoredVertex::vec3> vertices;
+        std::vector<TexturedColoredVertex::vec3> normals;
+        std::vector<TexturedColoredVertex::vec2> texture;
         std::vector<std::string> faces;
         
         std::stringstream ss_line(m_Filedata);
@@ -52,16 +52,16 @@ namespace njli
         
         enum parsemode{none,v,vn,vt,f};
         parsemode mode = none;
-        btVector3 vec3;
-        btVector2 vec2;
+        TexturedColoredVertex::vec3 vec3;
+        TexturedColoredVertex::vec2 vec2;
         
         while(std::getline(ss_line, line, '\n'))
         {
             std::stringstream ss_token(line);
             std::string token;
             int tokencount = 0;
-            vec3 = btVector3(0,0,0);
-            vec2 = btVector2(0,0);
+            vec3 = TexturedColoredVertex::vec3(0,0,0);
+            vec2 = TexturedColoredVertex::vec2(0,0);
             
             while(std::getline(ss_token, token, ' '))
             {
@@ -184,7 +184,7 @@ namespace njli
             }
             t.hidden = 0.0f;
             t.opacity = 1.0f;
-            t.color = btVector4(1.0f, 1.0f, 1.0f, 1.0f);
+            t.color = TexturedColoredVertex::vec4(1.0f, 1.0f, 1.0f, 1.0f);
             
             vertexData[idx] = t;
             indiceData[idx] = (GLuint)idx;
@@ -314,7 +314,7 @@ namespace njli
         if(m_VertexData)
         {
             
-            btVector4 c(btFabs(node->getColorBase().x()),
+            TexturedColoredVertex::vec4 c(btFabs(node->getColorBase().x()),
                         btFabs(node->getColorBase().y()),
                         btFabs(node->getColorBase().z()),
                         btFabs(node->getColorBase().w()));

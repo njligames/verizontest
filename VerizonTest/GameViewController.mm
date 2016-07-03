@@ -10,7 +10,7 @@
 #import <OpenGLES/ES2/glext.h>
 #include "Cubenado.hpp"
 #include "Node.hpp"
-#include "CubeGeometry.hpp"
+#include "Geometry.hpp"
 
 #include <pthread.h>
 

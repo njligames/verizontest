@@ -151,8 +151,6 @@
 		C1242DDD1D1B311000CEABBF /* AbstractDecorator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1242DDB1D1B311000CEABBF /* AbstractDecorator.cpp */; };
 		C149C17A1D1F75BD00988F89 /* TornadoData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C149C1781D1F75BD00988F89 /* TornadoData.cpp */; };
 		C149C1801D221A1F00988F89 /* Geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C149C17E1D221A1F00988F89 /* Geometry.cpp */; };
-		C149C1831D221A3400988F89 /* CubeGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C149C1811D221A3400988F89 /* CubeGeometry.cpp */; };
-		C149C1861D221A4000988F89 /* RectangleGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C149C1841D221A4000988F89 /* RectangleGeometry.cpp */; };
 		C149C18D1D2338A700988F89 /* MeshGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C149C18B1D2338A700988F89 /* MeshGeometry.cpp */; };
 		C18167B01D26224C00AB90DD /* btGpu3DGridBroadphase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C18167251D26224C00AB90DD /* btGpu3DGridBroadphase.cpp */; };
 		C18167B11D26224C00AB90DD /* btParallelConstraintSolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C181672D1D26224C00AB90DD /* btParallelConstraintSolver.cpp */; };
@@ -539,10 +537,6 @@
 		C149C1791D1F75BD00988F89 /* TornadoData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TornadoData.hpp; sourceTree = "<group>"; };
 		C149C17E1D221A1F00988F89 /* Geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Geometry.cpp; sourceTree = "<group>"; };
 		C149C17F1D221A1F00988F89 /* Geometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Geometry.hpp; sourceTree = "<group>"; };
-		C149C1811D221A3400988F89 /* CubeGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CubeGeometry.cpp; sourceTree = "<group>"; };
-		C149C1821D221A3400988F89 /* CubeGeometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CubeGeometry.hpp; sourceTree = "<group>"; };
-		C149C1841D221A4000988F89 /* RectangleGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RectangleGeometry.cpp; sourceTree = "<group>"; };
-		C149C1851D221A4000988F89 /* RectangleGeometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RectangleGeometry.hpp; sourceTree = "<group>"; };
 		C149C18B1D2338A700988F89 /* MeshGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeshGeometry.cpp; sourceTree = "<group>"; };
 		C149C18C1D2338A700988F89 /* MeshGeometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MeshGeometry.hpp; sourceTree = "<group>"; };
 		C18167251D26224C00AB90DD /* btGpu3DGridBroadphase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = btGpu3DGridBroadphase.cpp; sourceTree = "<group>"; };
@@ -1197,10 +1191,6 @@
 			children = (
 				C149C17F1D221A1F00988F89 /* Geometry.hpp */,
 				C149C17E1D221A1F00988F89 /* Geometry.cpp */,
-				C149C1821D221A3400988F89 /* CubeGeometry.hpp */,
-				C149C1811D221A3400988F89 /* CubeGeometry.cpp */,
-				C149C1851D221A4000988F89 /* RectangleGeometry.hpp */,
-				C149C1841D221A4000988F89 /* RectangleGeometry.cpp */,
 				C149C18C1D2338A700988F89 /* MeshGeometry.hpp */,
 				C149C18B1D2338A700988F89 /* MeshGeometry.cpp */,
 			);
@@ -1655,10 +1645,8 @@
 				C18167F61D26224C00AB90DD /* Win32ThreadSupport.cpp in Sources */,
 				C12429A71D19FE8F00CEABBF /* Shader.cpp in Sources */,
 				C18168241D26B89F00AB90DD /* btSoftRigidCollisionAlgorithm.cpp in Sources */,
-				C149C1861D221A4000988F89 /* RectangleGeometry.cpp in Sources */,
 				C1242DC41D1A008C00CEABBF /* btGeometryUtil.cpp in Sources */,
 				C1242CF51D1A008C00CEABBF /* btUniformScalingShape.cpp in Sources */,
-				C149C1831D221A3400988F89 /* CubeGeometry.cpp in Sources */,
 				C149C17A1D1F75BD00988F89 /* TornadoData.cpp in Sources */,
 				C1242CE71D1A008C00CEABBF /* btTetrahedronShape.cpp in Sources */,
 				C1242C871D1A008C00CEABBF /* btCollisionObject.cpp in Sources */,
