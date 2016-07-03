@@ -99,10 +99,10 @@ namespace njli
                 glEnableVertexAttribArray(inTransformAttrib + 1);
                 glEnableVertexAttribArray(inTransformAttrib + 2);
                 glEnableVertexAttribArray(inTransformAttrib + 3);
-                glVertexAttribPointer(inTransformAttrib + 0, 4, GL_FLOAT, 0, 64, (GLvoid*)0);
-                glVertexAttribPointer(inTransformAttrib + 1, 4, GL_FLOAT, 0, 64, (GLvoid*)16);
-                glVertexAttribPointer(inTransformAttrib + 2, 4, GL_FLOAT, 0, 64, (GLvoid*)32);
-                glVertexAttribPointer(inTransformAttrib + 3, 4, GL_FLOAT, 0, 64, (GLvoid*)48);
+                glVertexAttribPointer(inTransformAttrib + 0, 4, GL_FLOAT, 0, sizeof(GLfloat) * 16, (GLvoid*)0);
+                glVertexAttribPointer(inTransformAttrib + 1, 4, GL_FLOAT, 0, sizeof(GLfloat) * 16, (GLvoid*)16);
+                glVertexAttribPointer(inTransformAttrib + 2, 4, GL_FLOAT, 0, sizeof(GLfloat) * 16, (GLvoid*)32);
+                glVertexAttribPointer(inTransformAttrib + 3, 4, GL_FLOAT, 0, sizeof(GLfloat) * 16, (GLvoid*)48);
                 glBindBuffer(GL_ARRAY_BUFFER, 0);
             }
             
@@ -116,10 +116,10 @@ namespace njli
 //                glEnableVertexAttribArray(inColorTransform + 1);
 //                glEnableVertexAttribArray(inColorTransform + 2);
 //                glEnableVertexAttribArray(inColorTransform + 3);
-//                glVertexAttribPointer(inColorTransform + 0, 4, GL_FLOAT, 0, 64, (GLvoid*)0);
-//                glVertexAttribPointer(inColorTransform + 1, 4, GL_FLOAT, 0, 64, (GLvoid*)16);
-//                glVertexAttribPointer(inColorTransform + 2, 4, GL_FLOAT, 0, 64, (GLvoid*)32);
-//                glVertexAttribPointer(inColorTransform + 3, 4, GL_FLOAT, 0, 64, (GLvoid*)48);
+//                glVertexAttribPointer(inColorTransform + 0, 4, GL_FLOAT, 0, sizeof(GLfloat) * 16, (GLvoid*)0);
+//                glVertexAttribPointer(inColorTransform + 1, 4, GL_FLOAT, 0, sizeof(GLfloat) * 16, (GLvoid*)16);
+//                glVertexAttribPointer(inColorTransform + 2, 4, GL_FLOAT, 0, sizeof(GLfloat) * 16, (GLvoid*)32);
+//                glVertexAttribPointer(inColorTransform + 3, 4, GL_FLOAT, 0, sizeof(GLfloat) * 16, (GLvoid*)48);
 //                glBindBuffer(GL_ARRAY_BUFFER, 0);
 //            }
             
@@ -133,10 +133,10 @@ namespace njli
                 glEnableVertexAttribArray(inNormalMatrixAttrib + 1);
                 glEnableVertexAttribArray(inNormalMatrixAttrib + 2);
                 glEnableVertexAttribArray(inNormalMatrixAttrib + 3);
-                glVertexAttribPointer(inNormalMatrixAttrib + 0, 4, GL_FLOAT, 0, 64, (GLvoid*)0);
-                glVertexAttribPointer(inNormalMatrixAttrib + 1, 4, GL_FLOAT, 0, 64, (GLvoid*)16);
-                glVertexAttribPointer(inNormalMatrixAttrib + 2, 4, GL_FLOAT, 0, 64, (GLvoid*)32);
-                glVertexAttribPointer(inNormalMatrixAttrib + 3, 4, GL_FLOAT, 0, 64, (GLvoid*)48);
+                glVertexAttribPointer(inNormalMatrixAttrib + 0, 4, GL_FLOAT, 0, sizeof(GLfloat) * 16, (GLvoid*)0);
+                glVertexAttribPointer(inNormalMatrixAttrib + 1, 4, GL_FLOAT, 0, sizeof(GLfloat) * 16, (GLvoid*)16);
+                glVertexAttribPointer(inNormalMatrixAttrib + 2, 4, GL_FLOAT, 0, sizeof(GLfloat) * 16, (GLvoid*)32);
+                glVertexAttribPointer(inNormalMatrixAttrib + 3, 4, GL_FLOAT, 0, sizeof(GLfloat) * 16, (GLvoid*)48);
                 glBindBuffer(GL_ARRAY_BUFFER, 0);
             }
             {
@@ -466,11 +466,11 @@ namespace njli
                 unsigned long p = ((index * STRIDE) + (16 * currentVertex));
                 int cmp = memcmp(m_ModelViewTransformData + p,
                                  m_MatrixBuffer,
-                                 sizeof(float) * 16);
+                                 sizeof(GLfloat) * 16);
                 
                 if(0 != cmp)
                 {
-                    memcpy(m_ModelViewTransformData + p, m_MatrixBuffer, sizeof(float) * 16);
+                    memcpy(m_ModelViewTransformData + p, m_MatrixBuffer, sizeof(GLfloat) * 16);
                 }
             }
             enableModelViewBufferChanged(true);
@@ -489,7 +489,7 @@ namespace njli
                 unsigned long p = ((index * STRIDE) + (16 * currentVertex));
                 memcpy(m_MatrixBuffer,
                        m_ModelViewTransformData + p,
-                       sizeof(float) * 16);
+                       sizeof(GLfloat) * 16);
             }
             
             transform.setFromOpenGLMatrix(m_MatrixBuffer);
@@ -511,13 +511,13 @@ namespace njli
 //                
 //                int cmp = memcmp(m_ColorTransformData + p,
 //                                 m_MatrixBuffer,
-//                                 sizeof(float) * 16);
+//                                 sizeof(GLfloat) * 16);
 //                
 //                if(0 != cmp)
 //                {
 //                    memcpy(m_ColorTransformData + p,
 //                           m_MatrixBuffer,
-//                           sizeof(float) * 16);
+//                           sizeof(GLfloat) * 16);
 //                }
 //            }
 //        }
@@ -535,7 +535,7 @@ namespace njli
 //                unsigned long p = ((index * STRIDE) + (16 * currentVertex));
 //                memcpy(m_MatrixBuffer,
 //                       m_ColorTransformData + p,
-//                       sizeof(float) * 16);
+//                       sizeof(GLfloat) * 16);
 //            }
 //            
 //            transform.setFromOpenGLMatrix(m_MatrixBuffer);
@@ -557,13 +557,13 @@ namespace njli
                 
                 int cmp = memcmp(m_NormalMatrixTransformData + p,
                                  m_MatrixBuffer,
-                                 sizeof(float) * 16);
+                                 sizeof(GLfloat) * 16);
                 
                 if(0 != cmp)
                 {
                     memcpy(m_NormalMatrixTransformData + p,
                            m_MatrixBuffer,
-                           sizeof(float) * 16);
+                           sizeof(GLfloat) * 16);
                 }
             }
             enableNormalMatrixBufferChanged(true);
@@ -582,7 +582,7 @@ namespace njli
                 unsigned long p = ((index * STRIDE) + (16 * currentVertex));
                 memcpy(m_MatrixBuffer,
                        m_NormalMatrixTransformData + p,
-                       sizeof(float) * 16);
+                       sizeof(GLfloat) * 16);
             }
             
             transform.setFromOpenGLMatrix(m_MatrixBuffer);

@@ -126,6 +126,9 @@ namespace njli
         glClearColor(0.52, 0.86, 0.99, 1.0f);
         
         glEnable(GL_DEPTH_TEST);
+//        glFrontFace(GL_CCW);
+//        glCullFace(GL_BACK);
+//        glEnable(GL_CULL_FACE);
         
         srand((unsigned int)time(0));
         
