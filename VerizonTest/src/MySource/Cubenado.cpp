@@ -137,7 +137,7 @@ namespace njli
         
         m_Scene->addActiveNode(m_CameraNode);
         m_Scene->addActiveCamera(m_Camera);
-        m_Scene->getRootNode()->setOrigin(btVector3(-10.0f, -10.0f, 130.0f));
+        m_Scene->getRootNode()->setOrigin(btVector3(-10.0f, -300.0f, 900.0f));
         
         assert(m_Shader->load(loadFile("shaders/Shader.vsh"), loadFile("shaders/Shader.fsh")));
         assert(m_ToonShader->load(loadFile("shaders/Toon.vsh"), loadFile("shaders/Toon.fsh")));
@@ -172,13 +172,12 @@ namespace njli
 //            node->getTornadoData()->setMaxDegreesPerTimestep(randomFloat(1.0f, 45.0f) + (randomFloat(1.0f, 45.0f) * m_Randomness));
             
             
-            node->setColorBase(btVector4(randomFloat(0.0f, 1.0f),
-                                         randomFloat(0.0f, 1.0f),
-                                         randomFloat(0.0f, 1.0f), 1.0f));
+//            node->setColorBase(btVector4(randomFloat(0.0f, 1.0f),
+//                                         randomFloat(0.0f, 1.0f),
+//                                         randomFloat(0.0f, 1.0f), 1.0f));
             
             
             
-//            node->setScale(randomFloat(0.8f, 1.1f));
         }
         
         setupPhysics();
@@ -202,9 +201,38 @@ namespace njli
              i++)
         {
             Node *node = *i;
-            node->addImpulseForce(btVector3(randomFloat(0.0f, 1.0f),
-                                        randomFloat(0.0f, 1.0f),
-                                        randomFloat(0.0f, 1.0f)).normalized() * randomFloat(-1.0f, 1.0f));
+            
+            btScalar rad(0.5);
+            
+            btScalar vertical_mag(randomFloat(4200, 4700));
+            btScalar horizontal_mag(randomFloat(2000, 2000));
+            
+            btVector3 origin(node->getTransform().getOrigin());
+            btVector3 forward(origin.normalized());
+            forward.setY(0.0f);
+            
+            btVector3 impulse(0,0,0);
+            
+            if(origin.length2() > (rad * rad))
+            {
+                impulse += btVector3(-forward);
+            }
+            else
+            {
+                impulse += btVector3(forward.rotate(btVector3(0,1,0), btRadians(90 + 0)));
+                
+            }
+            impulse.setY(0);
+            impulse *= horizontal_mag;
+            
+            if(origin.y() <= 0)
+            {
+                impulse+=btVector3(0, vertical_mag, 0);
+            }
+            
+            node->addImpulseForce(impulse);
+            
+            
         }
 //        long cubesToDraw = m_NumberOfCubes;
 //        
@@ -363,17 +391,17 @@ namespace njli
     void Cubenado::setStartPositions()
     {
         float startX = 0.0f;
-        float startY = 0.0f;
+        float startY = 10.0f;
         float startZ = 0.0f;
         
         float xinc = 2.0f;
-        float xmargin = 0.1;
+        float xmargin = 1.0;
         
         float yinc = 2.0f;
-        float ymargin = 0.1f;
+        float ymargin = 30.0f;
         
         float zinc = 2.0f;
-        float zmargin = 0.1;
+        float zmargin = 1.0;
         
         
 //        int currentIndex = 1;
@@ -402,7 +430,10 @@ namespace njli
                     {
                         Node *node = m_CubeNodes.at(idx++);
                         if(node)
+                        {
                             node->setOrigin(btVector3(currentX, currentY, currentZ));
+                            node->setGravity(btVector3(0,-9.81,0));
+                        }
                     }
                     currentZ += (zinc + zmargin);
                 }

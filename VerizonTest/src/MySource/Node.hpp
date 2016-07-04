@@ -106,6 +106,8 @@ namespace njli
         TornadoData *const getTornadoData()const;
         
         void setGravity(const btVector3 &vec);
+        void setVelocity(const btVector3 &vec);
+        const btVector3 &getVelocity()const;
         void addImpulseForce(const btVector3 &vec);
         void setMaxSpeed(float speed);
         float getMaxSpeed()const;

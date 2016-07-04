@@ -614,6 +614,17 @@ namespace njli
     {
         *m_GravityForce = vec;
     }
+    
+    void Node::setVelocity(const btVector3 &vec)
+    {
+        *m_CurrentVelocity = vec;
+    }
+    
+    const btVector3 &Node::getVelocity()const
+    {
+        return *m_CurrentVelocity;
+    }
+    
     void Node::addImpulseForce(const btVector3 &vec)
     {
         *m_ImpulseForce += vec;
@@ -637,11 +648,9 @@ namespace njli
         
         btVector3 acceleration((*m_ImpulseForce) / mass);
         
-        *m_CurrentVelocity = (*m_CurrentVelocity) + acceleration * timestep;
-//        std::cout << m_CurrentVelocity->x() << ", " << m_CurrentVelocity->y() << ", " << m_CurrentVelocity->z() << std::endl;
-        
-        if(m_CurrentVelocity->length() > getMaxSpeed())
-            *m_CurrentVelocity = m_CurrentVelocity->normalized() * getMaxSpeed();
+        setVelocity(getVelocity() + acceleration * timestep);
+        if(getVelocity().length() > getMaxSpeed())
+            setVelocity(getVelocity().normalized() * getMaxSpeed());
         
         setOrigin(getTransform().getOrigin() + (*m_CurrentVelocity) * timestep);
         
@@ -649,7 +658,7 @@ namespace njli
         {
             *m_HeadingVector = m_CurrentVelocity->normalized();
         }
-//        *m_ImpulseForce = btVector3(0,0,0);
+        *m_ImpulseForce = btVector3(0,0,0);
     }
     void Node::render(Geometry *const geometry)
     {
