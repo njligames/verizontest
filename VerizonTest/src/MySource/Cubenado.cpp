@@ -18,8 +18,6 @@
 #include "PhysicsShapeCube.hpp"
 #include "PhysicsWorld.hpp"
 
-#include "TornadoData.hpp"
-
 #include "btQuaternion.h"
 
 using namespace std;
@@ -67,6 +65,7 @@ namespace njli
     Cubenado::Cubenado():
     m_Shader(new Shader()),
     m_ToonShader(new Shader()),
+    m_RimLite(new Shader()),
     m_Geometry(new MeshGeometry()),
     m_Camera(new Camera()),
     m_CameraNode(new Node()),
@@ -119,16 +118,20 @@ namespace njli
         
         delete m_Shader;
         m_Shader = NULL;
+        
+        delete m_RimLite;
+        m_RimLite = NULL;
     }
     
     void Cubenado::create(int x, int y, int width, int height)
     {
-        glClearColor(0.52, 0.86, 0.99, 1.0f);
+//        glClearColor(0.52, 0.86, 0.99, 1.0f);
+        glClearColor(0.7,0.7,0.7,1);
         
         glEnable(GL_DEPTH_TEST);
-//        glFrontFace(GL_CCW);
-//        glCullFace(GL_BACK);
-//        glEnable(GL_CULL_FACE);
+        glFrontFace(GL_CW);
+        glCullFace(GL_BACK);
+        glEnable(GL_CULL_FACE);
         
         srand((unsigned int)time(0));
         
@@ -141,9 +144,15 @@ namespace njli
         
         assert(m_Shader->load(loadFile("shaders/Shader.vsh"), loadFile("shaders/Shader.fsh")));
         assert(m_ToonShader->load(loadFile("shaders/Toon.vsh"), loadFile("shaders/Toon.fsh")));
+        assert(m_RimLite->load(loadFile("shaders/RimLite.vsh"), loadFile("shaders/RimLite.fsh")));
         
+        btTransform light(btTransform::getIdentity());
+        light.setOrigin(btVector3(0,0,-1));
+        m_RimLite->setUniformValue("light_position", light);
+               
         m_ShaderMap.insert(ShaderPair("Default", m_Shader));
         m_ShaderMap.insert(ShaderPair("Toon", m_ToonShader));
+        m_ShaderMap.insert(ShaderPair("Rim lite", m_RimLite));
         
         m_Geometry->load(m_Shader, loadFile("models/cube.obj"));
         
@@ -165,12 +174,6 @@ namespace njli
             m_Scene->getRootNode()->addChildNode(node);
             
             node->addGeometry(m_Geometry);
-            
-//            node->getTornadoData()->setBaseDegreesPerTimeStep(randomFloat(1.0f, 90.0f));
-//            
-//            node->getTornadoData()->setMaxDegreesPerTimestep(1.0f);
-//            node->getTornadoData()->setMaxDegreesPerTimestep(randomFloat(1.0f, 45.0f) + (randomFloat(1.0f, 45.0f) * m_Randomness));
-            
             
 //            node->setColorBase(btVector4(randomFloat(0.0f, 1.0f),
 //                                         randomFloat(0.0f, 1.0f),
@@ -196,8 +199,10 @@ namespace njli
                 
     void Cubenado::update(float step)
     {
-        for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
-             i != m_CubeNodes.end();
+        long cubesToDraw = m_NumberOfCubes;
+        
+        for (std::vector<Node*>::reverse_iterator i = m_CubeNodes.rbegin();
+             i != m_CubeNodes.rend();
              i++)
         {
             Node *node = *i;
@@ -205,7 +210,11 @@ namespace njli
             btScalar rad(0.5);
             
             btScalar vertical_mag(randomFloat(4200, 4700));
-            btScalar horizontal_mag(randomFloat(2000, 2000));
+            
+            btScalar horizontal_mag_from = 2000;
+            btScalar horizontal_mat_to = horizontal_mag_from + (500 * m_Randomness);
+            
+            btScalar horizontal_mag(randomFloat(horizontal_mag_from, horizontal_mat_to));
             
             btVector3 origin(node->getTransform().getOrigin());
             btVector3 forward(origin.normalized());
@@ -232,35 +241,14 @@ namespace njli
             
             node->addImpulseForce(impulse);
             
+            node->setNormalMatrix(node->getTransform().getBasis().inverse().transpose());
             
+            node->enableHideGeometry(false);
+            if(cubesToDraw < 0)
+                node->enableHideGeometry();
+            cubesToDraw--;
+
         }
-//        long cubesToDraw = m_NumberOfCubes;
-//        
-//        for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
-//             i != m_CubeNodes.end();
-//             i++)
-//        {
-//            Node *node = *i;
-//            
-////            node->getTornadoData()->setMaxDegreesPerTimestep(randomFloat(1.0f, 45.0f) + (randomFloat(1.0f, 45.0f) * m_Randomness));
-//            
-//            node->getTornadoData()->update(step);
-//            
-//            
-//            btVector3 axis = randomPosition(btVector3(0.0f, 0.0f, 0.0f), btVector3(1.0f, 1.0f, 1.0f)).normalized();
-////            node->setRotation(node->getRotation() * btQuaternion(axis, step + (step * m_Randomness)));
-//            
-//            node->setTransform(node->getTornadoData()->getBaseTransform() * node->getTransform());
-//            
-//            
-//            node->setNormalMatrix(node->getTransform().getBasis().inverse().transpose());
-//            
-//            node->enableHideGeometry(false);
-//            if(cubesToDraw < 0)
-//                node->enableHideGeometry();
-//            cubesToDraw--;
-//                
-//        }
         
         m_Scene->update(step, 1, 1.0f/30.0f);
     }
@@ -290,15 +278,6 @@ namespace njli
     {
         assert(percent >= 0.0f && percent <= 1.0f);
         m_Randomness = percent;
-        
-        for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
-             i != m_CubeNodes.end();
-             i++)
-        {
-            Node *node = *i;
-            node->getTornadoData()->setMaxDegreesPerTimestep(node->getTornadoData()->getBaseDegreesPerTimeStep() + (randomFloat(1.0f, 10.0f) * m_Randomness));
-            
-        }
     }
     
     float Cubenado::getRandomness()const
@@ -357,7 +336,7 @@ namespace njli
     
     void Cubenado::setupPhysics()
     {
-//        m_Scene->getPhysicsWorld()->setGravity(btVector3(0,-9.81,0));
+        m_Scene->getPhysicsWorld()->setGravity(btVector3(0,-9.81,0));
         m_PhysicsShapeCube->setHalfExtends(btVector3(1.0f, 1.0f, 1.0f));
         
         unsigned long idx = 0;
@@ -372,11 +351,7 @@ namespace njli
             PhysicsBodyRigid *rigidBody = m_PhysicsBodies.at(idx++);
             
             rigidBody->addPhysicsShape(m_PhysicsShapeCube);
-//            if(randomFloat(0.0, 1.0) < 0.01)
-//                rigidBody->setStaticPhysics();
-//            else
-                rigidBody->setDynamicPhysics();
-//            rigidBody->setKinematicPhysics();
+            rigidBody->setKinematicPhysics();
             rigidBody->setMass(1.0f);
             rigidBody->setScene(m_Scene);
             
@@ -403,20 +378,11 @@ namespace njli
         float zinc = 2.0f;
         float zmargin = 1.0;
         
-        
-//        int currentIndex = 1;
-//        int amountHigh = sqrt(Geometry::MAX_CUBES);
-//        int currentIndexIncrement = 1;
-        
         float currentX = startX;
         float currentY = startY;
         float currentZ = startZ;
         
-//        float currentBaseX = 0.0f;
-//        float currentBaseZ = 0.0f;
-        
         float dim = m_CubeNodes.size();
-//        dim = sqrt(dim);
         dim = pow(dim, 1.0/3.0);
         unsigned long idx = 0;
         
@@ -443,32 +409,6 @@ namespace njli
             currentY = startY;
             currentX += (xinc + xmargin);
         }
-//        for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
-//             i != m_CubeNodes.end();
-//             i++)
-//        {
-//            Node *node = *i;
-//            
-//            node->setOrigin(btVector3(0.0f, currentY, 0.0f));
-////            while(currentIndex <= (currentIndexIncrement * currentIndexIncrement))
-////            {
-////                while(currentX <  )
-////                node->setOrigin(btVector3(0.0f, currentY, 0.0f));
-////                node->getTornadoData()->setTranslationOffset(btVector3(currentX, 0.0f, currentZ));
-////                currentIndex++;
-////            }
-////            
-////            currentIndexIncrement++;
-////            
-////            currentBaseX -= (xinc + xmargin);
-////            currentBaseZ -= (zinc + zmargin);
-////            
-////            currentX = currentBaseX;
-//            currentY += (yinc + ymargin);
-////            currentZ = currentBaseZ;
-//            
-//            
-//        }
     }
     
     btVector3 Cubenado::randomPosition(const btVector3 &min, const btVector3 &max)const

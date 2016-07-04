@@ -80,6 +80,8 @@ struct thread_data{
     picker.dataSource = self;
     picker.delegate = self;
     self.tf.inputView = picker;
+    [self.tf becomeFirstResponder];
+    [self.tf resignFirstResponder];
     
     
     std::vector<std::string> names = njli::Cubenado::getInstance()->getShaderNames();
@@ -191,24 +193,24 @@ void *_update(void *threadarg)
 
 - (void)update
 {
-    njli::Cubenado::getInstance()->update(self.timeSinceLastUpdate);
+//    njli::Cubenado::getInstance()->update(self.timeSinceLastUpdate);
     
-//    threadData.timeSinceLastUpdate = self.timeSinceLastUpdate;
-//    
-//    pthread_t threads;
-//    int rc;
-//    rc = pthread_create(&threads, NULL, _update, (void *)&threadData);
-//    if (rc){
-//        printf("ERROR; return code from pthread_create() is %d\n", rc);
-//        exit(-1);
-//    }
-//    
-//    if(pthread_join(threads, NULL))
-//    {
-//        
-//        fprintf(stderr, "Error joining thread\n");
-//        exit(-1);
-//    }
+    threadData.timeSinceLastUpdate = self.timeSinceLastUpdate;
+    
+    pthread_t threads;
+    int rc;
+    rc = pthread_create(&threads, NULL, _update, (void *)&threadData);
+    if (rc){
+        printf("ERROR; return code from pthread_create() is %d\n", rc);
+        exit(-1);
+    }
+    
+    if(pthread_join(threads, NULL))
+    {
+        
+        fprintf(stderr, "Error joining thread\n");
+        exit(-1);
+    }
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
@@ -226,6 +228,7 @@ void *_update(void *threadarg)
     
     njli::Cubenado::getInstance()->resize(0, 0, view.frame.size.width * view.contentScaleFactor, view.frame.size.height * view.contentScaleFactor);
 }
+
 - (IBAction)numberOfCubesChanged:(id)sender
 {
     UISlider *slider = sender;
@@ -237,6 +240,7 @@ void *_update(void *threadarg)
     NSString *s = [NSString stringWithFormat:@"Number of Cubes: %d", numberOfCubes];
     [_lblNumberOfCubes setText:s];
 }
+
 - (IBAction)randomnessPercentChanged:(id)sender
 {
     UISlider *slider = sender;
@@ -245,6 +249,7 @@ void *_update(void *threadarg)
     float randomness = [slider value];
     njli::Cubenado::getInstance()->setRandomness(randomness/100.0f);
     NSString *s = [NSString stringWithFormat:@"Randomness: %.0f%%", njli::Cubenado::getInstance()->getRandomness()*100];
+    NSLog(s);
     [_lblRandomnessPercent setText:s];
 }
 

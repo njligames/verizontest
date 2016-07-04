@@ -135,7 +135,6 @@ namespace njli
         Geometry *m_Geometry;
         unsigned long m_GeometryIndex;
         
-        TornadoData *m_TornadoData;
         bool m_HideGeometry;
         float m_Opacity;
         btMatrix3x3 *m_NormalMatrix;

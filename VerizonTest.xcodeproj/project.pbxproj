@@ -149,7 +149,6 @@
 		C1242DD61D1A1E2000CEABBF /* assets in Resources */ = {isa = PBXBuildFile; fileRef = C1242DD51D1A1E2000CEABBF /* assets */; };
 		C1242DD91D1A1FFD00CEABBF /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1242DD71D1A1FFD00CEABBF /* Scene.cpp */; };
 		C1242DDD1D1B311000CEABBF /* AbstractDecorator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1242DDB1D1B311000CEABBF /* AbstractDecorator.cpp */; };
-		C149C17A1D1F75BD00988F89 /* TornadoData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C149C1781D1F75BD00988F89 /* TornadoData.cpp */; };
 		C149C1801D221A1F00988F89 /* Geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C149C17E1D221A1F00988F89 /* Geometry.cpp */; };
 		C149C18D1D2338A700988F89 /* MeshGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C149C18B1D2338A700988F89 /* MeshGeometry.cpp */; };
 		C18167B01D26224C00AB90DD /* btGpu3DGridBroadphase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C18167251D26224C00AB90DD /* btGpu3DGridBroadphase.cpp */; };
@@ -533,8 +532,6 @@
 		C1242DDA1D1AE60300CEABBF /* btVector2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = btVector2.h; sourceTree = "<group>"; };
 		C1242DDB1D1B311000CEABBF /* AbstractDecorator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AbstractDecorator.cpp; sourceTree = "<group>"; };
 		C1242DDC1D1B311000CEABBF /* AbstractDecorator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AbstractDecorator.hpp; sourceTree = "<group>"; };
-		C149C1781D1F75BD00988F89 /* TornadoData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TornadoData.cpp; sourceTree = "<group>"; };
-		C149C1791D1F75BD00988F89 /* TornadoData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TornadoData.hpp; sourceTree = "<group>"; };
 		C149C17E1D221A1F00988F89 /* Geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Geometry.cpp; sourceTree = "<group>"; };
 		C149C17F1D221A1F00988F89 /* Geometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Geometry.hpp; sourceTree = "<group>"; };
 		C149C18B1D2338A700988F89 /* MeshGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeshGeometry.cpp; sourceTree = "<group>"; };
@@ -772,8 +769,6 @@
 				C12429AE1D19FEF300CEABBF /* Camera.cpp */,
 				C1242DD81D1A1FFD00CEABBF /* Scene.hpp */,
 				C1242DD71D1A1FFD00CEABBF /* Scene.cpp */,
-				C149C1791D1F75BD00988F89 /* TornadoData.hpp */,
-				C149C1781D1F75BD00988F89 /* TornadoData.cpp */,
 			);
 			path = MySource;
 			sourceTree = "<group>";
@@ -1647,7 +1642,6 @@
 				C18168241D26B89F00AB90DD /* btSoftRigidCollisionAlgorithm.cpp in Sources */,
 				C1242DC41D1A008C00CEABBF /* btGeometryUtil.cpp in Sources */,
 				C1242CF51D1A008C00CEABBF /* btUniformScalingShape.cpp in Sources */,
-				C149C17A1D1F75BD00988F89 /* TornadoData.cpp in Sources */,
 				C1242CE71D1A008C00CEABBF /* btTetrahedronShape.cpp in Sources */,
 				C1242C871D1A008C00CEABBF /* btCollisionObject.cpp in Sources */,
 				C18168221D26B89F00AB90DD /* btSoftBodyRigidBodyCollisionConfiguration.cpp in Sources */,

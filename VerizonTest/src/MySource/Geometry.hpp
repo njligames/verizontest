@@ -20,8 +20,10 @@
 //#define USE_HALF_FLOAT
 
 
+typedef unsigned short hfloat;
+
 #ifdef USE_HALF_FLOAT
-typedef GLhalf GLfptype;
+typedef hfloat GLfptype;
 #define GL_INDEX_TYPE (GL_HALF_FLOAT_OES)
 
 #else

@@ -198,6 +198,35 @@ namespace njli
         return false;
     }
     
+    bool Shader::setUniformValue(const char *uniformName, const btVector3 &value)
+    {
+        int location = getUniformLocation(uniformName);
+        if(location != -1)
+        {
+            m_mat4Buffer[0] = value.x();
+            m_mat4Buffer[1] = value.y();
+            m_mat4Buffer[2] = value.z();
+            m_mat4Buffer[3] = value.w();
+            glUniform3fv(location, 1, m_mat4Buffer);
+            return true;
+        }
+        return false;
+    }
+    
+    bool Shader::getUniformValue(const char *uniformName, btVector3 &value)
+    {
+        int location = getUniformLocation(uniformName);
+        if(location != -1)
+        {
+            glGetUniformfv(m_Program, location, m_mat4Buffer);
+            value.setX(m_mat4Buffer[0]);
+            value.setX(m_mat4Buffer[1]);
+            value.setX(m_mat4Buffer[2]);
+            return true;
+        }
+        return false;
+    }
+    
     GLuint Shader::compileShader(const std::string &source, GLenum type)
     {
         GLuint shader;

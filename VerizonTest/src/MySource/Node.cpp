@@ -8,7 +8,6 @@
 
 #include "Node.hpp"
 #include "Geometry.hpp"
-#include "TornadoData.hpp"
 #include "Camera.hpp"
 #include "PhysicsBody.hpp"
 
@@ -27,7 +26,6 @@ namespace njli
     m_Camera(NULL),
     m_Geometry(NULL),
     m_GeometryIndex(-1),
-    m_TornadoData(new TornadoData()),
     m_HideGeometry(false),
     m_Opacity(1.0f),
     m_NormalMatrix(new btMatrix3x3(btMatrix3x3::getIdentity())),
@@ -67,9 +65,6 @@ namespace njli
         
         delete m_NormalMatrix;
         m_NormalMatrix = NULL;
-        
-        delete m_TornadoData;
-        m_TornadoData = NULL;
         
         m_Camera = NULL;
         m_ParentNode = NULL;
@@ -544,19 +539,6 @@ namespace njli
     PhysicsBody *const Node::getPhysicsBody()const
     {
         return m_PhysicsBody;
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    TornadoData *const Node::getTornadoData()const
-    {
-        return m_TornadoData;
     }
     
     void Node::setGeometryIndex(unsigned long index)
