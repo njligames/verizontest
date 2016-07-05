@@ -108,7 +108,7 @@ namespace njli
     m_ProjectionMatrixBuffer(new GLfloat[16]),
     m_NodeOwner(NULL),
     m_Near(0.1f),
-    m_Far(1000.0f),
+    m_Far(3000.0f),
     m_Fov(45.0f),
     m_AspectRatio(1.0f),
     m_ProjectionMatrix(new btTransform()),

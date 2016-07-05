@@ -60,7 +60,7 @@ namespace njli
         GLuint m_Program;
         
         GLfloat *m_mat4Buffer;
-        
+        GLfloat *m_vec3Buffer;
         
         typedef std::map<std::string, int> UniformMap;
         typedef std::pair<std::string, int> UniformPair;

@@ -9,12 +9,14 @@ attribute float inHidden;
 //attribute mat4 inColorTransform;
 attribute mat4 inNormalMatrix;
 
-
 varying vec4 destinationColor;
+//varying vec2 destinationTexCoord2D;
+//varying mat4 destinationColorTransform;
+varying vec3 eyespaceNormal;
+varying vec4 eyespacePosition;
+
 uniform mat4 modelView;
 uniform mat4 projection;
-
-//uniform mat4 modelViewProjection;
 
 mat3 mat3_emu(mat4 m4) {
     return mat3(
@@ -25,24 +27,22 @@ mat3 mat3_emu(mat4 m4) {
 
 void main ()
 {
-    mat3 normal = mat3_emu(inNormalMatrix);
-    
-    vec3 eyeNormal = normalize(normal * inNormal.xyz);
-    vec3 lightPosition = vec3(0.0, 0.0, -1.0);
-    float nDotVP = max(0.0, dot(eyeNormal, normalize(lightPosition)));
-    
+    mat3 normalMatrix = mat3_emu(inNormalMatrix);
+    vec3 normal = inNormal.xyz;
     vec4 position = inPosition;
+    
     if(inHidden == 1.0)
     {
         position = vec4(modelView[3][0], modelView[3][1], modelView[3][2], modelView[3][3]);
     }
     
-    vec4 color = inColor * nDotVP;
+    eyespaceNormal = normalMatrix * normal;
+    eyespacePosition = modelView * position;
+    
+    vec4 color = inColor;
     color.a = inOpacity;
     
     destinationColor = color;
-    
-    gl_Position = (((modelView * projection) * inTransform) * position);
-//    gl_Position = ((modelViewProjection * inTransform) * position);
+    gl_Position = (((projection * modelView) * inTransform) * position);
 }
 

@@ -67,7 +67,7 @@ struct thread_data{
     NSString *s = [NSString stringWithFormat:@"Randomness: %.0f%%", njli::Cubenado::getInstance()->getRandomness()*100];
     [_lblRandomnessPercent setText:s];
     [_sldRandomnessPercent setMinimumValue:0];
-    [_sldRandomnessPercent setMaximumValue:100];
+    [_sldRandomnessPercent setMaximumValue:1];
     [_sldRandomnessPercent setValue:njli::Cubenado::getInstance()->getRandomness()];
     
     s = [NSString stringWithFormat:@"Number of Cubes: %d", njli::Geometry::MAX_CUBES];
@@ -249,7 +249,7 @@ void *_update(void *threadarg)
     float randomness = [slider value];
     njli::Cubenado::getInstance()->setRandomness(randomness/100.0f);
     NSString *s = [NSString stringWithFormat:@"Randomness: %.0f%%", njli::Cubenado::getInstance()->getRandomness()*100];
-    NSLog(s);
+//    NSLog(s);
     [_lblRandomnessPercent setText:s];
 }
 

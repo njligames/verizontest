@@ -14,13 +14,17 @@ namespace njli
 {   
     Shader::Shader():
     m_Program(0),
-    m_mat4Buffer(new GLfloat[16])
+    m_mat4Buffer(new GLfloat[16]),
+    m_vec3Buffer(new GLfloat[3])
     {
         
     }
     
     Shader::~Shader()
     {
+        delete [] m_vec3Buffer;
+        m_vec3Buffer = NULL;
+        
         delete [] m_mat4Buffer;
         m_mat4Buffer = NULL;
         
@@ -203,11 +207,8 @@ namespace njli
         int location = getUniformLocation(uniformName);
         if(location != -1)
         {
-            m_mat4Buffer[0] = value.x();
-            m_mat4Buffer[1] = value.y();
-            m_mat4Buffer[2] = value.z();
-            m_mat4Buffer[3] = value.w();
-            glUniform3fv(location, 1, m_mat4Buffer);
+            glUniform3f(location, value.x(), value.y(), value.z());
+            
             return true;
         }
         return false;
@@ -218,10 +219,12 @@ namespace njli
         int location = getUniformLocation(uniformName);
         if(location != -1)
         {
-            glGetUniformfv(m_Program, location, m_mat4Buffer);
-            value.setX(m_mat4Buffer[0]);
-            value.setX(m_mat4Buffer[1]);
-            value.setX(m_mat4Buffer[2]);
+            glGetUniformfv(m_Program, location, m_vec3Buffer);
+            
+            value.setX(m_vec3Buffer[0]);
+            value.setY(m_vec3Buffer[1]);
+            value.setZ(m_vec3Buffer[2]);
+            
             return true;
         }
         return false;

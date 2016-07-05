@@ -156,7 +156,6 @@ namespace njli
             while(std::getline(ss_faceData, faceData, '/'))
             {
                 unsigned long idx = atoi(faceData.c_str()) - 1;
-                std::cout << idx << std::endl;
                 
                 switch (ii)
                 {

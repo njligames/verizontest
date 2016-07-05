@@ -20,6 +20,8 @@
 
 #include "btQuaternion.h"
 
+//#define EDIT_SHADER
+
 using namespace std;
 
 static float randomFloat(float min, float max)
@@ -70,7 +72,7 @@ namespace njli
     m_Camera(new Camera()),
     m_CameraNode(new Node()),
     m_Scene(new Scene()),
-    m_Randomness(0.0f),
+    m_Randomness(1.0f),
     m_NumberOfCubes(Geometry::MAX_CUBES),
     m_Rotation(0.0f),
     m_PhysicsShapeCube(new PhysicsShapeCube())
@@ -78,8 +80,12 @@ namespace njli
         for (unsigned long i = 0; i < Geometry::MAX_CUBES; i++)
             m_PhysicsBodies.push_back(new PhysicsBodyRigid());
         
+#ifdef EDIT_SHADER
+        m_CubeNodes.push_back(new Node());
+#else
         for (unsigned long i = 0; i < Geometry::MAX_CUBES; i++)
             m_CubeNodes.push_back(new Node());
+#endif
     }
     
     Cubenado::~Cubenado()
@@ -140,15 +146,17 @@ namespace njli
         
         m_Scene->addActiveNode(m_CameraNode);
         m_Scene->addActiveCamera(m_Camera);
-        m_Scene->getRootNode()->setOrigin(btVector3(-10.0f, -300.0f, 900.0f));
+        m_Scene->getRootNode()->setOrigin(btVector3(-10.0f, -300.0f, 1800.0f));
+#ifdef EDIT_SHADER
+        m_Scene->getRootNode()->setOrigin(btVector3(0.0f, 0.0f, 10.0f));
+#endif
         
-        assert(m_Shader->load(loadFile("shaders/Shader.vsh"), loadFile("shaders/Shader.fsh")));
-        assert(m_ToonShader->load(loadFile("shaders/Toon.vsh"), loadFile("shaders/Toon.fsh")));
-        assert(m_RimLite->load(loadFile("shaders/RimLite.vsh"), loadFile("shaders/RimLite.fsh")));
+        assert(m_Shader->load(loadFile("shaders/Shader.vert"), loadFile("shaders/Shader.frag")));
+        assert(m_ToonShader->load(loadFile("shaders/Toon.vert"), loadFile("shaders/Toon.frag")));
+        assert(m_RimLite->load(loadFile("shaders/RimLite.vert"), loadFile("shaders/RimLite.frag")));
         
-        btTransform light(btTransform::getIdentity());
-        light.setOrigin(btVector3(0,0,-1));
-        m_RimLite->setUniformValue("light_position", light);
+        
+        
                
         m_ShaderMap.insert(ShaderPair("Default", m_Shader));
         m_ShaderMap.insert(ShaderPair("Toon", m_ToonShader));
@@ -157,12 +165,6 @@ namespace njli
         m_Geometry->load(m_Shader, loadFile("models/cube.obj"));
         
         setStartPositions();
-        
-        
-        btTransform baseTransform(btTransform::getIdentity());
-        baseTransform.setOrigin(btVector3(0.0f, 0.0f, 2.0f));
-        
-        btQuaternion rot(btVector3(0.0f, 1.0f, 0.0f), m_Rotation);
         
         for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
              i != m_CubeNodes.end();
@@ -175,15 +177,12 @@ namespace njli
             
             node->addGeometry(m_Geometry);
             
-//            node->setColorBase(btVector4(randomFloat(0.0f, 1.0f),
-//                                         randomFloat(0.0f, 1.0f),
-//                                         randomFloat(0.0f, 1.0f), 1.0f));
-            
-            
-            
+            node->setColorBase(btVector4(randomFloat(0.0f, 1.0f),
+                                         randomFloat(0.0f, 1.0f),
+                                         randomFloat(0.0f, 1.0f), 1.0f));
         }
         
-        setupPhysics();
+//        setupPhysics();
     }
     
     void Cubenado::destroy()
@@ -198,9 +197,23 @@ namespace njli
     }
                 
     void Cubenado::update(float step)
-    {
+    {   
+#ifdef EDIT_SHADER
+        Node *node = m_CubeNodes.at(0);
+        
+        node->setNormalMatrix(node->getTransform().getBasis().inverse().transpose());
+        
+        
+        btQuaternion rot1(btVector3(1.0, 0.0, 0.0), m_Rotation);
+        btQuaternion rot2(btVector3(0.0, 1.0, 0.0), m_Rotation);
+        btQuaternion rot3(btVector3(0.0, 0.0, 1.0), m_Rotation);
+        node->setRotation(rot1 * rot2 * rot3);
+        m_Rotation += step;
+        return;
+#endif
         long cubesToDraw = m_NumberOfCubes;
         
+        //https://prezi.com/yxshhdjmxr9q/the-physics-of-tornadoes/
         for (std::vector<Node*>::reverse_iterator i = m_CubeNodes.rbegin();
              i != m_CubeNodes.rend();
              i++)
@@ -209,9 +222,13 @@ namespace njli
             
             btScalar rad(0.5);
             
-            btScalar vertical_mag(randomFloat(4200, 4700));
+            //            25800.13889
+            btScalar vertical_mat_from = 4000;
+            btScalar vertical_mat_to = (vertical_mat_from + (1000 * m_Randomness));
             
-            btScalar horizontal_mag_from = 2000;
+            btScalar vertical_mag(randomFloat(vertical_mat_from, vertical_mat_to));
+            
+            btScalar horizontal_mag_from = 2000;//25800.13889;
             btScalar horizontal_mat_to = horizontal_mag_from + (500 * m_Randomness);
             
             btScalar horizontal_mag(randomFloat(horizontal_mag_from, horizontal_mat_to));
@@ -247,10 +264,8 @@ namespace njli
             if(cubesToDraw < 0)
                 node->enableHideGeometry();
             cubesToDraw--;
-
+            
         }
-        
-        m_Scene->update(step, 1, 1.0f/30.0f);
     }
     
     void Cubenado::render()
@@ -365,6 +380,11 @@ namespace njli
     
     void Cubenado::setStartPositions()
     {
+#ifdef EDIT_SHADER
+        Node *node = m_CubeNodes.at(0);
+        node->setOrigin(btVector3(0,0,0));
+        return;
+#endif
         float startX = 0.0f;
         float startY = 10.0f;
         float startZ = 0.0f;
