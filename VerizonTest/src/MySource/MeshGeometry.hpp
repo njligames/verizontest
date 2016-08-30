@@ -23,7 +23,7 @@ namespace njli
         const MeshGeometry &operator=(const MeshGeometry &rhs);
         ~MeshGeometry();
         
-        virtual void load(Shader *shader, const std::string &filecontent="", MeshType type = MeshType_Obj);
+        virtual void load(Shader *shader, const std::string &filecontent="", unsigned int numInstances = 1, MeshType type = MeshType_Obj);
     protected:
         
         virtual void loadData();

@@ -16,6 +16,7 @@ namespace njli
     class Scene;
     class PhysicsBodyRigid;
     class PhysicsShapeCube;
+    class SceneFrameBuffer;
     
     class Cubenado
     {
@@ -42,6 +43,7 @@ namespace njli
         Camera *const getCamera()const;
         
         void setNumberOfCubes(const unsigned int amount);
+        unsigned long numberOfCubes()const;
         void setRandomness(const float percent);
         float getRandomness()const;
         std::vector<std::string> getShaderNames()const;
@@ -59,12 +61,17 @@ namespace njli
         /* static */
         static Cubenado *s_Instance;
         static std::string *s_BundlePath;
+        static const GLsizei MAX_CUBES = 10000;
         
         /* members */
         
         Shader *m_Shader;
-        Shader *m_ToonShader;
-        Shader *m_RimLite;
+//        Shader *m_ToonShader;
+//        Shader *m_RimLite;
+//        Shader *m_Phong;
+//        Shader * m_PixelLighting;
+//        Shader *m_Gourand;
+        
         Geometry *m_Geometry;
         Camera *m_Camera;
         Node *m_CameraNode;
@@ -80,6 +87,8 @@ namespace njli
         typedef std::pair<std::string, Shader*> ShaderPair;
         
         ShaderMap m_ShaderMap;
+        
+        SceneFrameBuffer *m_FrameBuffer[12];
     };
 }
 

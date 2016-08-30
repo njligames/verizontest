@@ -125,7 +125,7 @@ namespace njli
         std::string m_Name;
         btVector3 *m_Scale;
         btTransform* m_Transform;
-        btTransform* m_ColorTransform;
+//        btTransform* m_ColorTransform;
         btQuaternion* m_Orientation;
         
         Node* m_ParentNode;

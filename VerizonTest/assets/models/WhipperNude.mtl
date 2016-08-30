@@ -1,0 +1,62 @@
+# Blender MTL File: 'WhipperNude.blend'
+# Material Count: 5
+
+newmtl WhipperNude_Body
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /Users/jamesfolk/Downloads/8sjh6tb2q16o-SB_WhipperNude/textures/BODY_WH_BD_N_00.dds
+map_Bump -bm 0.500000 /Users/jamesfolk/Downloads/8sjh6tb2q16o-SB_WhipperNude/textures/BODY_WH_BD_N_00_NR.dds
+
+newmtl WhipperNude_Feet
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /Users/jamesfolk/Downloads/8sjh6tb2q16o-SB_WhipperNude/textures/FEET_WH_FT_N_00.dds
+map_Bump -bm 0.500000 /Users/jamesfolk/Downloads/8sjh6tb2q16o-SB_WhipperNude/textures/FEET_WH_FT_N_00_NR.dds
+
+newmtl WhipperNude_Hair
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 2
+map_Kd /Users/jamesfolk/Downloads/8sjh6tb2q16o-SB_WhipperNude/textures/HAIR_CO_HR_N_50.tga
+map_Bump -bm 0.500000 /Users/jamesfolk/Downloads/8sjh6tb2q16o-SB_WhipperNude/textures/HAIR_CO_HR_N_50_NR.dds
+map_d  /Users/jamesfolk/Downloads/8sjh6tb2q16o-SB_WhipperNude/textures/HAIR_CO_HR_N_50.tga
+
+newmtl WhipperNude_Hands
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /Users/jamesfolk/Downloads/8sjh6tb2q16o-SB_WhipperNude/textures/HAND_WH_GL_N_00.dds
+map_Bump -bm 0.500000 /Users/jamesfolk/Downloads/8sjh6tb2q16o-SB_WhipperNude/textures/HAND_WH_GL_N_00_NR.dds
+
+newmtl WhipperNude_Head
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /Users/jamesfolk/Downloads/8sjh6tb2q16o-SB_WhipperNude/textures/HEAD_WH_FC_N_08.dds

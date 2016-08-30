@@ -14,7 +14,7 @@
 #include "Shader.hpp"
 #include "Camera.hpp"
 #include "Node.hpp"
-
+//https://en.wikipedia.org/wiki/Wavefront_.obj_file#Material_template_library
 
 namespace njli
 {
@@ -150,6 +150,7 @@ namespace njli
     m_NormalMatrixTransformBuffer(0),
     m_VerticesBuffer(0),
     m_IndexBuffer(0),
+    m_NumberInstances(1),
     m_Shader(NULL),
     m_OpacityModifyRGB(false),
     m_VertexBufferChanged(true),
@@ -159,6 +160,8 @@ namespace njli
     {
         assert(m_MatrixBuffer);
         assert(m_MatrixBufferFullSize);
+        
+        m_References.resize(m_NumberInstances);
     }
     
     
@@ -183,11 +186,14 @@ namespace njli
         m_MatrixBuffer = NULL;
     }
     
-    void Geometry::load(Shader *shader, const std::string &filecontent, MeshType type)
+    void Geometry::load(Shader *shader, const std::string &filecontent, unsigned int numInstances, MeshType type)
     {
         assert(shader);
         
         setShader(shader);
+        
+        m_NumberInstances = numInstances;
+        m_References.resize(m_NumberInstances);
         
         loadData();
         
@@ -213,7 +219,7 @@ namespace njli
             }
             
 //            {
-//            assert(m_ColorTransformBuffer == 0);
+//                assert(m_ColorTransformBuffer == 0);
 //                glGenBuffers(1, &m_ColorTransformBuffer);
 //                glBindBuffer(GL_ARRAY_BUFFER, m_ColorTransformBuffer);
 //                glBufferData(GL_ARRAY_BUFFER, getColorTransformArrayBufferSize(), getColorTransformArrayBufferPtr(), GL_STREAM_DRAW);
@@ -253,9 +259,13 @@ namespace njli
                 int inPositionAttrib = getShader()->getAttributeLocation("inPosition");
                 int inColorAttrib = getShader()->getAttributeLocation("inColor");
                 int inNormalAttrib = getShader()->getAttributeLocation("inNormal");
-                int inOpacityAttrib = getShader()->getAttributeLocation("inOpacity");
-                int inHiddenAttrib = getShader()->getAttributeLocation("inHidden");
-//                int inTexCoordAttrib = getShader()->getAttributeLocation("inTexCoord");
+//                int inOpacityAttrib = getShader()->getAttributeLocation("inOpacity");
+//                int inHiddenAttrib = getShader()->getAttributeLocation("inHidden");
+                int inTexCoordAttrib = getShader()->getAttributeLocation("inTexCoord");
+                
+                int inTangentAttrib = getShader()->getAttributeLocation("inTangent");
+                int inBiTangentAttrib = getShader()->getAttributeLocation("inBiTangent");
+                
                 glEnableVertexAttribArray(inPositionAttrib);
                 glVertexAttribPointer(inPositionAttrib,
                                       3,
@@ -265,13 +275,13 @@ namespace njli
                                       (const GLvoid*) offsetof(TexturedColoredVertex, vertex));
                 
                 
-//                glEnableVertexAttribArray(inTexCoordAttrib);
-//                glVertexAttribPointer(inTexCoordAttrib,
-//                                      2,
-//                                      GL_INDEX_TYPE,
-//                                      GL_FALSE,
-//                                      sizeof(TexturedColoredVertex),
-//                                      (const GLvoid*) offsetof(TexturedColoredVertex, texture));
+                glEnableVertexAttribArray(inTexCoordAttrib);
+                glVertexAttribPointer(inTexCoordAttrib,
+                                      2,
+                                      GL_INDEX_TYPE,
+                                      GL_FALSE,
+                                      sizeof(TexturedColoredVertex),
+                                      (const GLvoid*) offsetof(TexturedColoredVertex, texture));
                 
                 glEnableVertexAttribArray(inNormalAttrib);
                 glVertexAttribPointer(inNormalAttrib,
@@ -289,21 +299,37 @@ namespace njli
                                       sizeof(TexturedColoredVertex),
                                       (const GLvoid*) offsetof(TexturedColoredVertex, color));
                 
-                glEnableVertexAttribArray(inOpacityAttrib);
-                glVertexAttribPointer(inOpacityAttrib,
-                                      1,
+                glEnableVertexAttribArray(inTangentAttrib);
+                glVertexAttribPointer(inTangentAttrib,
+                                      3,
                                       GL_INDEX_TYPE,
                                       GL_FALSE,
                                       sizeof(TexturedColoredVertex),
-                                      (const GLvoid*)offsetof(TexturedColoredVertex, opacity));
+                                      (const GLvoid*) offsetof(TexturedColoredVertex, tangent));
                 
-                glEnableVertexAttribArray(inHiddenAttrib);
-                glVertexAttribPointer(inHiddenAttrib,
-                                      1,
+                glEnableVertexAttribArray(inBiTangentAttrib);
+                glVertexAttribPointer(inBiTangentAttrib,
+                                      3,
                                       GL_INDEX_TYPE,
                                       GL_FALSE,
                                       sizeof(TexturedColoredVertex),
-                                      (const GLvoid*)offsetof(TexturedColoredVertex, hidden));
+                                      (const GLvoid*) offsetof(TexturedColoredVertex, bitangent));
+                
+//                glEnableVertexAttribArray(inOpacityAttrib);
+//                glVertexAttribPointer(inOpacityAttrib,
+//                                      1,
+//                                      GL_INDEX_TYPE,
+//                                      GL_FALSE,
+//                                      sizeof(TexturedColoredVertex),
+//                                      (const GLvoid*)offsetof(TexturedColoredVertex, opacity));
+                
+//                glEnableVertexAttribArray(inHiddenAttrib);
+//                glVertexAttribPointer(inHiddenAttrib,
+//                                      1,
+//                                      GL_INDEX_TYPE,
+//                                      GL_FALSE,
+//                                      sizeof(TexturedColoredVertex),
+//                                      (const GLvoid*)offsetof(TexturedColoredVertex, hidden));
                 glBindBuffer(GL_ARRAY_BUFFER, 0);
             }
             
@@ -368,6 +394,113 @@ namespace njli
             assert(shader->use());
             
             camera->render(shader, m_ShaderChanged);
+            
+            struct LightSourceParameters
+            {
+                btVector4 ambient;
+                btVector4 diffuse;
+                btVector4 specular;
+                btVector4 position;
+                btVector4 halfVector;
+                btVector3 spotDirection;
+                float spotExponent;
+                float spotCutoff;
+                float spotCosCutoff;
+                float constantAttenuation;
+                float linearAttenuation;
+                float quadraticAttenuation;
+            };
+            
+            struct MaterialParameters
+            {
+                btVector4 emission;
+                btVector4 ambient;
+                btVector4 diffuse;
+                btVector4 specular;
+                float shininess;
+            };
+            
+            
+//            shader->setUniformValue("RimLightColor", btVector3(0.25008f, 0.250f, 0.8712f));
+            shader->setUniformValue("RimLightColor", btVector3(1.0f, 1.0f, 1.0f));
+            shader->setUniformValue("RimLightStart", 0.0f);
+            shader->setUniformValue("RimLightEnd", 1.0f);
+            shader->setUniformValue("RimLightCoefficient", 0.6f);
+            /*
+             uniform float RimLightStart;
+             uniform float RimLightEnd;
+             uniform float RimLightCoefficient;
+             */
+            
+            shader->setUniformValue("LightSourceAmbientColor", btVector3(1.0f, 1.0f, 1.0f));
+            shader->setUniformValue("LightSourceDiffuseColor", btVector3(1.0f, 1.0f, 1.0f));
+            shader->setUniformValue("LightSourceSpecularColor", btVector3(1.0f, 1.0f, 1.0f));
+            
+            //set LightSourcePosition_worldspace.w == 0 for DirectionalLight
+            //set LightSourcePosition_worldspace.w != 0 for PointlLight
+            shader->setUniformValue("LightSourcePosition_worldspace", btVector4(0.0f, 0.0f, -1.0f, 1.0));
+            
+            shader->setUniformValue("LightSourceSpotDirection", btVector3(0.0f, 0.0f, 1.0f));
+            shader->setUniformValue("LightSourceSpotExponent", 100.0f);
+            //set LightSourceSpotCutoff != 180 for SpotLight
+            shader->setUniformValue("LightSourceSpotCutoff", 180.0f);
+            shader->setUniformValue("LightSourceSpotCosCutoff", 30.0f);
+            //http://www.ogre3d.org/tikiwiki/-Point+Light+Attenuation
+            
+//             Range Constant Linear Quadratic
+//             3250, 1.0, 0.0014, 0.000007
+//            shader->setUniformValue("LightSourceConstantAttenuation", 1.0f);
+//            shader->setUniformValue("LightSourceLinearAttenuation", 0.0014f);
+//            shader->setUniformValue("LightSourceQuadraticAttenuation", 0.000007f);
+            
+//             600, 1.0, 0.007, 0.0002
+//            shader->setUniformValue("LightSourceConstantAttenuation", 1.0f);
+//            shader->setUniformValue("LightSourceLinearAttenuation", 0.007f);
+//            shader->setUniformValue("LightSourceQuadraticAttenuation", 0.0002f);
+            
+            
+//             325, 1.0, 0.014, 0.0007
+//            shader->setUniformValue("LightSourceConstantAttenuation", 1.0f);
+//            shader->setUniformValue("LightSourceLinearAttenuation", 0.014f);
+//            shader->setUniformValue("LightSourceQuadraticAttenuation", 0.0007f);
+            
+//             200, 1.0, 0.022, 0.0019
+//            shader->setUniformValue("LightSourceConstantAttenuation", 1.0f);
+//            shader->setUniformValue("LightSourceLinearAttenuation", 0.022f);
+//            shader->setUniformValue("LightSourceQuadraticAttenuation", 0.0019f);
+
+            
+//             160, 1.0, 0.027, 0.0028
+//            shader->setUniformValue("LightSourceConstantAttenuation", 1.0f);
+//            shader->setUniformValue("LightSourceLinearAttenuation", 0.027f);
+//            shader->setUniformValue("LightSourceQuadraticAttenuation", 0.0028f);
+            
+//             100, 1.0, 0.045, 0.0075
+            shader->setUniformValue("LightSourceConstantAttenuation", 1.0f);
+            shader->setUniformValue("LightSourceLinearAttenuation", 0.045f);
+            shader->setUniformValue("LightSourceQuadraticAttenuation", 0.0075f);
+            
+//             65, 1.0, 0.07, 0.017
+//             50, 1.0, 0.09, 0.032
+//             32, 1.0, 0.14, 0.07
+//             20, 1.0, 0.22, 0.20
+//             13, 1.0, 0.35, 0.44
+//             7, 1.0, 0.7, 1.8
+//            shader->setUniformValue("LightSourceConstantAttenuation", 1.0f);
+//            shader->setUniformValue("LightSourceLinearAttenuation", 0.7f);
+//            shader->setUniformValue("LightSourceQuadraticAttenuation", 1.8f);
+            
+            
+            
+            shader->setUniformValue("LightAmbientColor", btVector3(1.0f, 1.0f, 1.0f));
+            
+            shader->setUniformValue("MaterialShininess", 1000.0f);
+            
+            shader->setUniformValue("FogMaxDistance", 10.0f);
+            shader->setUniformValue("FogMinDistance", 0.1f);
+            shader->setUniformValue("FogColor", btVector3(0.7f, 0.7f, 0.7f));
+            shader->setUniformValue("FogDensity", 0.000000001f);
+            
             m_ShaderChanged = false;
             
             glBindVertexArrayOES(m_VertexArray);
@@ -399,21 +532,98 @@ namespace njli
             
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
             
-            glDrawElements(GL_TRIANGLES, maxNumberOfObjects() * numberOfIndices(), getElementIndexType(), (const GLvoid*)0);
+            glDrawElements(GL_TRIANGLES, numberOfInstances() * numberOfIndices(), getElementIndexType(), (const GLvoid*)0);
             
 //            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 //            glBindVertexArrayOES(0);
         }
     }
     
-    GLsizei Geometry::maxNumberOfObjects()const
+    GLsizei Geometry::numberOfInstances()const
     {
-        return MAX_CUBES;
+        return m_NumberInstances;
     }
     
     unsigned long Geometry::getGeometryIndex(Node *const node)const
     {
         return node->getGeometryIndex();
+    }
+    
+    void computeTangentBasis(
+                             // inputs
+                             const std::vector<btVector3> & vertices,
+                             const std::vector<btVector2> & uvs,
+                             const std::vector<btVector3> & normals,
+                             // outputs
+                             std::vector<btVector3> & tangents,
+                             std::vector<btVector3> & bitangents
+                             )
+    {
+        
+        tangents.clear();
+        bitangents.clear();
+        tangents.resize(vertices.size());
+        bitangents.resize(vertices.size());
+        
+        for (unsigned int i=0; i<vertices.size(); i+=3 )
+        {
+            
+            // Shortcuts for vertices
+            btVector3  v0 = vertices[i+0];
+            btVector3  v1 = vertices[i+1];
+            btVector3  v2 = vertices[i+2];
+            
+            // Shortcuts for UVs
+            btVector2  uv0 = uvs[i+0];
+            btVector2  uv1 = uvs[i+1];
+            btVector2  uv2 = uvs[i+2];
+            
+            // Edges of the triangle : postion delta
+            btVector3 deltaPos1 = v1-v0;
+            btVector3 deltaPos2 = v2-v0;
+            
+            // UV delta
+            btVector2 deltaUV1 = uv1-uv0;
+            btVector2 deltaUV2 = uv2-uv0;
+            
+            float r = 1.0f / (deltaUV1.x() * deltaUV2.y() - deltaUV1.y() * deltaUV2.x());
+            btVector3 tangent = (deltaPos1 * deltaUV2.y()   - deltaPos2 * deltaUV1.y())*r;
+            btVector3 bitangent = (deltaPos2 * deltaUV1.x()   - deltaPos1 * deltaUV2.x())*r;
+            
+            // Set the same tangent for all three vertices of the triangle.
+            // They will be merged later, in vboindexer.cpp
+            tangents[i] = tangent;
+            tangents[i+1] = tangent;
+            tangents[i+2] = tangent;
+            
+            // Same thing for binormals
+            bitangents[i] = bitangent;
+            bitangents[i+1] = bitangent;
+            bitangents[i+2] = bitangent;
+            
+        }
+        
+        // See "Going Further"
+        for (unsigned int i=0; i<vertices.size(); i+=1 )
+        {
+            btVector3  n = normals[i];
+            btVector3  t = tangents[i];
+            btVector3  b = bitangents[i];
+            
+            
+            // Gram-Schmidt orthogonalize
+            t = (t - n * n.dot(t)).normalized();
+            
+            
+            // Calculate handedness
+            if (n.cross(t).dot(b) < 0.0f)
+            {
+                t = t * -1.0f;
+            }
+            
+        }
+        
+        
     }
     
     const void *Geometry::getModelViewTransformArrayBufferPtr()const
@@ -425,7 +635,7 @@ namespace njli
     
     GLsizeiptr Geometry::getModelViewTransformArrayBufferSize()const
     {
-        GLsizeiptr size = sizeof(GLfptype) * maxNumberOfObjects() * numberOfVertices() * 16;
+        GLsizeiptr size = sizeof(GLfptype) * numberOfInstances() * numberOfVertices() * 16;
         return size;
     }
     
@@ -448,7 +658,7 @@ namespace njli
 //    
 //    GLsizeiptr Geometry::getColorTransformArrayBufferSize()const
 //    {
-//        GLsizeiptr size = sizeof(GLfptype) * maxNumberOfObjects() * numberOfVertices() * 16;
+//        GLsizeiptr size = sizeof(GLfptype) * numberOfInstances() * numberOfVertices() * 16;
 //        return size;
 //    }
     
@@ -461,7 +671,7 @@ namespace njli
     
     GLsizeiptr Geometry::getNormalMatrixTransformArrayBufferSize()const
     {
-        GLsizeiptr size = sizeof(GLfptype) * maxNumberOfObjects() * numberOfVertices() * 16;
+        GLsizeiptr size = sizeof(GLfptype) * numberOfInstances() * numberOfVertices() * 16;
         return size;
     }
     
@@ -479,9 +689,9 @@ namespace njli
     {
         unLoadData();
         
-        m_ModelViewTransformData = new GLfptype[maxNumberOfObjects() * numberOfVertices() * 16];
-//        m_ColorTransformData = new GLfptype[maxNumberOfObjects() * numberOfVertices() * 16];
-        m_NormalMatrixTransformData = new GLfptype[maxNumberOfObjects() * numberOfVertices() * 16];
+        m_ModelViewTransformData = new GLfptype[numberOfInstances() * numberOfVertices() * 16];
+//        m_ColorTransformData = new GLfptype[numberOfInstances() * numberOfVertices() * 16];
+        m_NormalMatrixTransformData = new GLfptype[numberOfInstances() * numberOfVertices() * 16];
         enableNormalMatrixBufferChanged(true);
         
         assert(m_ModelViewTransformData);
@@ -491,17 +701,17 @@ namespace njli
         unsigned long i;
         
         for (i = 0;
-             i < (maxNumberOfObjects() * numberOfVertices() * 16);
+             i < (numberOfInstances() * numberOfVertices() * 16);
              i += 16)
             memcpy(m_ModelViewTransformData + i, TRANSFORM_IDENTITY_MATRIX, sizeof(TRANSFORM_IDENTITY_MATRIX));
         
 //        for (i = 0;
-//             i < (maxNumberOfObjects() * numberOfVertices() * 16);
+//             i < (numberOfInstances() * numberOfVertices() * 16);
 //             i += 16)
 //            memcpy(m_ColorTransformData + i, COLOR_IDENTITY_MATRIX, sizeof(COLOR_IDENTITY_MATRIX));
         
         for (i = 0;
-             i < (maxNumberOfObjects() * numberOfVertices() * 16);
+             i < (numberOfInstances() * numberOfVertices() * 16);
              i += 16)
             memcpy(m_NormalMatrixTransformData + i, TRANSFORM_IDENTITY_MATRIX, sizeof(TRANSFORM_IDENTITY_MATRIX));
         
@@ -540,7 +750,7 @@ namespace njli
         {
             if (!m_References[i])
             {
-                m_References[i] = 1;
+                m_References[i] = true;
                 node->setGeometryIndex(i);
                 return;
             }
@@ -553,7 +763,7 @@ namespace njli
         
         if(index < m_References.size())
         {
-            m_References[index] = 0;
+            m_References[index] = false;
             
             setHidden(node);
         }
@@ -561,7 +771,7 @@ namespace njli
     
     void Geometry::setTransform(const unsigned long index, const btTransform &transform)
     {
-        if (index < maxNumberOfObjects())
+        if (index < numberOfInstances())
         {
             const unsigned long STRIDE = 16 * numberOfVertices();
             
@@ -592,7 +802,7 @@ namespace njli
     btTransform Geometry::getTransform(const unsigned long index)
     {
         btTransform transform(btTransform::getIdentity());
-        if (index < maxNumberOfObjects())
+        if (index < numberOfInstances())
         {
             const unsigned long STRIDE = 16 * numberOfVertices();
             
@@ -617,7 +827,7 @@ namespace njli
     
 //    void Geometry::setColorTransform(const unsigned long index, const btTransform &transform)
 //    {
-//        if (index < maxNumberOfObjects())
+//        if (index < numberOfInstances())
 //        {
 //            const unsigned long STRIDE = 16 * numberOfVertices();
 //            
@@ -644,7 +854,7 @@ namespace njli
 //    btTransform Geometry::getColorTransform(const unsigned long index)
 //    {
 //        btTransform transform(btTransform::getIdentity());
-//        if (index < maxNumberOfObjects())
+//        if (index < numberOfInstances())
 //        {
 //            const unsigned long STRIDE = 16 * numberOfVertices();
 //            
@@ -663,7 +873,7 @@ namespace njli
     
     void Geometry::setNormalMatrixTransform(const unsigned long index, const btTransform &transform)
     {
-        if (index < maxNumberOfObjects())
+        if (index < numberOfInstances())
         {
             const unsigned long STRIDE = 16 * numberOfVertices();
             
@@ -697,7 +907,7 @@ namespace njli
     btTransform Geometry::getNormalMatrixTransform(const unsigned long index)
     {
         btTransform transform(btTransform::getIdentity());
-        if (index < maxNumberOfObjects())
+        if (index < numberOfInstances())
         {
             const unsigned long STRIDE = 16 * numberOfVertices();
             

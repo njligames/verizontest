@@ -17,10 +17,12 @@
 #include "PhysicsBodyRigid.hpp"
 #include "PhysicsShapeCube.hpp"
 #include "PhysicsWorld.hpp"
+#include "AbstractFrameBuffer.hpp"
+#include "SceneFrameBuffer.hpp"
 
 #include "btQuaternion.h"
 
-//#define EDIT_SHADER
+#define EDIT_SHADER
 
 using namespace std;
 
@@ -66,24 +68,49 @@ namespace njli
     
     Cubenado::Cubenado():
     m_Shader(new Shader()),
-    m_ToonShader(new Shader()),
-    m_RimLite(new Shader()),
+//    m_ToonShader(new Shader()),
+//    m_RimLite(new Shader()),
+//    m_Phong(new Shader()),
+//    m_PixelLighting(new Shader()),
+//    m_Gourand(new Shader()),
     m_Geometry(new MeshGeometry()),
     m_Camera(new Camera()),
     m_CameraNode(new Node()),
     m_Scene(new Scene()),
     m_Randomness(1.0f),
-    m_NumberOfCubes(Geometry::MAX_CUBES),
+    m_NumberOfCubes(Cubenado::MAX_CUBES),
     m_Rotation(0.0f),
     m_PhysicsShapeCube(new PhysicsShapeCube())
     {
-        for (unsigned long i = 0; i < Geometry::MAX_CUBES; i++)
+        for (unsigned long i = 0; i < Cubenado::MAX_CUBES; i++)
             m_PhysicsBodies.push_back(new PhysicsBodyRigid());
         
 #ifdef EDIT_SHADER
         m_CubeNodes.push_back(new Node());
+        
+//        unsigned int width = 1242;
+//        unsigned int height = 2208;
+//        
+//        for (unsigned long i = 0; i < 12; i++)
+//        {
+//            m_FrameBuffer[i] = new SceneFrameBuffer();
+//            m_FrameBuffer[i]->setScene(m_Scene);
+//        }
+        
+//        m_FrameBuffer[0]->load                 (width, height, true);
+//        m_FrameBuffer[1]->load                 (width, height, false);
+//        m_FrameBuffer[2]->loadTexture2D        (NULL, NULL, width, height, true, false);
+//        m_FrameBuffer[3]->loadTexture2D        (NULL, NULL, width, height, true, true);
+//        m_FrameBuffer[4]->loadTextureCube      (NULL, NULL, width, height, true, false);
+//        m_FrameBuffer[5]->loadTextureCube      (NULL, NULL, width, height, true, true);
+//        m_FrameBuffer[6]->loadColorTexture2D   (NULL, width, height, true);
+//        m_FrameBuffer[7]->loadDepthTexture2D   (NULL, width, height, true, false);
+//        m_FrameBuffer[8]->loadDepthTexture2D   (NULL, width, height, true, true);
+//        m_FrameBuffer[9]->loadColorTextureCube (NULL, width, height, true);
+//        m_FrameBuffer[10]->loadDepthTextureCube (NULL, width, height, true, false);
+//        m_FrameBuffer[11]->loadDepthTextureCube(NULL, width, height, true, true);
 #else
-        for (unsigned long i = 0; i < Geometry::MAX_CUBES; i++)
+        for (unsigned long i = 0; i < Cubenado::MAX_CUBES; i++)
             m_CubeNodes.push_back(new Node());
 #endif
     }
@@ -119,19 +146,29 @@ namespace njli
         delete m_Geometry;
         m_Geometry = NULL;
         
-        delete m_ToonShader;
-        m_ToonShader = NULL;
-        
-        delete m_Shader;
-        m_Shader = NULL;
-        
-        delete m_RimLite;
-        m_RimLite = NULL;
+//        delete m_ToonShader;
+//        m_ToonShader = NULL;
+//        
+//        delete m_Shader;
+//        m_Shader = NULL;
+//        
+//        delete m_RimLite;
+//        m_RimLite = NULL;
+//        
+//        delete m_Phong;
+//        m_Phong = NULL;
+//        
+//        delete m_PixelLighting;
+//        m_PixelLighting = NULL;
+//        
+//        delete m_Gourand;
+//        m_Gourand = NULL;
     }
     
     void Cubenado::create(int x, int y, int width, int height)
     {
 //        glClearColor(0.52, 0.86, 0.99, 1.0f);
+//        glClearColor(0.7,0.7,0.7,1);
         glClearColor(0.7,0.7,0.7,1);
         
         glEnable(GL_DEPTH_TEST);
@@ -151,18 +188,29 @@ namespace njli
         m_Scene->getRootNode()->setOrigin(btVector3(0.0f, 0.0f, 10.0f));
 #endif
         
-        assert(m_Shader->load(loadFile("shaders/Shader.vert"), loadFile("shaders/Shader.frag")));
-        assert(m_ToonShader->load(loadFile("shaders/Toon.vert"), loadFile("shaders/Toon.frag")));
-        assert(m_RimLite->load(loadFile("shaders/RimLite.vert"), loadFile("shaders/RimLite.frag")));
+        assert(m_Shader->load(loadFile("shaders/StandardShader2.vert"), loadFile("shaders/StandardShader2.frag")));
+//        assert(m_ToonShader->load(loadFile("shaders/Toon.vert"), loadFile("shaders/Toon.frag")));
+//        assert(m_RimLite->load(loadFile("shaders/RimLite.vert"), loadFile("shaders/RimLite.frag")));
+//        assert(m_Phong->load(loadFile("shaders/Phong.vert"), loadFile("shaders/Phong.frag")));
+//        assert(m_PixelLighting->load(loadFile("shaders/PixelLighting.vert"), loadFile("shaders/PixelLighting.frag")));
+//        assert(m_Gourand->load(loadFile("shaders/Gourand.vert"), loadFile("shaders/Gourand.frag")));
         
         
-        
-               
         m_ShaderMap.insert(ShaderPair("Default", m_Shader));
-        m_ShaderMap.insert(ShaderPair("Toon", m_ToonShader));
-        m_ShaderMap.insert(ShaderPair("Rim lite", m_RimLite));
+//        m_ShaderMap.insert(ShaderPair("Toon", m_ToonShader));
+//        m_ShaderMap.insert(ShaderPair("Rim lite", m_RimLite));
+//        m_ShaderMap.insert(ShaderPair("Phong", m_Phong));
+//        m_ShaderMap.insert(ShaderPair("Pixel Lighting", m_PixelLighting));
+//        m_ShaderMap.insert(ShaderPair("Gourand", m_Gourand));
         
-        m_Geometry->load(m_Shader, loadFile("models/cube.obj"));
+#ifdef EDIT_SHADER
+        m_Geometry->load(m_Shader, loadFile("models/suzanne.obj"));
+#else
+        m_Geometry->load(m_Shader, loadFile("models/cube.obj"), m_NumberOfCubes);
+#endif
+        
+//
+        
         
         setStartPositions();
         
@@ -177,9 +225,13 @@ namespace njli
             
             node->addGeometry(m_Geometry);
             
-            node->setColorBase(btVector4(randomFloat(0.0f, 1.0f),
-                                         randomFloat(0.0f, 1.0f),
-                                         randomFloat(0.0f, 1.0f), 1.0f));
+//            node->setColorBase(btVector4(randomFloat(0.0f, 1.0f),
+//                                         randomFloat(0.0f, 1.0f),
+//                                         randomFloat(0.0f, 1.0f), 1.0f));
+            
+//            node->setColorBase(btVector4(1.0f,
+//                                         1.0f,
+//                                         1.0f, 1.0f));
         }
         
 //        setupPhysics();
@@ -201,13 +253,15 @@ namespace njli
 #ifdef EDIT_SHADER
         Node *node = m_CubeNodes.at(0);
         
-        node->setNormalMatrix(node->getTransform().getBasis().inverse().transpose());
+        node->setNormalMatrix(node->getWorldTransform().getBasis().inverse().transpose());
+//        node->setColorBase(btVector4(1.0f, 0.0f, 0.0f, 1.0f));
         
         
-        btQuaternion rot1(btVector3(1.0, 0.0, 0.0), m_Rotation);
+//        btQuaternion rot1(btVector3(1.0, 0.0, 0.0), m_Rotation);
         btQuaternion rot2(btVector3(0.0, 1.0, 0.0), m_Rotation);
-        btQuaternion rot3(btVector3(0.0, 0.0, 1.0), m_Rotation);
-        node->setRotation(rot1 * rot2 * rot3);
+//        btQuaternion rot3(btVector3(0.0, 0.0, 1.0), m_Rotation);
+//        node->setRotation(rot1 * rot2 * rot3);
+        node->setRotation(rot2);
         m_Rotation += step;
         return;
 #endif
@@ -258,7 +312,10 @@ namespace njli
             
             node->addImpulseForce(impulse);
             
-            node->setNormalMatrix(node->getTransform().getBasis().inverse().transpose());
+//            node->setNormalMatrix(node->getTransform().getBasis().inverse().transpose());
+            btMatrix3x3 m(node->getTransform().getBasis().transpose().inverse());
+            
+            node->setNormalMatrix(node->getTransform().getBasis().transpose().inverse());
             
             node->enableHideGeometry(false);
             if(cubesToDraw < 0)
@@ -266,10 +323,47 @@ namespace njli
             cubesToDraw--;
             
         }
+        m_Scene->update(step);
     }
     
     void Cubenado::render()
     {
+//        m_FrameBuffer[0]->load                 (width, height, true);
+//        m_FrameBuffer[0]->render();
+        
+//        m_FrameBuffer[1]->load                 (width, height, false);
+//        m_FrameBuffer[1]->render();
+        
+//        m_FrameBuffer[2]->loadTexture2D        (NULL, NULL, width, height, true, false);
+//        m_FrameBuffer[2]->render();
+        
+//        m_FrameBuffer[3]->loadTexture2D        (NULL, NULL, width, height, true, true);
+//        m_FrameBuffer[3]->render();
+        
+//        m_FrameBuffer[4]->loadTextureCube      (NULL, NULL, width, height, true, false);
+//        m_FrameBuffer[4]->render();
+        
+//        m_FrameBuffer[5]->loadTextureCube      (NULL, NULL, width, height, true, true);
+//        m_FrameBuffer[5]->render();
+        
+//        m_FrameBuffer[6]->loadColorTexture2D   (NULL, width, height, true);
+//        m_FrameBuffer[6]->render();
+        
+//        m_FrameBuffer[7]->loadDepthTexture2D   (NULL, width, height, true, false);
+//        m_FrameBuffer[7]->render();
+        
+//        m_FrameBuffer[8]->loadDepthTexture2D   (NULL, width, height, true, true);
+//        m_FrameBuffer[8]->render();
+        
+//        m_FrameBuffer[9]->loadColorTextureCube (NULL, width, height, true);
+//        m_FrameBuffer[9]->render();
+        
+//        m_FrameBuffer[10]->loadDepthTextureCube (NULL, width, height, true, false);
+//        m_FrameBuffer[10]->render();
+        
+//        m_FrameBuffer[11]->loadDepthTextureCube(NULL, width, height, true, true);
+//        m_FrameBuffer[11]->render();
+        
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         
         m_Scene->render();
@@ -282,11 +376,16 @@ namespace njli
     
     void Cubenado::setNumberOfCubes(const unsigned int amount)
     {
-        if (amount > Geometry::MAX_CUBES)
+        if (amount > Cubenado::MAX_CUBES)
         {
-            m_NumberOfCubes = Geometry::MAX_CUBES;
+            m_NumberOfCubes = Cubenado::MAX_CUBES;
         }
         m_NumberOfCubes = amount;
+    }
+    
+    unsigned long Cubenado::numberOfCubes()const
+    {
+        return m_NumberOfCubes;
     }
     
     void Cubenado::setRandomness(const float percent)

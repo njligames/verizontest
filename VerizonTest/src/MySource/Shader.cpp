@@ -15,13 +15,17 @@ namespace njli
     Shader::Shader():
     m_Program(0),
     m_mat4Buffer(new GLfloat[16]),
-    m_vec3Buffer(new GLfloat[3])
+    m_vec3Buffer(new GLfloat[3]),
+    m_vec4Buffer(new GLfloat[4])
     {
         
     }
     
     Shader::~Shader()
     {
+        delete [] m_vec4Buffer;
+        m_vec4Buffer = NULL;
+        
         delete [] m_vec3Buffer;
         m_vec3Buffer = NULL;
         
@@ -224,6 +228,57 @@ namespace njli
             value.setX(m_vec3Buffer[0]);
             value.setY(m_vec3Buffer[1]);
             value.setZ(m_vec3Buffer[2]);
+            
+            return true;
+        }
+        return false;
+    }
+    
+    bool Shader::setUniformValue(const char *uniformName, float value)
+    {
+        int location = getUniformLocation(uniformName);
+        if(location != -1)
+        {
+            glUniform1f(location, value);
+            return true;
+        }
+        return false;
+    }
+    
+    bool Shader::getUniformValue(const char *uniformName, float &value)
+    {
+        int location = getUniformLocation(uniformName);
+        if(location != -1)
+        {
+            glGetUniformfv(m_Program, location, &value);
+            return true;
+        }
+        return false;
+    }
+    
+    bool Shader::setUniformValue(const char *uniformName, const btVector4 &value)
+    {
+        int location = getUniformLocation(uniformName);
+        if(location != -1)
+        {
+            glUniform4f(location, value.x(), value.y(), value.z(), value.w());
+            
+            return true;
+        }
+        return false;
+    }
+    
+    bool Shader::getUniformValue(const char *uniformName, btVector4 &value)
+    {
+        int location = getUniformLocation(uniformName);
+        if(location != -1)
+        {
+            glGetUniformfv(m_Program, location, m_vec4Buffer);
+            
+            value.setX(m_vec4Buffer[0]);
+            value.setY(m_vec4Buffer[1]);
+            value.setZ(m_vec4Buffer[2]);
+            value.setW(m_vec4Buffer[3]);
             
             return true;
         }

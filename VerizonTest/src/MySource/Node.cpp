@@ -20,7 +20,7 @@ namespace njli
     m_Name("NODE"),
     m_Scale(new btVector3(1.0f, 1.0f, 1.0f)),
     m_Transform(new btTransform(btTransform::getIdentity())),
-    m_ColorTransform(new btTransform(btTransform::getIdentity())),
+//    m_ColorTransform(new btTransform(btTransform::getIdentity())),
     m_Orientation(new btQuaternion()),
     m_ParentNode(NULL),
     m_Camera(NULL),
@@ -72,8 +72,8 @@ namespace njli
         delete m_Orientation;
         m_Orientation = NULL;
         
-        delete m_ColorTransform;
-        m_ColorTransform = NULL;
+//        delete m_ColorTransform;
+//        m_ColorTransform = NULL;
         
         delete m_Transform;
         m_Transform = NULL;
@@ -543,7 +543,7 @@ namespace njli
     
     void Node::setGeometryIndex(unsigned long index)
     {
-        assert(index >= 0 && index < Geometry::MAX_CUBES);
+        assert(index >= 0 && index < getGeometry()->numberOfInstances());
         
         m_GeometryIndex = index;
         

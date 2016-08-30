@@ -70,10 +70,10 @@ struct thread_data{
     [_sldRandomnessPercent setMaximumValue:1];
     [_sldRandomnessPercent setValue:njli::Cubenado::getInstance()->getRandomness()];
     
-    s = [NSString stringWithFormat:@"Number of Cubes: %d", njli::Geometry::MAX_CUBES];
+    s = [NSString stringWithFormat:@"Number of Cubes: %lu", njli::Cubenado::getInstance()->numberOfCubes()];
     [_lblNumberOfCubes setText:s];
     [_sldNumberOfCubes setMinimumValue:10];
-    [_sldNumberOfCubes setMaximumValue:njli::Geometry::MAX_CUBES];
+    [_sldNumberOfCubes setMaximumValue:njli::Cubenado::getInstance()->numberOfCubes()];
     [_sldNumberOfCubes setValue:10000];
     
     UIPickerView *picker = [[UIPickerView alloc] init];
@@ -193,24 +193,24 @@ void *_update(void *threadarg)
 
 - (void)update
 {
-//    njli::Cubenado::getInstance()->update(self.timeSinceLastUpdate);
+    njli::Cubenado::getInstance()->update(self.timeSinceLastUpdate);
     
-    threadData.timeSinceLastUpdate = self.timeSinceLastUpdate;
-    
-    pthread_t threads;
-    int rc;
-    rc = pthread_create(&threads, NULL, _update, (void *)&threadData);
-    if (rc){
-        printf("ERROR; return code from pthread_create() is %d\n", rc);
-        exit(-1);
-    }
-    
-    if(pthread_join(threads, NULL))
-    {
-        
-        fprintf(stderr, "Error joining thread\n");
-        exit(-1);
-    }
+//    threadData.timeSinceLastUpdate = self.timeSinceLastUpdate;
+//    
+//    pthread_t threads;
+//    int rc;
+//    rc = pthread_create(&threads, NULL, _update, (void *)&threadData);
+//    if (rc){
+//        printf("ERROR; return code from pthread_create() is %d\n", rc);
+//        exit(-1);
+//    }
+//    
+//    if(pthread_join(threads, NULL))
+//    {
+//        
+//        fprintf(stderr, "Error joining thread\n");
+//        exit(-1);
+//    }
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect

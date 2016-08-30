@@ -149,6 +149,8 @@
 		C1242DD61D1A1E2000CEABBF /* assets in Resources */ = {isa = PBXBuildFile; fileRef = C1242DD51D1A1E2000CEABBF /* assets */; };
 		C1242DD91D1A1FFD00CEABBF /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1242DD71D1A1FFD00CEABBF /* Scene.cpp */; };
 		C1242DDD1D1B311000CEABBF /* AbstractDecorator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1242DDB1D1B311000CEABBF /* AbstractDecorator.cpp */; };
+		C14850411D69487B00992B05 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C148503F1D69487B00992B05 /* GLKit.framework */; };
+		C14850421D69487B00992B05 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14850401D69487B00992B05 /* OpenGLES.framework */; };
 		C149C1801D221A1F00988F89 /* Geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C149C17E1D221A1F00988F89 /* Geometry.cpp */; };
 		C149C18D1D2338A700988F89 /* MeshGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C149C18B1D2338A700988F89 /* MeshGeometry.cpp */; };
 		C18167B01D26224C00AB90DD /* btGpu3DGridBroadphase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C18167251D26224C00AB90DD /* btGpu3DGridBroadphase.cpp */; };
@@ -178,6 +180,10 @@
 		C18168241D26B89F00AB90DD /* btSoftRigidCollisionAlgorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C181680E1D26B89F00AB90DD /* btSoftRigidCollisionAlgorithm.cpp */; };
 		C18168261D26B89F00AB90DD /* btSoftRigidDynamicsWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C18168111D26B89F00AB90DD /* btSoftRigidDynamicsWorld.cpp */; };
 		C18168281D26B89F00AB90DD /* btSoftSoftCollisionAlgorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C18168141D26B89F00AB90DD /* btSoftSoftCollisionAlgorithm.cpp */; };
+		C183AB301D5EC29700EAB8AB /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C183AB2E1D5EC29700EAB8AB /* Material.cpp */; };
+		C183AB331D5EC6AF00EAB8AB /* MaterialProperty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C183AB311D5EC6AF00EAB8AB /* MaterialProperty.cpp */; };
+		C19DF49F1D63539300AEA119 /* AbstractFrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C19DF49D1D63539300AEA119 /* AbstractFrameBuffer.cpp */; };
+		C19DF4A21D65F19600AEA119 /* SceneFrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C19DF4A01D65F19600AEA119 /* SceneFrameBuffer.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -532,6 +538,8 @@
 		C1242DDA1D1AE60300CEABBF /* btVector2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = btVector2.h; sourceTree = "<group>"; };
 		C1242DDB1D1B311000CEABBF /* AbstractDecorator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AbstractDecorator.cpp; sourceTree = "<group>"; };
 		C1242DDC1D1B311000CEABBF /* AbstractDecorator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AbstractDecorator.hpp; sourceTree = "<group>"; };
+		C148503F1D69487B00992B05 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		C14850401D69487B00992B05 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		C149C17E1D221A1F00988F89 /* Geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Geometry.cpp; sourceTree = "<group>"; };
 		C149C17F1D221A1F00988F89 /* Geometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Geometry.hpp; sourceTree = "<group>"; };
 		C149C18B1D2338A700988F89 /* MeshGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeshGeometry.cpp; sourceTree = "<group>"; };
@@ -613,6 +621,14 @@
 		C18168141D26B89F00AB90DD /* btSoftSoftCollisionAlgorithm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = btSoftSoftCollisionAlgorithm.cpp; sourceTree = "<group>"; };
 		C18168151D26B89F00AB90DD /* btSoftSoftCollisionAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = btSoftSoftCollisionAlgorithm.h; sourceTree = "<group>"; };
 		C18168171D26B89F00AB90DD /* btSparseSDF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = btSparseSDF.h; sourceTree = "<group>"; };
+		C183AB2E1D5EC29700EAB8AB /* Material.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Material.cpp; sourceTree = "<group>"; };
+		C183AB2F1D5EC29700EAB8AB /* Material.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Material.hpp; sourceTree = "<group>"; };
+		C183AB311D5EC6AF00EAB8AB /* MaterialProperty.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MaterialProperty.cpp; sourceTree = "<group>"; };
+		C183AB321D5EC6AF00EAB8AB /* MaterialProperty.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MaterialProperty.hpp; sourceTree = "<group>"; };
+		C19DF49D1D63539300AEA119 /* AbstractFrameBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AbstractFrameBuffer.cpp; sourceTree = "<group>"; };
+		C19DF49E1D63539300AEA119 /* AbstractFrameBuffer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AbstractFrameBuffer.hpp; sourceTree = "<group>"; };
+		C19DF4A01D65F19600AEA119 /* SceneFrameBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneFrameBuffer.cpp; sourceTree = "<group>"; };
+		C19DF4A11D65F19600AEA119 /* SceneFrameBuffer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SceneFrameBuffer.hpp; sourceTree = "<group>"; };
 		C5BBBB5F935C45E7A9F8EA84 /* Pods-VerizonTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VerizonTest.release.xcconfig"; path = "Pods/Target Support Files/Pods-VerizonTest/Pods-VerizonTest.release.xcconfig"; sourceTree = "<group>"; };
 		C7A9C7528DDDC86DAAD0C386 /* Pods-VerizonTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VerizonTest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VerizonTest/Pods-VerizonTest.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -622,6 +638,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C14850411D69487B00992B05 /* GLKit.framework in Frameworks */,
+				C14850421D69487B00992B05 /* OpenGLES.framework in Frameworks */,
 				A408468BCD408ED97579EBCA /* libPods-VerizonTest.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -646,6 +664,8 @@
 		3010D5812404EC6DF8D4B45D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C148503F1D69487B00992B05 /* GLKit.framework */,
+				C14850401D69487B00992B05 /* OpenGLES.framework */,
 				3D7C0103A830137795300760 /* libPods-VerizonTest.a */,
 			);
 			name = Frameworks;
@@ -769,6 +789,14 @@
 				C12429AE1D19FEF300CEABBF /* Camera.cpp */,
 				C1242DD81D1A1FFD00CEABBF /* Scene.hpp */,
 				C1242DD71D1A1FFD00CEABBF /* Scene.cpp */,
+				C183AB2F1D5EC29700EAB8AB /* Material.hpp */,
+				C183AB2E1D5EC29700EAB8AB /* Material.cpp */,
+				C183AB321D5EC6AF00EAB8AB /* MaterialProperty.hpp */,
+				C183AB311D5EC6AF00EAB8AB /* MaterialProperty.cpp */,
+				C19DF49E1D63539300AEA119 /* AbstractFrameBuffer.hpp */,
+				C19DF49D1D63539300AEA119 /* AbstractFrameBuffer.cpp */,
+				C19DF4A11D65F19600AEA119 /* SceneFrameBuffer.hpp */,
+				C19DF4A01D65F19600AEA119 /* SceneFrameBuffer.cpp */,
 			);
 			path = MySource;
 			sourceTree = "<group>";
@@ -1608,6 +1636,7 @@
 				C1242CBF1D1A008C00CEABBF /* btConvex2dShape.cpp in Sources */,
 				C1242D621D1A008C00CEABBF /* btWheelInfo.cpp in Sources */,
 				C18167F01D26224C00AB90DD /* SpuContactResult.cpp in Sources */,
+				C19DF49F1D63539300AEA119 /* AbstractFrameBuffer.cpp in Sources */,
 				C1242CBD1D1A008C00CEABBF /* btConeShape.cpp in Sources */,
 				C1242C741D1A008C00CEABBF /* btMultiSapBroadphase.cpp in Sources */,
 				C1242CF11D1A008C00CEABBF /* btTriangleMesh.cpp in Sources */,
@@ -1624,6 +1653,7 @@
 				C1242D3C1D1A008C00CEABBF /* btSequentialImpulseConstraintSolver.cpp in Sources */,
 				C1242DCC1D1A008C00CEABBF /* btVector3.cpp in Sources */,
 				C1242CA71D1A008C00CEABBF /* btSphereSphereCollisionAlgorithm.cpp in Sources */,
+				C183AB331D5EC6AF00EAB8AB /* MaterialProperty.cpp in Sources */,
 				C1242CA91D1A008C00CEABBF /* btSphereTriangleCollisionAlgorithm.cpp in Sources */,
 				C1242CA31D1A008C00CEABBF /* btSimulationIslandManager.cpp in Sources */,
 				C11E22CE1D25BE6B00C53809 /* PhysicsShapeCube.cpp in Sources */,
@@ -1639,6 +1669,8 @@
 				C1242DBE1D1A008C00CEABBF /* btAlignedAllocator.cpp in Sources */,
 				C18167F61D26224C00AB90DD /* Win32ThreadSupport.cpp in Sources */,
 				C12429A71D19FE8F00CEABBF /* Shader.cpp in Sources */,
+				C19DF4A21D65F19600AEA119 /* SceneFrameBuffer.cpp in Sources */,
+				C183AB301D5EC29700EAB8AB /* Material.cpp in Sources */,
 				C18168241D26B89F00AB90DD /* btSoftRigidCollisionAlgorithm.cpp in Sources */,
 				C1242DC41D1A008C00CEABBF /* btGeometryUtil.cpp in Sources */,
 				C1242CF51D1A008C00CEABBF /* btUniformScalingShape.cpp in Sources */,

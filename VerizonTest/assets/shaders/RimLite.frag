@@ -25,13 +25,13 @@ varying vec3 world_normal;
 void main()
 {
     
-    vec3 lightPosition = vec3(0.0, -10.0, -1.0);
+    vec3 lightPosition = vec3(50.0, 0.0, 50.0);
     //vec3 tex1 = texture(texture1, texcoord).rgb;
-    
+    vec3 eye_position = vec3(0.0, 0.0, 95.0);
     
     //get light an view directions
     vec3 L = normalize( lightPosition - world_pos);
-    vec3 V = normalize( destinationEyePosition - world_pos);
+    vec3 V = normalize( eye_position - world_pos);
     
     //diffuse lighting
     vec3 diffuse = DiffuseLight * max(0.0, dot(L, world_normal));
@@ -47,7 +47,7 @@ void main()
     vec4 finalColorGamma = vec4(pow(finalColor.r, gamma),
                                 pow(finalColor.g, gamma),
                                 pow(finalColor.b, gamma),
-                                1.0);
+                                destinationOpacity);
     
     gl_FragColor = finalColorGamma;
 }

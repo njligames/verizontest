@@ -50,6 +50,12 @@ namespace njli
         
         bool setUniformValue(const char *uniformName, const btVector3 &value);
         bool getUniformValue(const char *uniformName, btVector3 &value);
+        
+        bool setUniformValue(const char *uniformName, float value);
+        bool getUniformValue(const char *uniformName, float &value);
+        
+        bool setUniformValue(const char *uniformName, const btVector4 &value);
+        bool getUniformValue(const char *uniformName, btVector4 &value);
     protected:
         GLuint compileShader(const std::string &source, GLenum type);
         bool compileStatus(GLuint shader);
@@ -61,6 +67,7 @@ namespace njli
         
         GLfloat *m_mat4Buffer;
         GLfloat *m_vec3Buffer;
+        GLfloat *m_vec4Buffer;
         
         typedef std::map<std::string, int> UniformMap;
         typedef std::pair<std::string, int> UniformPair;

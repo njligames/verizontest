@@ -26,6 +26,8 @@ void main ()
     vec4 color = inColor;
     mat4 transform = inTransform;
     mat3 normalMatrix = mat3(inNormalMatrix);
+    vec4 eyePosition = modelView * position;
+    
     destinationOpacity = inOpacity;
     
     
@@ -35,7 +37,7 @@ void main ()
     world_normal = normalize(mat3(transform) * normal);
 //    texcoord = in_texcoord;
     
-    destinationEyePosition = vec3(modelView[3][0], modelView[3][1], modelView[3][2]);
+    destinationEyePosition = eyePosition.xyz;
     
     if(inHidden == 1.0)
         position = vec4(destinationEyePosition, 1.0);
