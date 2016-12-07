@@ -204,7 +204,7 @@ namespace njli
 //        m_ShaderMap.insert(ShaderPair("Gourand", m_Gourand));
         
 #ifdef EDIT_SHADER
-        m_Geometry->load(m_Shader, loadFile("models/suzanne.obj"));
+        m_Geometry->load(m_Shader, loadFile("models/utah-teapot-EXPORT.obj"));
 #else
         m_Geometry->load(m_Shader, loadFile("models/cube.obj"), m_NumberOfCubes);
 #endif
