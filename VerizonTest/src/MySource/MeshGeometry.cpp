@@ -61,7 +61,7 @@ namespace njli
         glm::vec3 vec3;
         glm::vec2 vec2;
         
-        btScalar maxX=0, maxY=0, maxZ=0;
+        float maxX=0, maxY=0, maxZ=0;
         
         while(std::getline(ss_line, line, '\n'))
         {
@@ -138,9 +138,9 @@ namespace njli
             switch (mode)
             {
                 case v:
-                    maxX = std::max<btScalar>(vec3.x, maxX);
-                    maxY = std::max<btScalar>(vec3.y, maxY);
-                    maxZ = std::max<btScalar>(vec3.z, maxZ);
+                    maxX = std::max<float>(vec3.x, maxX);
+                    maxY = std::max<float>(vec3.y, maxY);
+                    maxZ = std::max<float>(vec3.z, maxZ);
                     
                     vertices.push_back(vec3);
                     break;

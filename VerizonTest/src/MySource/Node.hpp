@@ -9,9 +9,6 @@
 #ifndef Node_hpp
 #define Node_hpp
 
-#include "btTransform.h"
-#include "btVector2.h"
-#include "btQuaternion.h"
 
 #include <vector>
 #include <string>
@@ -58,16 +55,12 @@ namespace njli
         void setOpacity(float opacity);
         float getOpacity()const;
         
-//        void setNormalMatrix(const btMatrix3x3 &mtx);
         void setNormalMatrix(const glm::mat3x3 &mtx);
         
-//        const btMatrix3x3 &getNormalMatrix()const;
         const glm::mat3x3 &getNormalMatrix()const;
         
-//        void setColorBase(const btVector4 &color);
         void setColorBase(const glm::vec4 &color);
         
-//        const btVector4 &getColorBase()const;
         const glm::vec4 &getColorBase()const;
     public:
         Node* getParentNode();
@@ -91,44 +84,25 @@ namespace njli
         unsigned long numberOfChildrenNodes() const;
         void replaceChildNode(Node * oldChild, Node * newChild);
     public:
-//        btTransform getWorldTransform() const;
         glm::mat4x4 getWorldTransform() const;
         
-//        const btTransform& getColorTransform() const;
-//        void setColorTransform(const btTransform& transform);
-//        const btTransform& getTransform() const;
         const glm::mat4x4& getTransform() const;
         
-//        void setTransform(const btTransform& transform);
         void setTransform(const glm::mat4x4& transform);
         
-//        btVector3 getOrigin() const;
         glm::vec3 getOrigin() const;
         
-//        void setOrigin(const btVector3& origin);
         void setOrigin(const glm::vec3 &origin);
         
-//        void setOrigin(const btVector2& origin);
         void setOrigin(const glm::vec2& origin);
         
-//        btQuaternion getRotation() const;
         glm::quat getRotation() const;
         
-//        void setRotation(const btQuaternion& rotation);
         void setRotation(const glm::quat& rotation);
         
-//        btVector3 getEulerAngles() const;
         
-//        void setEulerAngles(const btVector3& angles);
-        
-//        const btQuaternion& getOrientation() const;
-        
-//        void setOrientation(const btQuaternion& orientation);
-        
-//        const btVector3 &getScale()const;
         const glm::vec3 &getScale()const;
         
-//        void setScale(const btVector3 &scale);
         void setScale(const glm::vec3 &scale);
         
         void setScale(const float scale);
@@ -136,12 +110,6 @@ namespace njli
         
         TornadoData *const getTornadoData()const;
         
-//        void setGravity(const btVector3 &vec);
-//        void setVelocity(const btVector3 &vec);
-//        const btVector3 &getVelocity()const;
-//        void addImpulseForce(const btVector3 &vec);
-//        void setMaxSpeed(float speed);
-//        float getMaxSpeed()const;
     protected:
         void setGeometryIndex(unsigned long index);
         unsigned long getGeometryIndex() const;
@@ -155,14 +123,10 @@ namespace njli
     private:
         std::string m_Name;
         
-//        btVector3 *m_Scale;
         glm::vec3 *mScale;
         
-//        btTransform* m_Transform;
         glm::mat4x4 *mTransform;
         
-//        btTransform* m_ColorTransform;
-//        btQuaternion* m_Orientation;
         
         Node* m_ParentNode;
         std::vector<Node*> m_ChildrenNodes;
@@ -174,24 +138,18 @@ namespace njli
         bool m_HideGeometry;
         float m_Opacity;
         
-//        btMatrix3x3 *m_NormalMatrix;
         glm::mat3x3 *mNormalMatrix;
         
-//        btVector4 *m_Colorbase;
         glm::vec4 *mColorbase;
         
         
         bool m_TransformDirty;
         bool m_NormalMatrixDirty;
-//        bool m_ColorTransformDirty;
         bool m_OpacityDirty;
         bool m_HiddenDirty;
         bool m_ColorBaseDirty;
         
-//        btVector3 *m_GravityForce;
-//        btVector3 *m_ImpulseForce;
-//        btVector3 *m_CurrentVelocity;
-//        btVector3 *m_HeadingVector;
+        
         float m_MaxSpeed;
         
     };

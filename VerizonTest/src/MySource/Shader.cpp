@@ -151,12 +151,7 @@ namespace njli
         
         return location;
     }
-    
-//    bool Shader::setUniformValue(const std::string &uniformName, const btTransform &value, bool transpose)
-//    {
-//        value.getOpenGLMatrix(m_mat4Buffer);
-//        return setUniformValue(uniformName, m_mat4Buffer, transpose);
-//    }
+
 
 bool Shader::setUniformValue(const std::string &uniformName, const glm::mat4x4 &value, bool transpose)
 {
@@ -180,24 +175,13 @@ bool Shader::setUniformValue(const std::string &uniformName, const glm::mat4x4 &
         return false;
     }
     
-//    bool Shader::getUniformValue(const std::string &uniformName, btTransform &value)
-//    {
-//        int location = getUniformLocation(uniformName);
-//        if(location != -1)
-//        {
-//            glGetUniformfv(m_Program, location, m_mat4Buffer);
-//            value.setFromOpenGLMatrix(m_mat4Buffer);
-//            return true;
-//        }
-//        return false;
-//    }
+
 bool Shader::getUniformValue(const std::string &uniformName, glm::mat4x4 &value)
 {
     int location = getUniformLocation(uniformName);
     if(location != -1)
     {
         glGetUniformfv(m_Program, location, m_mat4Buffer);
-//        value.setFromOpenGLMatrix(m_mat4Buffer);
         memcpy(&value[0], m_mat4Buffer, sizeof(glm::mat4x4));
         return true;
     }
@@ -226,17 +210,7 @@ bool Shader::getUniformValue(const std::string &uniformName, glm::mat4x4 &value)
         return false;
     }
     
-//    bool Shader::setUniformValue(const char *uniformName, const btVector3 &value)
-//    {
-//        int location = getUniformLocation(uniformName);
-//        if(location != -1)
-//        {
-//            glUniform3f(location, value.x(), value.y(), value.z());
-//
-//            return true;
-//        }
-//        return false;
-//    }
+
     
 bool Shader::setUniformValue(const char *uniformName, const glm::vec3 &value)
 {
@@ -250,21 +224,7 @@ bool Shader::setUniformValue(const char *uniformName, const glm::vec3 &value)
     return false;
 }
 
-//    bool Shader::getUniformValue(const char *uniformName, btVector3 &value)
-//    {
-//        int location = getUniformLocation(uniformName);
-//        if(location != -1)
-//        {
-//            glGetUniformfv(m_Program, location, m_vec3Buffer);
-//
-//            value.setX(m_vec3Buffer[0]);
-//            value.setY(m_vec3Buffer[1]);
-//            value.setZ(m_vec3Buffer[2]);
-//
-//            return true;
-//        }
-//        return false;
-//    }
+
 bool Shader::getUniformValue(const char *uniformName, glm::vec3 &value)
 {
     int location = getUniformLocation(uniformName);
@@ -272,9 +232,6 @@ bool Shader::getUniformValue(const char *uniformName, glm::vec3 &value)
     {
         glGetUniformfv(m_Program, location, m_vec3Buffer);
         
-//        value.setX(m_vec3Buffer[0]);
-//        value.setY(m_vec3Buffer[1]);
-//        value.setZ(m_vec3Buffer[2]);
         
         memcpy(&value[0], m_vec3Buffer, sizeof(glm::vec3));
         
@@ -305,17 +262,6 @@ bool Shader::getUniformValue(const char *uniformName, glm::vec3 &value)
         return false;
     }
     
-//    bool Shader::setUniformValue(const char *uniformName, const btVector4 &value)
-//    {
-//        int location = getUniformLocation(uniformName);
-//        if(location != -1)
-//        {
-//            glUniform4f(location, value.x(), value.y(), value.z(), value.w());
-//
-//            return true;
-//        }
-//        return false;
-//    }
 bool Shader::setUniformValue(const char *uniformName, const glm::vec4 &value)
 {
     int location = getUniformLocation(uniformName);
@@ -328,22 +274,7 @@ bool Shader::setUniformValue(const char *uniformName, const glm::vec4 &value)
     return false;
 }
     
-//    bool Shader::getUniformValue(const char *uniformName, btVector4 &value)
-//    {
-//        int location = getUniformLocation(uniformName);
-//        if(location != -1)
-//        {
-//            glGetUniformfv(m_Program, location, m_vec4Buffer);
-//
-//            value.setX(m_vec4Buffer[0]);
-//            value.setY(m_vec4Buffer[1]);
-//            value.setZ(m_vec4Buffer[2]);
-//            value.setW(m_vec4Buffer[3]);
-//
-//            return true;
-//        }
-//        return false;
-//    }
+
 bool Shader::getUniformValue(const char *uniformName, glm::vec4 &value)
 {
     int location = getUniformLocation(uniformName);
@@ -352,10 +283,6 @@ bool Shader::getUniformValue(const char *uniformName, glm::vec4 &value)
         glGetUniformfv(m_Program, location, m_vec4Buffer);
         
         memcpy(&value[0], m_vec4Buffer, sizeof(glm::vec4));
-//        value.setX(m_vec4Buffer[0]);
-//        value.setY(m_vec4Buffer[1]);
-//        value.setZ(m_vec4Buffer[2]);
-//        value.setW(m_vec4Buffer[3]);
         
         return true;
     }

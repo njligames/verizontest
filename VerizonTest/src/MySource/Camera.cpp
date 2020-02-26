@@ -39,18 +39,6 @@ namespace njli
         
         return _m;
         
-//        btMatrix3x3 basis;
-//        btVector3 origin;
-//
-//        basis.setFromOpenGLSubMatrix(m);
-//        origin.setValue(m[12],m[13],m[14]);
-//
-//        basis[0].setW(m[3]);
-//        basis[1].setW(m[7]);
-//        basis[2].setW(m[11]);
-//        origin.setW(m[15]);
-        
-//        return btTransform(basis, origin);
     }
 
     glm::mat4x4 Camera::makeFrustum(float *matrixBuffer, float fov, float aspect, float nearDist, float farDist, bool leftHanded )
@@ -79,13 +67,12 @@ namespace njli
         if ( fov <= 0 || aspect == 0 )
         {
             return glm::mat4x4(1.0);
-//            return btTransform::getIdentity();
         }
         
         float frustumDepth = farDist - nearDist;
         float oneOverDepth = 1.0f / frustumDepth;
         
-        matrixBuffer[5] = 1.0f / tan(0.5f * btRadians(fov));
+        matrixBuffer[5] = 1.0f / tan(0.5f * glm::radians(fov));
         matrixBuffer[0] = (leftHanded ? 1.0f : -1.0f ) * matrixBuffer[5] / aspect;
         matrixBuffer[10] = farDist * oneOverDepth;
         matrixBuffer[14] = (-farDist * nearDist) * oneOverDepth;
@@ -102,28 +89,37 @@ namespace njli
     {
         assert(buffer);
         
-        btVector3 ev(eyeX, eyeY, eyeZ );
-        btVector3 cv(centerX, centerY, centerZ );
-        btVector3 uv( upX, upY, upZ );
-        btVector3 n((ev + -cv).normalized());
-        btVector3 u((uv.cross(n).normalized()));
-        btVector3 v(n.cross(u));
+        glm::vec3 ev(eyeX, eyeY, eyeZ );
+        glm::vec3 cv(centerX, centerY, centerZ );
+        glm::vec3 uv( upX, upY, upZ );
+//        glm::vec3 n((ev + -cv).normalized());
+        glm::vec3 n(glm::normalize(ev + -cv));
+//        glm::vec3 u((uv.cross(n).normalized()));
+        glm::vec3 u(glm::normalize(glm::cross(uv, n)));
+//        glm::vec3 v(n.cross(u));
+        glm::vec3 v(glm::cross(n, u));
         
-        buffer[ 0] = u.x();
-        buffer[ 1] = v.x();
-        buffer[ 2] = n.x();
+        buffer[ 0] = u.x;
+        buffer[ 1] = v.x;
+        buffer[ 2] = n.x;
         buffer[ 3] = 0.0f;
-        buffer[ 4] = u.y();
-        buffer[ 5] = v.y();
-        buffer[ 6] = n.y();
+        buffer[ 4] = u.y;
+        buffer[ 5] = v.y;
+        buffer[ 6] = n.y;
         buffer[ 7] = 0.0f;
-        buffer[ 8] = u.z();
-        buffer[ 9] = v.z();
-        buffer[10] = n.z();
+        buffer[ 8] = u.z;
+        buffer[ 9] = v.z;
+        buffer[10] = n.z;
         buffer[11] = 0.0f;
-        buffer[12] = (-u).dot(ev);
-        buffer[13] = (-v).dot(ev);
-        buffer[14] = (-n).dot(ev);
+//        buffer[12] = (-u).dot(ev);
+        buffer[12] = glm::dot(-u, ev);
+        
+//        buffer[13] = (-v).dot(ev);
+        buffer[13] = glm::dot(-v, ev);
+        
+//        buffer[14] = (-n).dot(ev);
+        buffer[14] = glm::dot(-n, ev);
+        
         buffer[15] = 1.0f;
         
         return setFrom4x4Matrix(buffer);
@@ -137,7 +133,6 @@ namespace njli
     m_Far(3000.0f),
     m_Fov(45.0f),
     m_AspectRatio(1.0f),
-//    m_ProjectionMatrix(new btTransform()),
 mProjectionMatrix(new glm::mat4x4()),
     m_ModelViewDirty(true),
     m_ProjectionDirty(true)
@@ -148,8 +143,6 @@ mProjectionMatrix(new glm::mat4x4()),
     
     Camera::~Camera()
     {
-//        delete m_ProjectionMatrix;
-//        m_ProjectionMatrix = NULL;
         
         delete mProjectionMatrix;
         mProjectionMatrix = NULL;
@@ -255,22 +248,19 @@ mProjectionMatrix(new glm::mat4x4()),
         m_NodeOwner = node;
     }
     
-    void Camera::lookAt(const btVector3 &target, const btVector3 &up)
+    void Camera::lookAt(const glm::vec3 &target, const glm::vec3 &up)
     {
         glm::mat4x4 _btTransform(makeLookAt(m_MatrixBuffer,
                                             getNodeOwner()->getOrigin().x,
                                             getNodeOwner()->getOrigin().y,
                                             getNodeOwner()->getOrigin().z,
-                                            target.getX(),
-                                            target.getY(),
-                                            target.getZ(),
-                                            up.getX(),
-                                            up.getY(),
-                                            up.getZ()));
-//        btQuaternion q;
-//        _btTransform.inverse().getBasis().getRotation(q);
-//        
-//        getNodeOwner()->setOrientation(q);
+                                            target.x,
+                                            target.y,
+                                            target.z,
+                                            up.x,
+                                            up.y,
+                                            up.z));
+        *mProjectionMatrix = _btTransform;
     }
     
     void Camera::render(Shader *const shader, bool shouldRedraw)

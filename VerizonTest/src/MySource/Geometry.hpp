@@ -16,9 +16,6 @@
 #include <vector>
 #include <string>
 
-#include "btTransform.h"
-//#include "glm::vec2.h"
-
 #include "glm/glm.hpp"
 
 //#define USE_HALF_FLOAT
@@ -37,7 +34,7 @@ typedef GLfloat GLfptype;
 
 namespace njli
 {
-    ATTRIBUTE_ALIGNED16(struct)
+    struct __attribute__ ((aligned (16)))
     TexturedColoredVertex
     {
         static void computeTangentBasis(TexturedColoredVertex *v, unsigned int numVerts)
@@ -222,16 +219,12 @@ namespace njli
         
         void render(Camera *camera);
         
-//        static const GLsizei MAX_CUBES = 10000;
         
     protected:
         const void *getModelViewTransformArrayBufferPtr()const;
         GLsizeiptr getModelViewTransformArrayBufferSize()const;
         bool isModelViewBufferChanged()const;
         void enableModelViewBufferChanged(bool changed = true);
-        
-//        const void *getColorTransformArrayBufferPtr()const;
-//        GLsizeiptr getColorTransformArrayBufferSize()const;
         
         const void *getNormalMatrixTransformArrayBufferPtr()const;
         GLsizeiptr getNormalMatrixTransformArrayBufferSize()const;
@@ -254,19 +247,12 @@ namespace njli
         void addReference(Node *node);
         void removeReference(Node *node);
         
-//        void setTransform(const unsigned long index, const btTransform &transform);
         void setTransform(const unsigned long index, const glm::mat4x4 &transform);
         
-//        btTransform getTransform(const unsigned long index);
         glm::mat4x4 getTransform(const unsigned long index);
         
-//        void setColorTransform(const unsigned long index, const btTransform &transform);
-//        btTransform getColorTransform(const unsigned long index);
-        
-//        void setNormalMatrixTransform(const unsigned long index, const btTransform &transform);
         void setNormalMatrixTransform(const unsigned long index, const glm::mat4x4 &transform);
         
-//        btTransform getNormalMatrixTransform(const unsigned long index);
         glm::mat4x4 getNormalMatrixTransform(const unsigned long index);
         
         virtual void setOpacity(Node *node) = 0;
@@ -278,21 +264,11 @@ namespace njli
         virtual GLsizei numberOfInstances()const;
         
         unsigned long getGeometryIndex(Node *const node)const;
-        
-//        void computeTangentBasis(
-//                                 // inputs
-//                                 const std::vector<glm::vec3> & vertices,
-//                                 const std::vector<glm::vec2> & uvs,
-//                                 const std::vector<glm::vec3> & normals,
-//                                 // outputs
-//                                 std::vector<glm::vec3> & tangents,
-//                                 std::vector<glm::vec3> & bitangents
-//                                 );
 
         
         
         GLfptype *m_MatrixBuffer;
-        btScalar *m_MatrixBufferFullSize;
+        float *m_MatrixBufferFullSize;
         
     private:
         

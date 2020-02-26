@@ -17,7 +17,7 @@
 #include "AbstractFrameBuffer.hpp"
 #include "SceneFrameBuffer.hpp"
 
-#include "btQuaternion.h"
+//#include "btQuaternion.h"
 
 #define EDIT_SHADER
 
@@ -277,18 +277,18 @@ namespace njli
         {
             Node *node = *i;
             
-            btScalar rad(0.5);
+            float rad(0.5);
             
             //            25800.13889
-            btScalar vertical_mat_from = 4000;
-            btScalar vertical_mat_to = (vertical_mat_from + (1000 * m_Randomness));
+            float vertical_mat_from = 4000;
+            float vertical_mat_to = (vertical_mat_from + (1000 * m_Randomness));
             
-            btScalar vertical_mag(randomFloat(vertical_mat_from, vertical_mat_to));
+            float vertical_mag(randomFloat(vertical_mat_from, vertical_mat_to));
             
-            btScalar horizontal_mag_from = 2000;//25800.13889;
-            btScalar horizontal_mat_to = horizontal_mag_from + (500 * m_Randomness);
+            float horizontal_mag_from = 2000;//25800.13889;
+            float horizontal_mat_to = horizontal_mag_from + (500 * m_Randomness);
             
-            btScalar horizontal_mag(randomFloat(horizontal_mag_from, horizontal_mat_to));
+            float horizontal_mag(randomFloat(horizontal_mag_from, horizontal_mat_to));
             
 //            glm::vec3 origin(node->getTransform().getOrigin());
 //            glm::vec3 forward(origin.normalized());
@@ -526,20 +526,4 @@ namespace njli
                       randomFloat(min.z, max.z));
     }
     
-//    btQuaternion Cubenado::randomRotation(const glm::vec3 &axis, const float degreesMin, const float degreesMax)const
-//    {
-//        assert(degreesMin <= degreesMax);
-//        
-//        return btQuaternion(axis, randomFloat(degreesMin, degreesMax)).normalized();
-//    }
-//    
-//    btQuaternion Cubenado::randomRotation(const float degreesMin, const float degreesMax)const
-//    {
-//        return randomRotation(randomPosition(glm::vec3(0,0,0), glm::vec3(1,1,1)).normalized(), degreesMin, degreesMax);
-//    }
-//    
-//    btQuaternion Cubenado::randomRotation()const
-//    {
-//        return randomRotation(randomPosition(glm::vec3(0,0,0), glm::vec3(1,1,1)).normalized(), btRadians(0), btRadians(360));
-//    }
 }

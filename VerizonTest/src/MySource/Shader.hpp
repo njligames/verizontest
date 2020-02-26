@@ -16,7 +16,6 @@
 #import <OpenGLES/ES2/glext.h>
 #import <OpenGLES/ES2/gl.h>
 
-#include "btTransform.h"
 #include "glm/glm.hpp"
 
 namespace njli
@@ -42,29 +41,23 @@ namespace njli
         
         int getUniformLocation(const std::string &uniformName);
         
-//        bool setUniformValue(const std::string &uniformName, const btTransform &value, bool transpose = false);
         bool setUniformValue(const std::string &uniformName, const glm::mat4x4 &value, bool transpose = false);
         bool setUniformValue(const std::string &uniformName, GLfloat *matrix4x4, bool transpose = false);
         
-//        bool getUniformValue(const std::string &uniformName, btTransform &value);
         bool getUniformValue(const std::string &uniformName, glm::mat4x4 &value);
         
         bool setUniformValue(const char *uniformName, int value);
         bool getUniformValue(const char *uniformName, int &value);
         
-//        bool setUniformValue(const char *uniformName, const btVector3 &value);
         bool setUniformValue(const char *uniformName, const glm::vec3 &value);
         
-//        bool getUniformValue(const char *uniformName, btVector3 &value);
         bool getUniformValue(const char *uniformName, glm::vec3 &value);
         
         bool setUniformValue(const char *uniformName, float value);
         bool getUniformValue(const char *uniformName, float &value);
         
-//        bool setUniformValue(const char *uniformName, const btVector4 &value);
         bool setUniformValue(const char *uniformName, const glm::vec4 &value);
         
-//        bool getUniformValue(const char *uniformName, btVector4 &value);
         bool getUniformValue(const char *uniformName, glm::vec4 &value);
     protected:
         GLuint compileShader(const std::string &source, GLenum type);

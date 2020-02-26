@@ -12,7 +12,6 @@
 #import <OpenGLES/ES2/glext.h>
 #import <OpenGLES/ES2/gl.h>
 
-#include "btTransform.h"
 #include "glm/glm.hpp"
 
 namespace njli
@@ -50,16 +49,14 @@ namespace njli
         void setAspectRatio(const float val);
         float getAspectRatio()const;
         
-//        btTransform getModelView()const;
         glm::mat4x4 getModelView()const;
         
-//        btTransform getProjectionMatrix()const;
         glm::mat4x4 getProjectionMatrix()const;
         
         Node *const getNodeOwner()const;
         void setNodeOwner(Node *const node);
         
-        void lookAt(const btVector3& pos, const btVector3& up = btVector3(0, 1.0f, 0));
+        void lookAt(const glm::vec3& pos, const glm::vec3& up = glm::vec3(0, 1.0f, 0));
     protected:
         void render(Shader *const shader, bool shouldRedraw = false);
     private:
@@ -74,7 +71,6 @@ namespace njli
         float m_Far;
         float m_Fov;
         float m_AspectRatio;
-//        btTransform *m_ProjectionMatrix;
         glm::mat4x4 *mProjectionMatrix;
         bool m_ModelViewDirty;
         bool m_ProjectionDirty;

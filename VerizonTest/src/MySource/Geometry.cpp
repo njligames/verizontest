@@ -140,7 +140,7 @@ namespace njli
     
     Geometry::Geometry():
     m_MatrixBuffer(new GLfptype[16]),
-    m_MatrixBufferFullSize(new btScalar[16]),
+    m_MatrixBufferFullSize(new float[16]),
     m_ModelViewTransformData(NULL),
 //    m_ColorTransformData(NULL),
     m_NormalMatrixTransformData(NULL),
@@ -397,12 +397,12 @@ namespace njli
             
             struct LightSourceParameters
             {
-                btVector4 ambient;
-                btVector4 diffuse;
-                btVector4 specular;
-                btVector4 position;
-                btVector4 halfVector;
-                btVector3 spotDirection;
+                glm::vec4 ambient;
+                glm::vec4 diffuse;
+                glm::vec4 specular;
+                glm::vec4 position;
+                glm::vec4 halfVector;
+                glm::vec3 spotDirection;
                 float spotExponent;
                 float spotCutoff;
                 float spotCosCutoff;
@@ -413,16 +413,16 @@ namespace njli
             
             struct MaterialParameters
             {
-                btVector4 emission;
-                btVector4 ambient;
-                btVector4 diffuse;
-                btVector4 specular;
+                glm::vec4 emission;
+                glm::vec4 ambient;
+                glm::vec4 diffuse;
+                glm::vec4 specular;
                 float shininess;
             };
             
             
-//            shader->setUniformValue("RimLightColor", btVector3(0.25008f, 0.250f, 0.8712f));
-            shader->setUniformValue("RimLightColor", btVector3(1.0f, 1.0f, 1.0f));
+//            shader->setUniformValue("RimLightColor", glm::vec3(0.25008f, 0.250f, 0.8712f));
+            shader->setUniformValue("RimLightColor", glm::vec3(1.0f, 1.0f, 1.0f));
             shader->setUniformValue("RimLightStart", 0.0f);
             shader->setUniformValue("RimLightEnd", 1.0f);
             shader->setUniformValue("RimLightCoefficient", 0.6f);
@@ -432,15 +432,15 @@ namespace njli
              uniform float RimLightCoefficient;
              */
             
-            shader->setUniformValue("LightSourceAmbientColor", btVector3(1.0f, 1.0f, 1.0f));
-            shader->setUniformValue("LightSourceDiffuseColor", btVector3(1.0f, 1.0f, 1.0f));
-            shader->setUniformValue("LightSourceSpecularColor", btVector3(1.0f, 1.0f, 1.0f));
+            shader->setUniformValue("LightSourceAmbientColor", glm::vec3(1.0f, 1.0f, 1.0f));
+            shader->setUniformValue("LightSourceDiffuseColor", glm::vec3(1.0f, 1.0f, 1.0f));
+            shader->setUniformValue("LightSourceSpecularColor", glm::vec3(1.0f, 1.0f, 1.0f));
             
             //set LightSourcePosition_worldspace.w == 0 for DirectionalLight
             //set LightSourcePosition_worldspace.w != 0 for PointlLight
-            shader->setUniformValue("LightSourcePosition_worldspace", btVector4(0.0f, 0.0f, -1.0f, 1.0));
+            shader->setUniformValue("LightSourcePosition_worldspace", glm::vec4(0.0f, 0.0f, -1.0f, 1.0));
             
-            shader->setUniformValue("LightSourceSpotDirection", btVector3(0.0f, 0.0f, 1.0f));
+            shader->setUniformValue("LightSourceSpotDirection", glm::vec3(0.0f, 0.0f, 1.0f));
             shader->setUniformValue("LightSourceSpotExponent", 100.0f);
             //set LightSourceSpotCutoff != 180 for SpotLight
             shader->setUniformValue("LightSourceSpotCutoff", 180.0f);
@@ -492,13 +492,13 @@ namespace njli
             
             
             
-            shader->setUniformValue("LightAmbientColor", btVector3(1.0f, 1.0f, 1.0f));
+            shader->setUniformValue("LightAmbientColor", glm::vec3(1.0f, 1.0f, 1.0f));
             
             shader->setUniformValue("MaterialShininess", 1000.0f);
             
             shader->setUniformValue("FogMaxDistance", 10.0f);
             shader->setUniformValue("FogMinDistance", 0.1f);
-            shader->setUniformValue("FogColor", btVector3(0.7f, 0.7f, 0.7f));
+            shader->setUniformValue("FogColor", glm::vec3(0.7f, 0.7f, 0.7f));
             shader->setUniformValue("FogDensity", 0.000000001f);
             
             m_ShaderChanged = false;
@@ -549,82 +549,82 @@ namespace njli
         return node->getGeometryIndex();
     }
     
-    void computeTangentBasis(
-                             // inputs
-                             const std::vector<btVector3> & vertices,
-                             const std::vector<btVector2> & uvs,
-                             const std::vector<btVector3> & normals,
-                             // outputs
-                             std::vector<btVector3> & tangents,
-                             std::vector<btVector3> & bitangents
-                             )
-    {
-        
-        tangents.clear();
-        bitangents.clear();
-        tangents.resize(vertices.size());
-        bitangents.resize(vertices.size());
-        
-        for (unsigned int i=0; i<vertices.size(); i+=3 )
-        {
-            
-            // Shortcuts for vertices
-            btVector3  v0 = vertices[i+0];
-            btVector3  v1 = vertices[i+1];
-            btVector3  v2 = vertices[i+2];
-            
-            // Shortcuts for UVs
-            btVector2  uv0 = uvs[i+0];
-            btVector2  uv1 = uvs[i+1];
-            btVector2  uv2 = uvs[i+2];
-            
-            // Edges of the triangle : postion delta
-            btVector3 deltaPos1 = v1-v0;
-            btVector3 deltaPos2 = v2-v0;
-            
-            // UV delta
-            btVector2 deltaUV1 = uv1-uv0;
-            btVector2 deltaUV2 = uv2-uv0;
-            
-            float r = 1.0f / (deltaUV1.x() * deltaUV2.y() - deltaUV1.y() * deltaUV2.x());
-            btVector3 tangent = (deltaPos1 * deltaUV2.y()   - deltaPos2 * deltaUV1.y())*r;
-            btVector3 bitangent = (deltaPos2 * deltaUV1.x()   - deltaPos1 * deltaUV2.x())*r;
-            
-            // Set the same tangent for all three vertices of the triangle.
-            // They will be merged later, in vboindexer.cpp
-            tangents[i] = tangent;
-            tangents[i+1] = tangent;
-            tangents[i+2] = tangent;
-            
-            // Same thing for binormals
-            bitangents[i] = bitangent;
-            bitangents[i+1] = bitangent;
-            bitangents[i+2] = bitangent;
-            
-        }
-        
-        // See "Going Further"
-        for (unsigned int i=0; i<vertices.size(); i+=1 )
-        {
-            btVector3  n = normals[i];
-            btVector3  t = tangents[i];
-            btVector3  b = bitangents[i];
-            
-            
-            // Gram-Schmidt orthogonalize
-            t = (t - n * n.dot(t)).normalized();
-            
-            
-            // Calculate handedness
-            if (n.cross(t).dot(b) < 0.0f)
-            {
-                t = t * -1.0f;
-            }
-            
-        }
-        
-        
-    }
+//    void computeTangentBasis(
+//                             // inputs
+//                             const std::vector<glm::vec3> & vertices,
+//                             const std::vector<glm::vec2> & uvs,
+//                             const std::vector<glm::vec3> & normals,
+//                             // outputs
+//                             std::vector<glm::vec3> & tangents,
+//                             std::vector<glm::vec3> & bitangents
+//                             )
+//    {
+//        
+//        tangents.clear();
+//        bitangents.clear();
+//        tangents.resize(vertices.size());
+//        bitangents.resize(vertices.size());
+//        
+//        for (unsigned int i=0; i<vertices.size(); i+=3 )
+//        {
+//            
+//            // Shortcuts for vertices
+//            glm::vec3  v0 = vertices[i+0];
+//            glm::vec3  v1 = vertices[i+1];
+//            glm::vec3  v2 = vertices[i+2];
+//            
+//            // Shortcuts for UVs
+//            glm::vec2  uv0 = uvs[i+0];
+//            glm::vec2  uv1 = uvs[i+1];
+//            glm::vec2  uv2 = uvs[i+2];
+//            
+//            // Edges of the triangle : postion delta
+//            glm::vec3 deltaPos1 = v1-v0;
+//            glm::vec3 deltaPos2 = v2-v0;
+//            
+//            // UV delta
+//            glm::vec2 deltaUV1 = uv1-uv0;
+//            glm::vec2 deltaUV2 = uv2-uv0;
+//            
+//            float r = 1.0f / (deltaUV1.x() * deltaUV2.y() - deltaUV1.y() * deltaUV2.x());
+//            glm::vec3 tangent = (deltaPos1 * deltaUV2.y()   - deltaPos2 * deltaUV1.y())*r;
+//            glm::vec3 bitangent = (deltaPos2 * deltaUV1.x()   - deltaPos1 * deltaUV2.x())*r;
+//            
+//            // Set the same tangent for all three vertices of the triangle.
+//            // They will be merged later, in vboindexer.cpp
+//            tangents[i] = tangent;
+//            tangents[i+1] = tangent;
+//            tangents[i+2] = tangent;
+//            
+//            // Same thing for binormals
+//            bitangents[i] = bitangent;
+//            bitangents[i+1] = bitangent;
+//            bitangents[i+2] = bitangent;
+//            
+//        }
+//        
+//        // See "Going Further"
+//        for (unsigned int i=0; i<vertices.size(); i+=1 )
+//        {
+//            glm::vec3  n = normals[i];
+//            glm::vec3  t = tangents[i];
+//            glm::vec3  b = bitangents[i];
+//            
+//            
+//            // Gram-Schmidt orthogonalize
+//            t = (t - n * n.dot(t)).normalized();
+//            
+//            
+//            // Calculate handedness
+//            if (n.cross(t).dot(b) < 0.0f)
+//            {
+//                t = t * -1.0f;
+//            }
+//            
+//        }
+//        
+//        
+//    }
     
     const void *Geometry::getModelViewTransformArrayBufferPtr()const
     {
@@ -769,35 +769,6 @@ namespace njli
         }
     }
     
-//    void Geometry::setTransform(const unsigned long index, const btTransform &transform)
-//    {
-//        if (index < numberOfInstances())
-//        {
-//            const unsigned long STRIDE = 16 * numberOfVertices();
-//
-//#ifdef USE_HALF_FLOAT
-//            transform.getOpenGLMatrix(m_MatrixBufferFullSize);
-//            for (unsigned long i = 0; i < 16; i++)
-//                m_MatrixBuffer[i] = convertFloatToHFloat(&m_MatrixBufferFullSize[i]);
-//#else
-//            transform.getOpenGLMatrix(m_MatrixBuffer);
-//#endif
-//
-//            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
-//            {
-//                unsigned long p = ((index * STRIDE) + (16 * currentVertex));
-//                int cmp = memcmp(m_ModelViewTransformData + p,
-//                                 m_MatrixBuffer,
-//                                 sizeof(GLfptype) * 16);
-//
-//                if(0 != cmp)
-//                {
-//                    memcpy(m_ModelViewTransformData + p, m_MatrixBuffer, sizeof(GLfptype) * 16);
-//                }
-//            }
-//            enableModelViewBufferChanged(true);
-//        }
-//    }
 
 void Geometry::setTransform(const unsigned long index, const glm::mat4x4 &transform)
     {
@@ -810,7 +781,6 @@ void Geometry::setTransform(const unsigned long index, const glm::mat4x4 &transf
             for (unsigned long i = 0; i < 16; i++)
                 m_MatrixBuffer[i] = convertFloatToHFloat(&m_MatrixBufferFullSize[i]);
 #else
-//            transform.getOpenGLMatrix(m_MatrixBuffer);
             memcpy(m_MatrixBuffer, &transform[0], sizeof(glm::mat4x4));
 #endif
             
@@ -830,31 +800,7 @@ void Geometry::setTransform(const unsigned long index, const glm::mat4x4 &transf
         }
     }
     
-//    btTransform Geometry::getTransform(const unsigned long index)
-//    {
-//        btTransform transform(btTransform::getIdentity());
-//        if (index < numberOfInstances())
-//        {
-//            const unsigned long STRIDE = 16 * numberOfVertices();
-//
-//            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
-//            {
-//                unsigned long p = ((index * STRIDE) + (16 * currentVertex));
-//                memcpy(m_MatrixBuffer,
-//                       m_ModelViewTransformData + p,
-//                       sizeof(GLfptype) * 16);
-//            }
-//
-//#ifdef USE_HALF_FLOAT
-//            for (unsigned long i = 0; i < 16; i++)
-//                m_MatrixBufferFullSize[i] = convertHFloatToFloat(m_MatrixBuffer[i]);
-//            transform.setFromOpenGLMatrix(m_MatrixBufferFullSize);
-//#else
-//            transform.setFromOpenGLMatrix(m_MatrixBuffer);
-//#endif
-//        }
-//        return transform;
-//    }
+
 glm::mat4x4 Geometry::getTransform(const unsigned long index)
     {
         glm::mat4x4 transform(1.0);
@@ -876,90 +822,12 @@ glm::mat4x4 Geometry::getTransform(const unsigned long index)
             transform.setFromOpenGLMatrix(m_MatrixBufferFullSize);
 #else
             memcpy(&transform[0], m_MatrixBuffer, sizeof(glm::mat4x4));
-//            transform.setFromOpenGLMatrix(m_MatrixBuffer);
 #endif
         }
         return transform;
     }
     
-//    void Geometry::setColorTransform(const unsigned long index, const btTransform &transform)
-//    {
-//        if (index < numberOfInstances())
-//        {
-//            const unsigned long STRIDE = 16 * numberOfVertices();
-//            
-//            transform.getOpenGLMatrix(m_MatrixBuffer);
-//            
-//            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
-//            {
-//                unsigned long p = ((index * STRIDE) + (16 * currentVertex));
-//                
-//                int cmp = memcmp(m_ColorTransformData + p,
-//                                 m_MatrixBuffer,
-//                                 sizeof(GLfptype) * 16);
-//                
-//                if(0 != cmp)
-//                {
-//                    memcpy(m_ColorTransformData + p,
-//                           m_MatrixBuffer,
-//                           sizeof(GLfptype) * 16);
-//                }
-//            }
-//        }
-//    }
-//    
-//    btTransform Geometry::getColorTransform(const unsigned long index)
-//    {
-//        btTransform transform(btTransform::getIdentity());
-//        if (index < numberOfInstances())
-//        {
-//            const unsigned long STRIDE = 16 * numberOfVertices();
-//            
-//            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
-//            {
-//                unsigned long p = ((index * STRIDE) + (16 * currentVertex));
-//                memcpy(m_MatrixBuffer,
-//                       m_ColorTransformData + p,
-//                       sizeof(GLfptype) * 16);
-//            }
-//            
-//            transform.setFromOpenGLMatrix(m_MatrixBuffer);
-//        }
-//        return transform;
-//    }
-    
-//    void Geometry::setNormalMatrixTransform(const unsigned long index, const btTransform &transform)
-//    {
-//        if (index < numberOfInstances())
-//        {
-//            const unsigned long STRIDE = 16 * numberOfVertices();
-//
-//#ifdef USE_HALF_FLOAT
-//            transform.getOpenGLMatrix(m_MatrixBufferFullSize);
-//            for (unsigned long i = 0; i < 16; i++)
-//                m_MatrixBuffer[i] = convertFloatToHFloat(&m_MatrixBufferFullSize[i]);
-//#else
-//            transform.getOpenGLMatrix(m_MatrixBuffer);
-//#endif
-//
-//            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
-//            {
-//                unsigned long p = ((index * STRIDE) + (16 * currentVertex));
-//
-//                int cmp = memcmp(m_NormalMatrixTransformData + p,
-//                                 m_MatrixBuffer,
-//                                 sizeof(GLfptype) * 16);
-//
-//                if(0 != cmp)
-//                {
-//                    memcpy(m_NormalMatrixTransformData + p,
-//                           m_MatrixBuffer,
-//                           sizeof(GLfptype) * 16);
-//                }
-//            }
-//            enableNormalMatrixBufferChanged(true);
-//        }
-//    }
+
 
 void Geometry::setNormalMatrixTransform(const unsigned long index, const glm::mat4x4 &transform)
     {
@@ -995,32 +863,7 @@ void Geometry::setNormalMatrixTransform(const unsigned long index, const glm::ma
         }
     }
     
-//    btTransform Geometry::getNormalMatrixTransform(const unsigned long index)
-//    {
-//        btTransform transform(btTransform::getIdentity());
-//        if (index < numberOfInstances())
-//        {
-//            const unsigned long STRIDE = 16 * numberOfVertices();
-//
-//            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
-//            {
-//                unsigned long p = ((index * STRIDE) + (16 * currentVertex));
-//                memcpy(m_MatrixBuffer,
-//                       m_NormalMatrixTransformData + p,
-//                       sizeof(GLfptype) * 16);
-//            }
-//
-//#ifdef USE_HALF_FLOAT
-//            for (unsigned long i = 0; i < 16; i++)
-//                m_MatrixBufferFullSize[i] = convertHFloatToFloat(m_MatrixBuffer[i]);
-//            transform.setFromOpenGLMatrix(m_MatrixBufferFullSize);
-//#else
-//            transform.setFromOpenGLMatrix(m_MatrixBuffer);
-//#endif
-//
-//        }
-//        return transform;
-//    }
+
 glm::mat4x4 Geometry::getNormalMatrixTransform(const unsigned long index)
     {
         glm::mat4x4 transform(1);
@@ -1041,7 +884,6 @@ glm::mat4x4 Geometry::getNormalMatrixTransform(const unsigned long index)
                 m_MatrixBufferFullSize[i] = convertHFloatToFloat(m_MatrixBuffer[i]);
             transform.setFromOpenGLMatrix(m_MatrixBufferFullSize);
 #else
-//            transform.setFromOpenGLMatrix(m_MatrixBuffer);
             memcpy(&transform[0], m_MatrixBuffer, sizeof(glm::mat4x4));
 #endif
             

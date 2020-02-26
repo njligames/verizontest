@@ -168,8 +168,6 @@ struct thread_data{
     
     if(njli::Cubenado::getInstance()->getCamera()->getNodeOwner())
     {
-        btTransform cameraTransform(btTransform::getIdentity());
-        
         glm::mat4x4 cameraT(1.0f);
         njli::Cubenado::getInstance()->getCamera()->getNodeOwner()->setTransform(cameraT);
     }
