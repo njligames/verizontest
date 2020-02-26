@@ -159,7 +159,7 @@ namespace njli
         glEnable(GL_DEPTH_TEST);
         glFrontFace(GL_CW);
         glCullFace(GL_BACK);
-        glEnable(GL_CULL_FACE);
+//        glEnable(GL_CULL_FACE);
         
         srand((unsigned int)time(0));
         
@@ -168,7 +168,8 @@ namespace njli
         
         m_Scene->addActiveNode(m_CameraNode);
         m_Scene->addActiveCamera(m_Camera);
-        m_Scene->getRootNode()->setOrigin(glm::vec3(-10.0f, -300.0f, 1800.0f));
+//        m_Scene->getRootNode()->setOrigin(glm::vec3(-10.0f, -300.0f, 1800.0f));
+        m_Scene->getRootNode()->setOrigin(glm::vec3(0.0f, 0.0f, 10.0f));
 #ifdef EDIT_SHADER
         m_Scene->getRootNode()->setOrigin(glm::vec3(0.0f, 0.0f, 10.0f));
 #endif
@@ -189,7 +190,8 @@ namespace njli
 //        m_ShaderMap.insert(ShaderPair("Gourand", m_Gourand));
         
 #ifdef EDIT_SHADER
-        m_Geometry->load(m_Shader, loadFile("models/utah-teapot-EXPORT.obj"));
+//        m_Geometry->load(m_Shader, loadFile("models/utah-teapot-EXPORT.obj"));
+        m_Geometry->load(m_Shader, loadFile("models/sprite.obj"));
 #else
         m_Geometry->load(m_Shader, loadFile("models/cube.obj"), m_NumberOfCubes);
 #endif
@@ -237,7 +239,7 @@ namespace njli
 #ifdef EDIT_SHADER
         Node *node = m_CubeNodes.at(0);
 
-        glm::mat3x3 normalMatrix = node->getWorldTransform();
+        glm::mat3x3 normalMatrix = node->getTransform();
         glm::mat3x3 _inversed = glm::inverse(normalMatrix);
         
         glm::mat3x3 _transposed = glm::transpose(_inversed);
@@ -257,6 +259,13 @@ namespace njli
 //        node->setRotation(rot1 * rot2 * rot3);
         node->setRotation(rot2);
         m_Rotation += step;
+        
+        node->setTransform(node->getTransform());
+//
+        node->setRotation(node->getRotation());
+        
+        node->setOrigin(node->getOrigin());
+        
         return;
 #endif
         long cubesToDraw = m_NumberOfCubes;
@@ -316,11 +325,11 @@ namespace njli
             
 //            node->setNormalMatrix(glm::transpose(glm::inverse((glm::mat3_cast(glm::quat_cast(node->getTransform()))))));
             
-//            glm::mat3x3 normalMatrix = node->getTransform();
-//            glm::mat3x3 _transposed = glm::transpose(normalMatrix);
-//            glm::mat3x3 _inversed = glm::inverse(_transposed);
-//
-//            node->setNormalMatrix(_inversed);
+            glm::mat3x3 normalMatrix = node->getTransform();
+            glm::mat3x3 _transposed = glm::transpose(normalMatrix);
+            glm::mat3x3 _inversed = glm::inverse(_transposed);
+
+            node->setNormalMatrix(_inversed);
             
             node->enableHideGeometry(false);
             if(cubesToDraw < 0)

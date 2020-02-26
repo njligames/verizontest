@@ -95,7 +95,8 @@ namespace njli
                 t = (t - n * glm::dot(n,t));
                 
                 
-                if(t.length() > 0.0f) {
+                float l = t.length();
+                if(l > 0.0f) {
 //                    t.normalize();
                     t = glm::normalize(t);
                 }
@@ -105,7 +106,10 @@ namespace njli
 //                {
 //                    t = t * -1.0f;
 //                }
-                if(glm::dot(glm::cross(n, t), b) < 0.0f) {
+                glm::vec3 _cross = glm::cross(t, n);
+                float _dot = glm::dot(_cross, b);
+                
+                if(_dot < 0.0f) {
                     t = t * -1.0f;
                 }
             }

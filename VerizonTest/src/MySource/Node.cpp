@@ -456,7 +456,7 @@ void Node::setTransform(const glm::mat4x4& transform) {
 
 glm::vec3 Node::getOrigin()const
 {
-    glm::mat4 transform(getWorldTransform());
+    glm::mat4 transform(getTransform());
     return glm::vec3(transform[3][0],
                      transform[3][1],
                      transform[3][2]);
@@ -471,7 +471,7 @@ glm::vec3 Node::getOrigin()const
 
 void Node::setOrigin(const glm::vec3 &origin)
 {
-    glm::mat4 t(getWorldTransform());
+    glm::mat4 t(getTransform());
     
     t[3][0] = origin.x;
     t[3][1] = origin.y;
@@ -499,7 +499,7 @@ void Node::setOrigin(const glm::vec2 &origin)
 
 glm::quat Node::getRotation()const
 {
-    return glm::quat_cast(getWorldTransform());
+    return glm::quat_cast(getTransform());
 //    return getWorldTransform().getRotation();
 }
     
