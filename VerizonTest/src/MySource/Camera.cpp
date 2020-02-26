@@ -12,23 +12,48 @@
 
 namespace njli
 {
-    static inline btTransform setFrom4x4Matrix(const btScalar *m)
+    static inline glm::mat4x4 setFrom4x4Matrix(const float *m)
     {
-        btMatrix3x3 basis;
-        btVector3 origin;
+        glm::mat4 _m;
         
-        basis.setFromOpenGLSubMatrix(m);
-        origin.setValue(m[12],m[13],m[14]);
+        _m[0][0] = m[0];
+        _m[1][0] = m[1];
+        _m[2][0] = m[2];
+        _m[3][0] = m[3];
         
-        basis[0].setW(m[3]);
-        basis[1].setW(m[7]);
-        basis[2].setW(m[11]);
-        origin.setW(m[15]);
+        _m[0][1] = m[4];
+        _m[1][1] = m[5];
+        _m[2][1] = m[6];
+        _m[3][1] = m[7];
         
-        return btTransform(basis, origin);
+        _m[0][2] = m[8];
+        _m[1][2] = m[9];
+        _m[2][2] = m[10];
+        _m[3][2] = m[11];
+        
+        _m[0][3] = m[12];
+        _m[1][3] = m[13];
+        _m[2][3] = m[14];
+        _m[3][3] = m[15];
+        
+        
+        return _m;
+        
+//        btMatrix3x3 basis;
+//        btVector3 origin;
+//
+//        basis.setFromOpenGLSubMatrix(m);
+//        origin.setValue(m[12],m[13],m[14]);
+//
+//        basis[0].setW(m[3]);
+//        basis[1].setW(m[7]);
+//        basis[2].setW(m[11]);
+//        origin.setW(m[15]);
+        
+//        return btTransform(basis, origin);
     }
 
-    btTransform Camera::makeFrustum(float *matrixBuffer, float fov, float aspect, float nearDist, float farDist, bool leftHanded )
+    glm::mat4x4 Camera::makeFrustum(float *matrixBuffer, float fov, float aspect, float nearDist, float farDist, bool leftHanded )
     {
         memset(matrixBuffer, 0, sizeof(float) * 16);
         //
@@ -53,7 +78,8 @@ namespace njli
         // if found, assert and return an identity matrix.
         if ( fov <= 0 || aspect == 0 )
         {
-            return btTransform::getIdentity();
+            return glm::mat4x4(1.0);
+//            return btTransform::getIdentity();
         }
         
         float frustumDepth = farDist - nearDist;
@@ -69,10 +95,10 @@ namespace njli
         return setFrom4x4Matrix(matrixBuffer);
     }
     
-    btTransform Camera::makeLookAt(float *buffer,
-                                   btScalar eyeX, btScalar eyeY, btScalar eyeZ,
-                                   btScalar centerX, btScalar centerY, btScalar centerZ,
-                                   btScalar upX, btScalar upY, btScalar upZ)
+    glm::mat4x4 Camera::makeLookAt(float *buffer,
+                                   float eyeX, float eyeY, float eyeZ,
+                                   float centerX, float centerY, float centerZ,
+                                   float upX, float upY, float upZ)
     {
         assert(buffer);
         
@@ -111,18 +137,22 @@ namespace njli
     m_Far(3000.0f),
     m_Fov(45.0f),
     m_AspectRatio(1.0f),
-    m_ProjectionMatrix(new btTransform()),
+//    m_ProjectionMatrix(new btTransform()),
+mProjectionMatrix(new glm::mat4x4()),
     m_ModelViewDirty(true),
     m_ProjectionDirty(true)
     {
-        *m_ProjectionMatrix = makeFrustum(m_ProjectionMatrixBuffer, getFov(), getAspectRatio(), getZNear(), getZFar());
+        *mProjectionMatrix = makeFrustum(m_ProjectionMatrixBuffer, getFov(), getAspectRatio(), getZNear(), getZFar());
         m_ProjectionDirty = true;
     }
     
     Camera::~Camera()
     {
-        delete m_ProjectionMatrix;
-        m_ProjectionMatrix = NULL;
+//        delete m_ProjectionMatrix;
+//        m_ProjectionMatrix = NULL;
+        
+        delete mProjectionMatrix;
+        mProjectionMatrix = NULL;
         
         delete [] m_ProjectionMatrixBuffer;
         m_ProjectionMatrixBuffer = NULL;
@@ -139,7 +169,7 @@ namespace njli
         
         if(changed)
         {
-            *m_ProjectionMatrix = makeFrustum(m_ProjectionMatrixBuffer, getFov(), getAspectRatio(), getZNear(), getZFar());
+            *mProjectionMatrix = makeFrustum(m_ProjectionMatrixBuffer, getFov(), getAspectRatio(), getZNear(), getZFar());
             m_ProjectionDirty = true;
         }
     }
@@ -157,7 +187,7 @@ namespace njli
         
         if(changed)
         {
-            *m_ProjectionMatrix = makeFrustum(m_ProjectionMatrixBuffer, getFov(), getAspectRatio(), getZNear(), getZFar());
+            *mProjectionMatrix = makeFrustum(m_ProjectionMatrixBuffer, getFov(), getAspectRatio(), getZNear(), getZFar());
             m_ProjectionDirty = true;
         }
     }
@@ -175,7 +205,7 @@ namespace njli
         
         if(changed)
         {
-            *m_ProjectionMatrix = makeFrustum(m_ProjectionMatrixBuffer, getFov(), getAspectRatio(), getZNear(), getZFar());
+            *mProjectionMatrix = makeFrustum(m_ProjectionMatrixBuffer, getFov(), getAspectRatio(), getZNear(), getZFar());
             m_ProjectionDirty = true;
         }
     }
@@ -193,7 +223,7 @@ namespace njli
         
         if(changed)
         {
-            *m_ProjectionMatrix = makeFrustum(m_ProjectionMatrixBuffer, getFov(), getAspectRatio(), getZNear(), getZFar());
+            *mProjectionMatrix = makeFrustum(m_ProjectionMatrixBuffer, getFov(), getAspectRatio(), getZNear(), getZFar());
             m_ProjectionDirty = true;
         }
     }
@@ -203,16 +233,16 @@ namespace njli
         return m_AspectRatio;
     }
     
-    btTransform Camera::getModelView()const
+    glm::mat4x4 Camera::getModelView()const
     {
         if(getNodeOwner())
             return getNodeOwner()->getWorldTransform();
-        return btTransform::getIdentity();
+        return glm::mat4x4(1.0);
     }
     
-    btTransform Camera::getProjectionMatrix()const
+    glm::mat4x4 Camera::getProjectionMatrix()const
     {
-        return *m_ProjectionMatrix;
+        return *mProjectionMatrix;
     }
     
     Node *const Camera::getNodeOwner()const
@@ -227,20 +257,20 @@ namespace njli
     
     void Camera::lookAt(const btVector3 &target, const btVector3 &up)
     {
-        btTransform _btTransform(makeLookAt(m_MatrixBuffer,
-                                            getNodeOwner()->getOrigin().getX(),
-                                            getNodeOwner()->getOrigin().getY(),
-                                            getNodeOwner()->getOrigin().getZ(),
+        glm::mat4x4 _btTransform(makeLookAt(m_MatrixBuffer,
+                                            getNodeOwner()->getOrigin().x,
+                                            getNodeOwner()->getOrigin().y,
+                                            getNodeOwner()->getOrigin().z,
                                             target.getX(),
                                             target.getY(),
                                             target.getZ(),
                                             up.getX(),
                                             up.getY(),
                                             up.getZ()));
-        btQuaternion q;
-        _btTransform.inverse().getBasis().getRotation(q);
-        
-        getNodeOwner()->setOrientation(q);
+//        btQuaternion q;
+//        _btTransform.inverse().getBasis().getRotation(q);
+//        
+//        getNodeOwner()->setOrientation(q);
     }
     
     void Camera::render(Shader *const shader, bool shouldRedraw)

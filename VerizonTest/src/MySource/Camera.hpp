@@ -13,6 +13,7 @@
 #import <OpenGLES/ES2/gl.h>
 
 #include "btTransform.h"
+#include "glm/glm.hpp"
 
 namespace njli
 {
@@ -25,11 +26,11 @@ namespace njli
         
     public:
         /* static */
-        static btTransform makeFrustum(float *buffer, float fov, float aspect, float nearDist, float farDist, bool leftHanded = true );
-        static btTransform makeLookAt(float *buffer,
-                                      btScalar eyeX, btScalar eyeY, btScalar eyeZ,
-                                      btScalar centerX, btScalar centerY, btScalar centerZ,
-                                      btScalar upX, btScalar upY, btScalar upZ);
+        static glm::mat4x4 makeFrustum(float *buffer, float fov, float aspect, float nearDist, float farDist, bool leftHanded = true );
+        static glm::mat4x4 makeLookAt(float *buffer,
+                                      float eyeX, float eyeY, float eyeZ,
+                                      float centerX, float centerY, float centerZ,
+                                      float upX, float upY, float upZ);
         
         /* members */
         Camera();
@@ -49,8 +50,11 @@ namespace njli
         void setAspectRatio(const float val);
         float getAspectRatio()const;
         
-        btTransform getModelView()const;
-        btTransform getProjectionMatrix()const;
+//        btTransform getModelView()const;
+        glm::mat4x4 getModelView()const;
+        
+//        btTransform getProjectionMatrix()const;
+        glm::mat4x4 getProjectionMatrix()const;
         
         Node *const getNodeOwner()const;
         void setNodeOwner(Node *const node);
@@ -70,7 +74,8 @@ namespace njli
         float m_Far;
         float m_Fov;
         float m_AspectRatio;
-        btTransform *m_ProjectionMatrix;
+//        btTransform *m_ProjectionMatrix;
+        glm::mat4x4 *mProjectionMatrix;
         bool m_ModelViewDirty;
         bool m_ProjectionDirty;
     };

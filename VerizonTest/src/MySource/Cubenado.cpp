@@ -14,9 +14,6 @@
 #include "MeshGeometry.hpp"
 #include "Node.hpp"
 #include "Scene.hpp"
-#include "PhysicsBodyRigid.hpp"
-#include "PhysicsShapeCube.hpp"
-#include "PhysicsWorld.hpp"
 #include "AbstractFrameBuffer.hpp"
 #include "SceneFrameBuffer.hpp"
 
@@ -79,11 +76,8 @@ namespace njli
     m_Scene(new Scene()),
     m_Randomness(1.0f),
     m_NumberOfCubes(Cubenado::MAX_CUBES),
-    m_Rotation(0.0f),
-    m_PhysicsShapeCube(new PhysicsShapeCube())
+    m_Rotation(0.0f)
     {
-        for (unsigned long i = 0; i < Cubenado::MAX_CUBES; i++)
-            m_PhysicsBodies.push_back(new PhysicsBodyRigid());
         
 #ifdef EDIT_SHADER
         m_CubeNodes.push_back(new Node());
@@ -117,21 +111,12 @@ namespace njli
     
     Cubenado::~Cubenado()
     {
-        delete m_PhysicsShapeCube;
-        m_PhysicsShapeCube = NULL;
         
         while (!m_CubeNodes.empty())
         {
             Node *node = m_CubeNodes.back();
             m_CubeNodes.pop_back();
             delete node;
-        }
-        
-        while (!m_PhysicsBodies.empty())
-        {
-            PhysicsBodyRigid *rigidBody = m_PhysicsBodies.back();
-            m_PhysicsBodies.pop_back();
-            delete rigidBody;
         }
         
         delete m_Scene;
@@ -179,13 +164,13 @@ namespace njli
         srand((unsigned int)time(0));
         
         m_CameraNode->addCamera(m_Camera);
-        m_CameraNode->setOrigin(btVector3(0.0f, 0.0f, 0.0f));
+        m_CameraNode->setOrigin(glm::vec3(0.0f, 0.0f, 0.0f));
         
         m_Scene->addActiveNode(m_CameraNode);
         m_Scene->addActiveCamera(m_Camera);
-        m_Scene->getRootNode()->setOrigin(btVector3(-10.0f, -300.0f, 1800.0f));
+        m_Scene->getRootNode()->setOrigin(glm::vec3(-10.0f, -300.0f, 1800.0f));
 #ifdef EDIT_SHADER
-        m_Scene->getRootNode()->setOrigin(btVector3(0.0f, 0.0f, 10.0f));
+        m_Scene->getRootNode()->setOrigin(glm::vec3(0.0f, 0.0f, 10.0f));
 #endif
         
         assert(m_Shader->load(loadFile("shaders/StandardShader2.vert"), loadFile("shaders/StandardShader2.frag")));
@@ -225,16 +210,15 @@ namespace njli
             
             node->addGeometry(m_Geometry);
             
-//            node->setColorBase(btVector4(randomFloat(0.0f, 1.0f),
+//            node->setColorBase(glm::vec4(randomFloat(0.0f, 1.0f),
 //                                         randomFloat(0.0f, 1.0f),
 //                                         randomFloat(0.0f, 1.0f), 1.0f));
             
-//            node->setColorBase(btVector4(1.0f,
+//            node->setColorBase(glm::vec4(1.0f,
 //                                         1.0f,
 //                                         1.0f, 1.0f));
         }
         
-//        setupPhysics();
     }
     
     void Cubenado::destroy()
@@ -252,14 +236,24 @@ namespace njli
     {   
 #ifdef EDIT_SHADER
         Node *node = m_CubeNodes.at(0);
+
+        glm::mat3x3 normalMatrix = node->getWorldTransform();
+        glm::mat3x3 _inversed = glm::inverse(normalMatrix);
         
-        node->setNormalMatrix(node->getWorldTransform().getBasis().inverse().transpose());
-//        node->setColorBase(btVector4(1.0f, 0.0f, 0.0f, 1.0f));
+        glm::mat3x3 _transposed = glm::transpose(_inversed);
         
         
-//        btQuaternion rot1(btVector3(1.0, 0.0, 0.0), m_Rotation);
-        btQuaternion rot2(btVector3(0.0, 1.0, 0.0), m_Rotation);
-//        btQuaternion rot3(btVector3(0.0, 0.0, 1.0), m_Rotation);
+//        node->setNormalMatrix(node->getWorldTransform().getBasis().inverse().transpose());
+        node->setNormalMatrix(_transposed);
+        
+//        node->setColorBase(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+        
+        
+//        btQuaternion rot1(glm::vec3(1.0, 0.0, 0.0), m_Rotation);
+//        btQuaternion rot2(glm::vec3(0.0, 1.0, 0.0), m_Rotation);
+        glm::quat rot2;
+        rot2 = glm::rotate(rot2, m_Rotation, glm::vec3(0.0, 1.0, 0.0));
+//        btQuaternion rot3(glm::vec3(0.0, 0.0, 1.0), m_Rotation);
 //        node->setRotation(rot1 * rot2 * rot3);
         node->setRotation(rot2);
         m_Rotation += step;
@@ -287,35 +281,46 @@ namespace njli
             
             btScalar horizontal_mag(randomFloat(horizontal_mag_from, horizontal_mat_to));
             
-            btVector3 origin(node->getTransform().getOrigin());
-            btVector3 forward(origin.normalized());
-            forward.setY(0.0f);
+//            glm::vec3 origin(node->getTransform().getOrigin());
+//            glm::vec3 forward(origin.normalized());
+//            forward.setY(0.0f);
             
-            btVector3 impulse(0,0,0);
+//            glm::vec3 impulse(0,0,0);
+//
+//            if(origin.length2() > (rad * rad))
+//            {
+//                impulse += glm::vec3(-forward);
+//            }
+//            else
+//            {
+//                impulse += glm::vec3(forward.rotate(glm::vec3(0,1,0), btRadians(90 + 0)));
+//
+//            }
+//            impulse.setY(0);
+//            impulse *= horizontal_mag;
+//
+//            if(origin.y() <= 0)
+//            {
+//                impulse+=glm::vec3(0, vertical_mag, 0);
+//            }
             
-            if(origin.length2() > (rad * rad))
-            {
-                impulse += btVector3(-forward);
-            }
-            else
-            {
-                impulse += btVector3(forward.rotate(btVector3(0,1,0), btRadians(90 + 0)));
-                
-            }
-            impulse.setY(0);
-            impulse *= horizontal_mag;
-            
-            if(origin.y() <= 0)
-            {
-                impulse+=btVector3(0, vertical_mag, 0);
-            }
-            
-            node->addImpulseForce(impulse);
+//            node->addImpulseForce(impulse);
             
 //            node->setNormalMatrix(node->getTransform().getBasis().inverse().transpose());
-            btMatrix3x3 m(node->getTransform().getBasis().transpose().inverse());
+//            btMatrix3x3 m(node->getTransform().getBasis().transpose().inverse());
             
-            node->setNormalMatrix(node->getTransform().getBasis().transpose().inverse());
+//            node->setNormalMatrix(node->getTransform().getBasis().transpose().inverse());
+            
+            
+//            glm::quat_cast(node->getTransform());
+            
+//            node->setNormalMatrix(glm::transpose(glm::inverse((glm::mat3_cast(glm::quat_cast(node->getTransform()))))));
+            
+//            glm::mat3x3 normalMatrix = node->getTransform();
+//            glm::mat3x3 _transposed = glm::transpose(normalMatrix);
+//            glm::mat3x3 _inversed = glm::inverse(_transposed);
+//
+//            node->setNormalMatrix(_inversed);
             
             node->enableHideGeometry(false);
             if(cubesToDraw < 0)
@@ -448,40 +453,11 @@ namespace njli
         return filedata;
     }
     
-    void Cubenado::setupPhysics()
-    {
-        m_Scene->getPhysicsWorld()->setGravity(btVector3(0,-9.81,0));
-        m_PhysicsShapeCube->setHalfExtends(btVector3(1.0f, 1.0f, 1.0f));
-        
-        unsigned long idx = 0;
-        for (std::vector<Node*>::iterator i = m_CubeNodes.begin();
-             i != m_CubeNodes.end();
-             i++)
-        {
-            Node *node = *i;
-            
-            assert(idx < m_PhysicsBodies.size());
-            
-            PhysicsBodyRigid *rigidBody = m_PhysicsBodies.at(idx++);
-            
-            rigidBody->addPhysicsShape(m_PhysicsShapeCube);
-            rigidBody->setKinematicPhysics();
-            rigidBody->setMass(1.0f);
-            rigidBody->setScene(m_Scene);
-            
-            assert(node->addPhysicsBody(rigidBody));
-            
-            assert(m_Scene);
-            assert(m_Scene->getPhysicsWorld());
-            assert(m_Scene->getPhysicsWorld()->addRigidBody(rigidBody));
-        }
-    }
-    
     void Cubenado::setStartPositions()
     {
 #ifdef EDIT_SHADER
         Node *node = m_CubeNodes.at(0);
-        node->setOrigin(btVector3(0,0,0));
+        node->setOrigin(glm::vec3(0,0,0));
         return;
 #endif
         float startX = 0.0f;
@@ -516,8 +492,8 @@ namespace njli
                         Node *node = m_CubeNodes.at(idx++);
                         if(node)
                         {
-                            node->setOrigin(btVector3(currentX, currentY, currentZ));
-                            node->setGravity(btVector3(0,-9.81,0));
+                            node->setOrigin(glm::vec3(currentX, currentY, currentZ));
+//                            node->setGravity(glm::vec3(0,-9.81,0));
                         }
                     }
                     currentZ += (zinc + zmargin);
@@ -530,31 +506,31 @@ namespace njli
         }
     }
     
-    btVector3 Cubenado::randomPosition(const btVector3 &min, const btVector3 &max)const
+    glm::vec3 Cubenado::randomPosition(const glm::vec3 &min, const glm::vec3 &max)const
     {
-        assert(min.x() <= max.x());
-        assert(min.y() <= max.y());
-        assert(min.z() <= max.z());
+        assert(min.x <= max.x);
+        assert(min.y <= max.y);
+        assert(min.z <= max.z);
         
-        return btVector3(randomFloat(min.x(), max.x()),
-                      randomFloat(min.y(), max.y()),
-                      randomFloat(min.z(), max.z()));
+        return glm::vec3(randomFloat(min.x, max.x),
+                      randomFloat(min.y, max.y),
+                      randomFloat(min.z, max.z));
     }
     
-    btQuaternion Cubenado::randomRotation(const btVector3 &axis, const float degreesMin, const float degreesMax)const
-    {
-        assert(degreesMin <= degreesMax);
-        
-        return btQuaternion(axis, randomFloat(degreesMin, degreesMax)).normalized();
-    }
-    
-    btQuaternion Cubenado::randomRotation(const float degreesMin, const float degreesMax)const
-    {
-        return randomRotation(randomPosition(btVector3(0,0,0), btVector3(1,1,1)).normalized(), degreesMin, degreesMax);
-    }
-    
-    btQuaternion Cubenado::randomRotation()const
-    {
-        return randomRotation(randomPosition(btVector3(0,0,0), btVector3(1,1,1)).normalized(), btRadians(0), btRadians(360));
-    }
+//    btQuaternion Cubenado::randomRotation(const glm::vec3 &axis, const float degreesMin, const float degreesMax)const
+//    {
+//        assert(degreesMin <= degreesMax);
+//        
+//        return btQuaternion(axis, randomFloat(degreesMin, degreesMax)).normalized();
+//    }
+//    
+//    btQuaternion Cubenado::randomRotation(const float degreesMin, const float degreesMax)const
+//    {
+//        return randomRotation(randomPosition(glm::vec3(0,0,0), glm::vec3(1,1,1)).normalized(), degreesMin, degreesMax);
+//    }
+//    
+//    btQuaternion Cubenado::randomRotation()const
+//    {
+//        return randomRotation(randomPosition(glm::vec3(0,0,0), glm::vec3(1,1,1)).normalized(), btRadians(0), btRadians(360));
+//    }
 }

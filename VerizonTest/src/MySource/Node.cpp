@@ -9,7 +9,6 @@
 #include "Node.hpp"
 #include "Geometry.hpp"
 #include "Camera.hpp"
-#include "PhysicsBody.hpp"
 
 #include <assert.h>
 #include <iostream>
@@ -18,68 +17,70 @@ namespace njli
 {
     Node::Node():
     m_Name("NODE"),
-    m_Scale(new btVector3(1.0f, 1.0f, 1.0f)),
-    m_Transform(new btTransform(btTransform::getIdentity())),
+//    m_Scale(new btVector3(1.0f, 1.0f, 1.0f)),
+mScale(new glm::vec3(1.0f, 1.0f, 1.0f)),
+//    m_Transform(new btTransform(btTransform::getIdentity())),
+mTransform(new glm::mat4(1)),
 //    m_ColorTransform(new btTransform(btTransform::getIdentity())),
-    m_Orientation(new btQuaternion()),
+//    m_Orientation(new btQuaternion()),
     m_ParentNode(NULL),
     m_Camera(NULL),
     m_Geometry(NULL),
     m_GeometryIndex(-1),
     m_HideGeometry(false),
     m_Opacity(1.0f),
-    m_NormalMatrix(new btMatrix3x3(btMatrix3x3::getIdentity())),
-    m_Colorbase(new btVector4(1, 1, 1, 1)),
-    m_PhysicsBody(NULL),
+//    m_NormalMatrix(new btMatrix3x3(btMatrix3x3::getIdentity())),
+mNormalMatrix(new glm::mat3x3(1)),
+//    m_Colorbase(new btVector4(1, 1, 1, 1)),
+mColorbase(new glm::vec4(1, 1, 1, 1)),
     m_TransformDirty(true),
     m_NormalMatrixDirty(true),
-//    m_ColorTransformDirty(true),
     m_OpacityDirty(true),
     m_HiddenDirty(true),
-    m_ColorBaseDirty(true),
-    m_GravityForce(new btVector3(0.0f, 0.0f, 0.0f)),
-    m_ImpulseForce(new btVector3(0.0f, 0.0f, 0.0f)),
-    m_CurrentVelocity(new btVector3(0.0f, 0.0f, 0.0f)),
-    m_HeadingVector(new btVector3(0.0f, 0.0f, 0.0f)),
-    m_MaxSpeed(std::numeric_limits<float>::max())
+    m_ColorBaseDirty(true)//,
+//    m_GravityForce(new btVector3(0.0f, 0.0f, 0.0f)),
+//    m_ImpulseForce(new btVector3(0.0f, 0.0f, 0.0f)),
+//    m_CurrentVelocity(new btVector3(0.0f, 0.0f, 0.0f)),
+//    m_HeadingVector(new btVector3(0.0f, 0.0f, 0.0f)),
+//    m_MaxSpeed(std::numeric_limits<float>::max())
     {
         
     }
     
     Node::~Node()
     {
-        delete m_HeadingVector;
-        m_HeadingVector = NULL;
+//        delete m_HeadingVector;
+//        m_HeadingVector = NULL;
+//
+//        delete m_CurrentVelocity;
+//        m_CurrentVelocity = NULL;
+//
+//        delete m_ImpulseForce;
+//        m_ImpulseForce = NULL;
+//
+//        delete m_GravityForce;
+//        m_GravityForce = NULL;
         
-        delete m_CurrentVelocity;
-        m_CurrentVelocity = NULL;
+        delete mColorbase;
+        mColorbase = NULL;
         
-        delete m_ImpulseForce;
-        m_ImpulseForce = NULL;
-        
-        delete m_GravityForce;
-        m_GravityForce = NULL;
-        
-        delete m_Colorbase;
-        m_Colorbase = NULL;
-        
-        delete m_NormalMatrix;
-        m_NormalMatrix = NULL;
+        delete mNormalMatrix;
+        mNormalMatrix = NULL;
         
         m_Camera = NULL;
         m_ParentNode = NULL;
         
-        delete m_Orientation;
-        m_Orientation = NULL;
+//        delete m_Orientation;
+//        m_Orientation = NULL;
         
 //        delete m_ColorTransform;
 //        m_ColorTransform = NULL;
         
-        delete m_Transform;
-        m_Transform = NULL;
+        delete mTransform;
+        mTransform = NULL;
         
-        delete m_Scale;
-        m_Scale = NULL;
+        delete mScale;
+        mScale = NULL;
     }
     
     void Node::setName(const std::string &name)
@@ -162,28 +163,47 @@ namespace njli
         return m_Opacity;
     }
     
-    void Node::setNormalMatrix(const btMatrix3x3 &mtx)
-    {
-        *m_NormalMatrix = mtx;
-        m_NormalMatrixDirty = true;
-    }
+//    void Node::setNormalMatrix(const btMatrix3x3 &mtx)
+//    {
+//        *m_NormalMatrix = mtx;
+//        m_NormalMatrixDirty = true;
+//    }
+void Node::setNormalMatrix(const glm::mat3x3 &mtx)
+{
+    *mNormalMatrix = mtx;
+    m_NormalMatrixDirty = true;
+}
     
-    const btMatrix3x3 &Node::getNormalMatrix()const
-    {
-        return *m_NormalMatrix;
-    }
+//    const btMatrix3x3 &Node::getNormalMatrix()const
+//    {
+//        return *m_NormalMatrix;
+//    }
+const glm::mat3x3 &Node::getNormalMatrix()const
+{
+    return *mNormalMatrix;
+}
     
-    void Node::setColorBase(const btVector4 &color)
-    {
-        if(*m_Colorbase != color)
-            m_ColorBaseDirty = true;
-        *m_Colorbase = color;
-    }
+//    void Node::setColorBase(const btVector4 &color)
+//    {
+//        if(*m_Colorbase != color)
+//            m_ColorBaseDirty = true;
+//        *m_Colorbase = color;
+//    }
+void Node::setColorBase(const glm::vec4 &color)
+{
+    if(*mColorbase != color)
+        m_ColorBaseDirty = true;
+    *mColorbase = color;
+}
     
-    const btVector4 &Node::getColorBase()const
-    {
-        return *m_Colorbase;
-    }
+//    const btVector4 &Node::getColorBase()const
+//    {
+//        return *m_Colorbase;
+//    }
+const glm::vec4 &Node::getColorBase()const
+{
+    return *mColorbase;
+}
     
     Node *Node::getParentNode()
     {
@@ -371,33 +391,32 @@ namespace njli
         parent->addChildNode(newChild);
     }
     
-    btTransform Node::getWorldTransform() const
-    {
-//        const PhysicsBody *physicsBody = m_PhysicsBody;
+//    btTransform Node::getWorldTransform() const
+//    {
 //
-//        if(physicsBody)
+//        btTransform transform(getTransform());
+//
+//        transform.setBasis(transform.getBasis().scaled(getScale()));
+//
+//        if(getParentNode())
 //        {
-//            btTransform transform(physicsBody->getWorldTransform());
-//
-//            transform.setBasis(transform.getBasis().scaled(getScale()));
-//
-//            if(getParentNode())
-//            {
-//                return (getParentNode()->getWorldTransform() * transform);
-//            }
-//            return (transform);
+//            return (getParentNode()->getWorldTransform() * transform);
 //        }
-        
-        btTransform transform(getTransform());
-        
-        transform.setBasis(transform.getBasis().scaled(getScale()));
-        
-        if(getParentNode())
-        {
-            return (getParentNode()->getWorldTransform() * transform);
-        }
-        return (transform);
+//        return (transform);
+//    }
+
+glm::mat4x4 Node::getWorldTransform() const {
+    glm::mat4x4 transform(getTransform());
+    
+    //TODO: Scale
+    
+    if(getParentNode())
+    {
+        return (getParentNode()->getWorldTransform() * transform);
     }
+    return (transform);
+    
+}
     
 //    const btTransform& Node::getColorTransform() const
 //    {
@@ -410,136 +429,151 @@ namespace njli
 //        m_ColorTransformDirty = true;
 //    }
     
-    const btTransform &Node::getTransform()const
-    {
-        return *m_Transform;
-    }
+//    const btTransform &Node::getTransform()const
+//    {
+//        return *m_Transform;
+//    }
+const glm::mat4x4& Node::getTransform() const {
+    return *mTransform;
+}
     
-    void Node::setTransform(const btTransform &transform)
-    {
-        m_TransformDirty = true;
-        
-        *m_Transform = transform;
-        
-        PhysicsBody *physicsBody = m_PhysicsBody;
-        
-        if(physicsBody)
-        {
-            physicsBody->setWorldTransform(getTransform());
-        }
-    }
+//    void Node::setTransform(const btTransform &transform)
+//    {
+//        m_TransformDirty = true;
+//
+//        *m_Transform = transform;
+//    }
+
+void Node::setTransform(const glm::mat4x4& transform) {
+    m_TransformDirty = true;
+    *mTransform = transform;
+}
     
-    btVector3 Node::getOrigin()const
-    {
-        return getWorldTransform().getOrigin();
-    }
+//    btVector3 Node::getOrigin()const
+//    {
+//        return getWorldTransform().getOrigin();
+//    }
+
+glm::vec3 Node::getOrigin()const
+{
+    glm::mat4 transform(getWorldTransform());
+    return glm::vec3(transform[3][0],
+                     transform[3][1],
+                     transform[3][2]);
+}
     
-    void Node::setOrigin(const btVector3 &origin)
-    {
-        btTransform t(getTransform());
-        t.setOrigin(origin);
-        setTransform(t);
-    }
+//    void Node::setOrigin(const btVector3 &origin)
+//    {
+//        btTransform t(getTransform());
+//        t.setOrigin(origin);
+//        setTransform(t);
+//    }
+
+void Node::setOrigin(const glm::vec3 &origin)
+{
+    glm::mat4 t(getWorldTransform());
     
-    void Node::setOrigin(const btVector2 &origin)
-    {
-        btVector3 _origin(origin.x(), origin.y(), 0);
-        Node::setOrigin(_origin);
-    }
+    t[3][0] = origin.x;
+    t[3][1] = origin.y;
+    t[3][2] = origin.z;
     
-    btQuaternion Node::getRotation()const
-    {
-        return getWorldTransform().getRotation();
-    }
+    setTransform(t);
+}
     
-    void Node::setRotation(const btQuaternion &rotation)
-    {
-        btTransform t(getTransform());
-        t.setRotation(rotation);
-        setTransform(t);
-    }
+//    void Node::setOrigin(const btVector2 &origin)
+//    {
+//        btVector3 _origin(origin.x(), origin.y(), 0);
+//        Node::setOrigin(_origin);
+//    }
+
+void Node::setOrigin(const glm::vec2 &origin)
+{
+    glm::vec3 _origin(origin.x, origin.y, 0);
+    Node::setOrigin(_origin);
+}
     
-    btVector3 Node::getEulerAngles()const
-    {
-        float x, y, z;
-        
-        m_Transform->getBasis().getEulerYPR(x, y, z);
-        
-        btVector3 v(x,y,z);
-        return v;
-    }
+//    btQuaternion Node::getRotation()const
+//    {
+//        return getWorldTransform().getRotation();
+//    }
+
+glm::quat Node::getRotation()const
+{
+    return glm::quat_cast(getWorldTransform());
+//    return getWorldTransform().getRotation();
+}
     
-    void Node::setEulerAngles(const btVector3 &angles)
-    {
-        btTransform t(getTransform());
-        btMatrix3x3 m(t.getBasis());
-        m.setEulerYPR(angles.x(), angles.y(), angles.z());
-        t.setBasis(m);
-        setTransform(t);
-    }
+//    void Node::setRotation(const btQuaternion &rotation)
+//    {
+//        btTransform t(getTransform());
+//        t.setRotation(rotation);
+//        setTransform(t);
+//    }
+
+ 
+void Node::setRotation(const glm::quat &rotation)
+{
+    glm::mat4 t(glm::mat3_cast(rotation));
     
-    const btQuaternion &Node::getOrientation()const
-    {
-        return *m_Orientation;
-    }
+    glm::translate(t, getOrigin());
     
-    void Node::setOrientation(const btQuaternion &orientation)
-    {
-        *m_Orientation = orientation;
-    }
+    setTransform(t);
+}
     
-    const btVector3 &Node::getScale()const
-    {
-        return *m_Scale;
-    }
+//    btVector3 Node::getEulerAngles()const
+//    {
+//        float x, y, z;
+//
+//        m_Transform->getBasis().getEulerYPR(x, y, z);
+//
+//        btVector3 v(x,y,z);
+//        return v;
+//    }
+//
+//
+//    void Node::setEulerAngles(const btVector3 &angles)
+//    {
+//        btTransform t(getTransform());
+//        btMatrix3x3 m(t.getBasis());
+//        m.setEulerYPR(angles.x(), angles.y(), angles.z());
+//        t.setBasis(m);
+//        setTransform(t);
+//    }
     
-    void Node::setScale(const btVector3 &scale)
-    {
-        *m_Scale = scale;
-    }
+//    const btQuaternion &Node::getOrientation()const
+//    {
+//        return *m_Orientation;
+//    }
+//    
+//    void Node::setOrientation(const btQuaternion &orientation)
+//    {
+//        *m_Orientation = orientation;
+//    }
+    
+//    const btVector3 &Node::getScale()const
+//    {
+//        return *m_Scale;
+//    }
+const glm::vec3 &Node::getScale()const {
+    return *mScale;
+}
+    
+//    void Node::setScale(const btVector3 &scale)
+//    {
+//        *m_Scale = scale;
+//    }
+void Node::setScale(const glm::vec3 &scale) {
+    *mScale = scale;
+}
     
     void Node::setScale(const float scale)
     {
-        btVector3 _scale(scale,scale,scale);
+//        btVector3 _scale(scale,scale,scale);
+        glm::vec3 _scale(scale, scale, scale);
         Node::setScale(_scale);
     }
     
-    
-    
-    
-    
-    
-    
-    
-    bool Node::addPhysicsBody(PhysicsBody *const body)
-    {
-        assert(body != NULL);
-        
-        removePhysicsBody();
-        
-        m_PhysicsBody = body;
-        m_PhysicsBody->setNodeOwner(this);
-        
-        return getPhysicsBody()->addPhysicsBody(getTransform());
-    }
-    
-    void Node::removePhysicsBody()
-    {
-        PhysicsBody *physicsBody = m_PhysicsBody;
-        
-        if(physicsBody)
-        {
-            physicsBody->removePhysicsBody();
-            physicsBody->setNodeOwner(NULL);
-        }
-        
-        m_PhysicsBody = NULL;
-    }
-    
-    PhysicsBody *const Node::getPhysicsBody()const
-    {
-        return m_PhysicsBody;
-    }
+
     
     void Node::setGeometryIndex(unsigned long index)
     {
@@ -566,21 +600,6 @@ namespace njli
     
     bool Node::isTransformDirty()const
     {
-//        if(m_PhysicsBody)
-//        {
-//            if (m_PhysicsBody->isKinematicPhysics() || m_PhysicsBody->isStaticPhysics())
-//            {
-//                if(getParentNode())
-//                    return m_TransformDirty || getParentNode()->isTransformDirty();
-//                return m_TransformDirty;
-//            }
-//            
-//            if(getParentNode())
-//            {
-//                return m_PhysicsBody->isActive() || getParentNode()->isTransformDirty();
-//            }
-//            return m_PhysicsBody->isActive() || getParentNode()->isTransformDirty();
-//        }
         
         if(getParentNode())
             return m_TransformDirty || getParentNode()->isTransformDirty();
@@ -592,55 +611,55 @@ namespace njli
         m_TransformDirty = false;
     }
     
-    void Node::setGravity(const btVector3 &vec)
-    {
-        *m_GravityForce = vec;
-    }
+//    void Node::setGravity(const btVector3 &vec)
+//    {
+//        *m_GravityForce = vec;
+//    }
+//
+//    void Node::setVelocity(const btVector3 &vec)
+//    {
+//        *m_CurrentVelocity = vec;
+//    }
+//
+//    const btVector3 &Node::getVelocity()const
+//    {
+//        return *m_CurrentVelocity;
+//    }
+//
+//    void Node::addImpulseForce(const btVector3 &vec)
+//    {
+//        *m_ImpulseForce += vec;
+//    }
     
-    void Node::setVelocity(const btVector3 &vec)
-    {
-        *m_CurrentVelocity = vec;
-    }
-    
-    const btVector3 &Node::getVelocity()const
-    {
-        return *m_CurrentVelocity;
-    }
-    
-    void Node::addImpulseForce(const btVector3 &vec)
-    {
-        *m_ImpulseForce += vec;
-    }
-    
-    void Node::setMaxSpeed(float speed)
-    {
-        m_MaxSpeed = speed;
-    }
-    
-    float Node::getMaxSpeed()const
-    {
-        return m_MaxSpeed;
-    }
+//    void Node::setMaxSpeed(float speed)
+//    {
+//        m_MaxSpeed = speed;
+//    }
+//
+//    float Node::getMaxSpeed()const
+//    {
+//        return m_MaxSpeed;
+//    }
     
     void Node::update(float timestep)
     {
         float mass = 1.0f;
         
-        *m_ImpulseForce += *m_GravityForce;
+//        *m_ImpulseForce += *m_GravityForce;
         
-        btVector3 acceleration((*m_ImpulseForce) / mass);
-        
-        setVelocity(getVelocity() + acceleration * timestep);
-        if(getVelocity().length() > getMaxSpeed())
-            setVelocity(getVelocity().normalized() * getMaxSpeed());
-        
-        setOrigin(getTransform().getOrigin() + (*m_CurrentVelocity) * timestep);
-        
-        if(m_CurrentVelocity->length() > 0.00000001)
-        {
-            *m_HeadingVector = m_CurrentVelocity->normalized();
-        }
-        *m_ImpulseForce = btVector3(0,0,0);
+//        btVector3 acceleration((*m_ImpulseForce) / mass);
+//
+//        setVelocity(getVelocity() + acceleration * timestep);
+//        if(getVelocity().length() > getMaxSpeed())
+//            setVelocity(getVelocity().normalized() * getMaxSpeed());
+//
+//        setOrigin(getTransform().getOrigin() + (*m_CurrentVelocity) * timestep);
+//
+//        if(m_CurrentVelocity->length() > 0.00000001)
+//        {
+//            *m_HeadingVector = m_CurrentVelocity->normalized();
+//        }
+//        *m_ImpulseForce = btVector3(0,0,0);
     }
     void Node::render(Geometry *const geometry)
     {
@@ -659,7 +678,9 @@ namespace njli
             
             if(m_NormalMatrixDirty)
             {
-                geometry->setNormalMatrixTransform(geometryIndex, btTransform(getNormalMatrix()));
+                
+//                geometry->setNormalMatrixTransform(geometryIndex, btTransform(getNormalMatrix()));
+                geometry->setNormalMatrixTransform(geometryIndex, getNormalMatrix());
                 m_NormalMatrixDirty = false;
             }
             

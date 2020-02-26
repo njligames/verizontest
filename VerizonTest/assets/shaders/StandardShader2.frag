@@ -584,6 +584,7 @@ void main()
     }
     
     gl_FragColor = baseColor;
+//    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
     
 //    gl_FragColor = vec4(Normal_modelspace, 1.0);
     

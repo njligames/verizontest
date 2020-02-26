@@ -769,7 +769,37 @@ namespace njli
         }
     }
     
-    void Geometry::setTransform(const unsigned long index, const btTransform &transform)
+//    void Geometry::setTransform(const unsigned long index, const btTransform &transform)
+//    {
+//        if (index < numberOfInstances())
+//        {
+//            const unsigned long STRIDE = 16 * numberOfVertices();
+//
+//#ifdef USE_HALF_FLOAT
+//            transform.getOpenGLMatrix(m_MatrixBufferFullSize);
+//            for (unsigned long i = 0; i < 16; i++)
+//                m_MatrixBuffer[i] = convertFloatToHFloat(&m_MatrixBufferFullSize[i]);
+//#else
+//            transform.getOpenGLMatrix(m_MatrixBuffer);
+//#endif
+//
+//            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
+//            {
+//                unsigned long p = ((index * STRIDE) + (16 * currentVertex));
+//                int cmp = memcmp(m_ModelViewTransformData + p,
+//                                 m_MatrixBuffer,
+//                                 sizeof(GLfptype) * 16);
+//
+//                if(0 != cmp)
+//                {
+//                    memcpy(m_ModelViewTransformData + p, m_MatrixBuffer, sizeof(GLfptype) * 16);
+//                }
+//            }
+//            enableModelViewBufferChanged(true);
+//        }
+//    }
+
+void Geometry::setTransform(const unsigned long index, const glm::mat4x4 &transform)
     {
         if (index < numberOfInstances())
         {
@@ -780,7 +810,8 @@ namespace njli
             for (unsigned long i = 0; i < 16; i++)
                 m_MatrixBuffer[i] = convertFloatToHFloat(&m_MatrixBufferFullSize[i]);
 #else
-            transform.getOpenGLMatrix(m_MatrixBuffer);
+//            transform.getOpenGLMatrix(m_MatrixBuffer);
+            memcpy(m_MatrixBuffer, &transform[0], sizeof(glm::mat4x4));
 #endif
             
             for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
@@ -799,9 +830,34 @@ namespace njli
         }
     }
     
-    btTransform Geometry::getTransform(const unsigned long index)
+//    btTransform Geometry::getTransform(const unsigned long index)
+//    {
+//        btTransform transform(btTransform::getIdentity());
+//        if (index < numberOfInstances())
+//        {
+//            const unsigned long STRIDE = 16 * numberOfVertices();
+//
+//            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
+//            {
+//                unsigned long p = ((index * STRIDE) + (16 * currentVertex));
+//                memcpy(m_MatrixBuffer,
+//                       m_ModelViewTransformData + p,
+//                       sizeof(GLfptype) * 16);
+//            }
+//
+//#ifdef USE_HALF_FLOAT
+//            for (unsigned long i = 0; i < 16; i++)
+//                m_MatrixBufferFullSize[i] = convertHFloatToFloat(m_MatrixBuffer[i]);
+//            transform.setFromOpenGLMatrix(m_MatrixBufferFullSize);
+//#else
+//            transform.setFromOpenGLMatrix(m_MatrixBuffer);
+//#endif
+//        }
+//        return transform;
+//    }
+glm::mat4x4 Geometry::getTransform(const unsigned long index)
     {
-        btTransform transform(btTransform::getIdentity());
+        glm::mat4x4 transform(1.0);
         if (index < numberOfInstances())
         {
             const unsigned long STRIDE = 16 * numberOfVertices();
@@ -819,7 +875,8 @@ namespace njli
                 m_MatrixBufferFullSize[i] = convertHFloatToFloat(m_MatrixBuffer[i]);
             transform.setFromOpenGLMatrix(m_MatrixBufferFullSize);
 #else
-            transform.setFromOpenGLMatrix(m_MatrixBuffer);
+            memcpy(&transform[0], m_MatrixBuffer, sizeof(glm::mat4x4));
+//            transform.setFromOpenGLMatrix(m_MatrixBuffer);
 #endif
         }
         return transform;
@@ -871,7 +928,40 @@ namespace njli
 //        return transform;
 //    }
     
-    void Geometry::setNormalMatrixTransform(const unsigned long index, const btTransform &transform)
+//    void Geometry::setNormalMatrixTransform(const unsigned long index, const btTransform &transform)
+//    {
+//        if (index < numberOfInstances())
+//        {
+//            const unsigned long STRIDE = 16 * numberOfVertices();
+//
+//#ifdef USE_HALF_FLOAT
+//            transform.getOpenGLMatrix(m_MatrixBufferFullSize);
+//            for (unsigned long i = 0; i < 16; i++)
+//                m_MatrixBuffer[i] = convertFloatToHFloat(&m_MatrixBufferFullSize[i]);
+//#else
+//            transform.getOpenGLMatrix(m_MatrixBuffer);
+//#endif
+//
+//            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
+//            {
+//                unsigned long p = ((index * STRIDE) + (16 * currentVertex));
+//
+//                int cmp = memcmp(m_NormalMatrixTransformData + p,
+//                                 m_MatrixBuffer,
+//                                 sizeof(GLfptype) * 16);
+//
+//                if(0 != cmp)
+//                {
+//                    memcpy(m_NormalMatrixTransformData + p,
+//                           m_MatrixBuffer,
+//                           sizeof(GLfptype) * 16);
+//                }
+//            }
+//            enableNormalMatrixBufferChanged(true);
+//        }
+//    }
+
+void Geometry::setNormalMatrixTransform(const unsigned long index, const glm::mat4x4 &transform)
     {
         if (index < numberOfInstances())
         {
@@ -882,7 +972,8 @@ namespace njli
             for (unsigned long i = 0; i < 16; i++)
                 m_MatrixBuffer[i] = convertFloatToHFloat(&m_MatrixBufferFullSize[i]);
 #else
-            transform.getOpenGLMatrix(m_MatrixBuffer);
+//            transform.getOpenGLMatrix(m_MatrixBuffer);
+            memcpy(m_MatrixBuffer, &transform[0], sizeof(glm::mat4x4));
 #endif
             
             for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
@@ -904,9 +995,35 @@ namespace njli
         }
     }
     
-    btTransform Geometry::getNormalMatrixTransform(const unsigned long index)
+//    btTransform Geometry::getNormalMatrixTransform(const unsigned long index)
+//    {
+//        btTransform transform(btTransform::getIdentity());
+//        if (index < numberOfInstances())
+//        {
+//            const unsigned long STRIDE = 16 * numberOfVertices();
+//
+//            for (int currentVertex = 0; currentVertex < numberOfVertices(); currentVertex++)
+//            {
+//                unsigned long p = ((index * STRIDE) + (16 * currentVertex));
+//                memcpy(m_MatrixBuffer,
+//                       m_NormalMatrixTransformData + p,
+//                       sizeof(GLfptype) * 16);
+//            }
+//
+//#ifdef USE_HALF_FLOAT
+//            for (unsigned long i = 0; i < 16; i++)
+//                m_MatrixBufferFullSize[i] = convertHFloatToFloat(m_MatrixBuffer[i]);
+//            transform.setFromOpenGLMatrix(m_MatrixBufferFullSize);
+//#else
+//            transform.setFromOpenGLMatrix(m_MatrixBuffer);
+//#endif
+//
+//        }
+//        return transform;
+//    }
+glm::mat4x4 Geometry::getNormalMatrixTransform(const unsigned long index)
     {
-        btTransform transform(btTransform::getIdentity());
+        glm::mat4x4 transform(1);
         if (index < numberOfInstances())
         {
             const unsigned long STRIDE = 16 * numberOfVertices();
@@ -924,7 +1041,8 @@ namespace njli
                 m_MatrixBufferFullSize[i] = convertHFloatToFloat(m_MatrixBuffer[i]);
             transform.setFromOpenGLMatrix(m_MatrixBufferFullSize);
 #else
-            transform.setFromOpenGLMatrix(m_MatrixBuffer);
+//            transform.setFromOpenGLMatrix(m_MatrixBuffer);
+            memcpy(&transform[0], m_MatrixBuffer, sizeof(glm::mat4x4));
 #endif
             
         }

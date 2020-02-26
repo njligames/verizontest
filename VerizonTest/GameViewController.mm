@@ -14,6 +14,8 @@
 
 #include <pthread.h>
 
+#include "glm/glm.hpp"
+
 struct thread_data{
     float timeSinceLastUpdate;
     float aspect;
@@ -167,8 +169,9 @@ struct thread_data{
     if(njli::Cubenado::getInstance()->getCamera()->getNodeOwner())
     {
         btTransform cameraTransform(btTransform::getIdentity());
-        cameraTransform.setOrigin(btVector3(0,0,0));
-        njli::Cubenado::getInstance()->getCamera()->getNodeOwner()->setTransform(cameraTransform);
+        
+        glm::mat4x4 cameraT(1.0f);
+        njli::Cubenado::getInstance()->getCamera()->getNodeOwner()->setTransform(cameraT);
     }
 }
 

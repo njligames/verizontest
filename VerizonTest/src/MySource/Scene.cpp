@@ -9,22 +9,19 @@
 #include "Scene.hpp"
 #include "Node.hpp"
 #include "Geometry.hpp"
-#include "PhysicsWorld.hpp"
 
 #include <assert.h>
 
 namespace njli
 {
     Scene::Scene():
-    m_RootNode(new Node()),
-    m_PhysicsWorld(new PhysicsWorld())
+    m_RootNode(new Node())
     {
         addActiveNode(m_RootNode);
     }
     
     Scene::~Scene()
     {
-        delete m_PhysicsWorld;
         delete m_RootNode;
     }
     
@@ -37,7 +34,6 @@ namespace njli
             Node *node = *j;
             node->update(timeStep);
         }
-//        getPhysicsWorld()->update(timeStep, maxSubSteps, fixedTimeStep);
     }
     
     void Scene::render()
@@ -124,10 +120,6 @@ namespace njli
     {
         return m_RootNode;
     }
-    
-    PhysicsWorld *const Scene::getPhysicsWorld()const
-    {
-        return m_PhysicsWorld;
-    }
+
 }
 

@@ -48,9 +48,9 @@ namespace njli
     
     void MeshGeometry::loadData()
     {
-        std::vector<btVector3> vertices;
-        std::vector<btVector3> normals;
-        std::vector<btVector2> texture;
+        std::vector<glm::vec3> vertices;
+        std::vector<glm::vec3> normals;
+        std::vector<glm::vec2> texture;
         std::vector<std::string> faces;
         
         std::stringstream ss_line(m_Filedata);
@@ -58,8 +58,8 @@ namespace njli
         
         enum parsemode{none,v,vn,vt,f};
         parsemode mode = none;
-        btVector3 vec3;
-        btVector2 vec2;
+        glm::vec3 vec3;
+        glm::vec2 vec2;
         
         btScalar maxX=0, maxY=0, maxZ=0;
         
@@ -74,8 +74,8 @@ namespace njli
             std::stringstream ss_token(line);
             std::string token;
             int tokencount = 0;
-            vec3 = btVector3(0,0,0);
-            vec2 = btVector2(0,0);
+            vec3 = glm::vec3(0,0,0);
+            vec2 = glm::vec2(0,0);
             
             while(std::getline(ss_token, token, ' '))
             {
@@ -103,9 +103,9 @@ namespace njli
                         {
                             switch (tokencount)
                             {
-                                case 1:vec3.setX(atof(token.c_str()));break;
-                                case 2:vec3.setY(atof(token.c_str()));break;
-                                case 3:vec3.setZ(atof(token.c_str()));break;
+                                case 1:vec3.x = (atof(token.c_str()));break;
+                                case 2:vec3.y = (atof(token.c_str()));break;
+                                case 3:vec3.z = (atof(token.c_str()));break;
                                 default:
                                     assert(false);
                             }
@@ -115,8 +115,8 @@ namespace njli
                         {
                             switch (tokencount)
                             {
-                                case 1:vec2.setX(atof(token.c_str()));break;
-                                case 2:vec2.setY(atof(token.c_str()));break;
+                                case 1:vec2.x = (atof(token.c_str()));break;
+                                case 2:vec2.y = (atof(token.c_str()));break;
                                 default:
                                     assert(false);
                             }
@@ -138,9 +138,9 @@ namespace njli
             switch (mode)
             {
                 case v:
-                    maxX = std::max<btScalar>(vec3.x(), maxX);
-                    maxY = std::max<btScalar>(vec3.y(), maxY);
-                    maxZ = std::max<btScalar>(vec3.z(), maxZ);
+                    maxX = std::max<btScalar>(vec3.x, maxX);
+                    maxY = std::max<btScalar>(vec3.y, maxY);
+                    maxZ = std::max<btScalar>(vec3.z, maxZ);
                     
                     vertices.push_back(vec3);
                     break;
@@ -205,7 +205,7 @@ namespace njli
             }
 //            t.hidden = 0.0f;
 //            t.opacity = 1.0f;
-            t.color = btVector4(1.0f, 1.0f, 1.0f, 1.0f);
+            t.color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
             
             vertexData[idx] = t;
             indiceData[idx] = (GLuint)idx;
@@ -307,8 +307,8 @@ namespace njli
             unsigned long offset = index * numberOfVertices();
             for (unsigned long vertexIndex = 0; vertexIndex < numberOfVertices(); vertexIndex++)
             {
-                btVector4 color(m_VertexData[vertexIndex + offset].color);
-                color.setW(o);
+                glm::vec4 color(m_VertexData[vertexIndex + offset].color);
+                color.w = (o);
                 
                 m_VertexData[vertexIndex + offset].color = color;
             }
@@ -329,8 +329,8 @@ namespace njli
             unsigned long offset = index * numberOfVertices();
             for (unsigned long vertexIndex = 0; vertexIndex < numberOfVertices(); vertexIndex++)
             {
-                btVector4 color(m_VertexData[vertexIndex + offset].color);
-                color.setW(h);
+                glm::vec4 color(m_VertexData[vertexIndex + offset].color);
+                color.w = (h);
                 
                 m_VertexData[vertexIndex + offset].color = color;
             }
@@ -346,10 +346,10 @@ namespace njli
         {
             bool hidden = node->isHiddenGeometry();
             
-            btVector4 c(node->getColorBase());
+            glm::vec4 c(node->getColorBase());
             
             if(hidden)
-                c.setW(0.0f);
+                c.w = (0.0f);
             
             unsigned long offset = index * numberOfVertices();
             for (unsigned long vertexIndex = 0;

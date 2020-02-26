@@ -17,7 +17,9 @@
 #include <string>
 
 #include "btTransform.h"
-#include "btVector2.h"
+//#include "glm::vec2.h"
+
+#include "glm/glm.hpp"
 
 //#define USE_HALF_FLOAT
 
@@ -44,28 +46,28 @@ namespace njli
             for (unsigned int i=0; i<numVerts; i+=3 )
             {
                 // Shortcuts for vertices
-                btVector3  v0 = (v + (i + 0))->vertex;
-                btVector3  v1 = (v + (i + 1))->vertex;
-                btVector3  v2 = (v + (i + 2))->vertex;
+                glm::vec3  v0 = (v + (i + 0))->vertex;
+                glm::vec3  v1 = (v + (i + 1))->vertex;
+                glm::vec3  v2 = (v + (i + 2))->vertex;
                 
                 // Shortcuts for UVs
-                btVector2  uv0 = (v + (i + 0))->texture;
-                btVector2  uv1 = (v + (i + 1))->texture;
-                btVector2  uv2 = (v + (i + 2))->texture;
+                glm::vec2  uv0 = (v + (i + 0))->texture;
+                glm::vec2  uv1 = (v + (i + 1))->texture;
+                glm::vec2  uv2 = (v + (i + 2))->texture;
                 
                 // Edges of the triangle : postion delta
-                btVector3 deltaPos1 = v1-v0;
-                btVector3 deltaPos2 = v2-v0;
+                glm::vec3 deltaPos1 = v1-v0;
+                glm::vec3 deltaPos2 = v2-v0;
                 
                 // UV delta
-                btVector2 deltaUV1 = uv1-uv0;
-                btVector2 deltaUV2 = uv2-uv0;
+                glm::vec2 deltaUV1 = uv1-uv0;
+                glm::vec2 deltaUV2 = uv2-uv0;
                 
-                float d = (deltaUV1.x() * deltaUV2.y() - deltaUV1.y() * deltaUV2.x());
+                float d = (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
                 
                 float r = (d!=0.0f)?(1.0f / d):0.0f;
-                btVector3 tangent = (deltaPos1 * deltaUV2.y()   - deltaPos2 * deltaUV1.y())*r;
-                btVector3 bitangent = (deltaPos2 * deltaUV1.x()   - deltaPos1 * deltaUV2.x())*r;
+                glm::vec3 tangent = (deltaPos1 * deltaUV2.y   - deltaPos2 * deltaUV1.y)*r;
+                glm::vec3 bitangent = (deltaPos2 * deltaUV1.x   - deltaPos1 * deltaUV2.x)*r;
                 
                 // Set the same tangent for all three vertices of the triangle.
                 // They will be merged later, in vboindexer.cpp
@@ -83,20 +85,27 @@ namespace njli
             // See "Going Further"
             for (unsigned int i=0; i<numVerts; i+=1 )
             {
-                btVector3 & n = (v + (i))->normal;
-                btVector3 & t = (v + (i))->tangent;
-                btVector3 & b = (v + (i))->bitangent;
+                glm::vec3 & n = (v + (i))->normal;
+                glm::vec3 & t = (v + (i))->tangent;
+                glm::vec3 & b = (v + (i))->bitangent;
                 
                 
                 // Gram-Schmidt orthogonalize
-                t = (t - n * n.dot(t));
+//                t = (t - n * n.dot(t));
+                t = (t - n * glm::dot(n,t));
                 
-                if(t.length() > 0.0f)
-                    t.normalize();
+                
+                if(t.length() > 0.0f) {
+//                    t.normalize();
+                    t = glm::normalize(t);
+                }
                 
                 // Calculate handedness
-                if (n.cross(t).dot(b) < 0.0f)
-                {
+//                if (n.cross(t).dot(b) < 0.0f)
+//                {
+//                    t = t * -1.0f;
+//                }
+                if(glm::dot(glm::cross(n, t), b) < 0.0f) {
                     t = t * -1.0f;
                 }
             }
@@ -113,12 +122,12 @@ namespace njli
 //        , hidden(0.0f)
         {
         }
-        TexturedColoredVertex(const btVector3 vertex,
-                              const btVector4 color,
-                              const btVector2 texture,
-                              const btVector3 normal,
-                              const btVector3 tangent,
-                              const btVector3 bitangent
+        TexturedColoredVertex(const glm::vec3 vertex,
+                              const glm::vec4 color,
+                              const glm::vec2 texture,
+                              const glm::vec3 normal,
+                              const glm::vec3 tangent,
+                              const glm::vec3 bitangent
 //                              const GLfptype opacity,
 //                              const GLfptype hidden
                               )
@@ -132,12 +141,12 @@ namespace njli
 //        , hidden(hidden)
         {
         }
-        btVector3 vertex;
-        btVector4 color;
-        btVector2 texture;
-        btVector3 normal;
-        btVector3 tangent;
-        btVector3 bitangent;
+        glm::vec3 vertex;
+        glm::vec4 color;
+        glm::vec2 texture;
+        glm::vec3 normal;
+        glm::vec3 tangent;
+        glm::vec3 bitangent;
         
 //        GLfptype opacity;
 //        GLfptype hidden;
@@ -165,10 +174,10 @@ namespace njli
 //            sprintf(buffer, "{{%f, %f, %f}, {%f, %f}, {%f, %f, %f, %f}, {%f, %f, %f}, %f, %f}",
 //            sprintf(buffer, "{{%f, %f, %f}, {%f, %f}, {%f, %f, %f}, %f, %f}",
             sprintf(buffer, "{{%f, %f, %f}, {%f, %f}, {%f, %f, %f}}",
-                    vertex.x(), vertex.y(), vertex.z(),
-                    texture.x(), texture.y(),
+                    vertex.x, vertex.y, vertex.z,
+                    texture.x, texture.y,
 //                    color.x(), color.y(), color.z(), color.w(),
-                    normal.x(), normal.y(), normal.z()//,
+                    normal.x, normal.y, normal.z//,
 //                    opacity,
 //                    hidden
                     );
@@ -241,14 +250,20 @@ namespace njli
         void addReference(Node *node);
         void removeReference(Node *node);
         
-        void setTransform(const unsigned long index, const btTransform &transform);
-        btTransform getTransform(const unsigned long index);
+//        void setTransform(const unsigned long index, const btTransform &transform);
+        void setTransform(const unsigned long index, const glm::mat4x4 &transform);
+        
+//        btTransform getTransform(const unsigned long index);
+        glm::mat4x4 getTransform(const unsigned long index);
         
 //        void setColorTransform(const unsigned long index, const btTransform &transform);
 //        btTransform getColorTransform(const unsigned long index);
         
-        void setNormalMatrixTransform(const unsigned long index, const btTransform &transform);
-        btTransform getNormalMatrixTransform(const unsigned long index);
+//        void setNormalMatrixTransform(const unsigned long index, const btTransform &transform);
+        void setNormalMatrixTransform(const unsigned long index, const glm::mat4x4 &transform);
+        
+//        btTransform getNormalMatrixTransform(const unsigned long index);
+        glm::mat4x4 getNormalMatrixTransform(const unsigned long index);
         
         virtual void setOpacity(Node *node) = 0;
         virtual void setHidden(Node *node) = 0;
@@ -262,12 +277,12 @@ namespace njli
         
 //        void computeTangentBasis(
 //                                 // inputs
-//                                 const std::vector<btVector3> & vertices,
-//                                 const std::vector<btVector2> & uvs,
-//                                 const std::vector<btVector3> & normals,
+//                                 const std::vector<glm::vec3> & vertices,
+//                                 const std::vector<glm::vec2> & uvs,
+//                                 const std::vector<glm::vec3> & normals,
 //                                 // outputs
-//                                 std::vector<btVector3> & tangents,
-//                                 std::vector<btVector3> & bitangents
+//                                 std::vector<glm::vec3> & tangents,
+//                                 std::vector<glm::vec3> & bitangents
 //                                 );
 
         

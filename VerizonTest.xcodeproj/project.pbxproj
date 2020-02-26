@@ -8,11 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		A408468BCD408ED97579EBCA /* libPods-VerizonTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D7C0103A830137795300760 /* libPods-VerizonTest.a */; };
-		C11E22C21D25A43700C53809 /* PhysicsWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11E22C01D25A43700C53809 /* PhysicsWorld.cpp */; };
-		C11E22C51D25A63800C53809 /* PhysicsBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11E22C31D25A63800C53809 /* PhysicsBody.cpp */; };
-		C11E22C81D25A66300C53809 /* PhysicsBodyRigid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11E22C61D25A66300C53809 /* PhysicsBodyRigid.cpp */; };
-		C11E22CB1D25BE3300C53809 /* PhysicsShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11E22C91D25BE3300C53809 /* PhysicsShape.cpp */; };
-		C11E22CE1D25BE6B00C53809 /* PhysicsShapeCube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11E22CC1D25BE6B00C53809 /* PhysicsShapeCube.cpp */; };
 		C124296A1D19F2BB00CEABBF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C12429691D19F2BB00CEABBF /* main.m */; };
 		C124296D1D19F2BB00CEABBF /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = C124296C1D19F2BB00CEABBF /* AppDelegate.mm */; };
 		C12429741D19F2BB00CEABBF /* GameViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C12429731D19F2BB00CEABBF /* GameViewController.mm */; };
@@ -205,16 +200,6 @@
 
 /* Begin PBXFileReference section */
 		3D7C0103A830137795300760 /* libPods-VerizonTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-VerizonTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C11E22C01D25A43700C53809 /* PhysicsWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsWorld.cpp; sourceTree = "<group>"; };
-		C11E22C11D25A43700C53809 /* PhysicsWorld.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PhysicsWorld.hpp; sourceTree = "<group>"; };
-		C11E22C31D25A63800C53809 /* PhysicsBody.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsBody.cpp; sourceTree = "<group>"; };
-		C11E22C41D25A63800C53809 /* PhysicsBody.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PhysicsBody.hpp; sourceTree = "<group>"; };
-		C11E22C61D25A66300C53809 /* PhysicsBodyRigid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsBodyRigid.cpp; sourceTree = "<group>"; };
-		C11E22C71D25A66300C53809 /* PhysicsBodyRigid.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PhysicsBodyRigid.hpp; sourceTree = "<group>"; };
-		C11E22C91D25BE3300C53809 /* PhysicsShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsShape.cpp; sourceTree = "<group>"; };
-		C11E22CA1D25BE3300C53809 /* PhysicsShape.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PhysicsShape.hpp; sourceTree = "<group>"; };
-		C11E22CC1D25BE6B00C53809 /* PhysicsShapeCube.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsShapeCube.cpp; sourceTree = "<group>"; };
-		C11E22CD1D25BE6B00C53809 /* PhysicsShapeCube.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PhysicsShapeCube.hpp; sourceTree = "<group>"; };
 		C12429651D19F2BB00CEABBF /* VerizonTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VerizonTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C12429691D19F2BB00CEABBF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C124296B1D19F2BB00CEABBF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -680,23 +665,6 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		C11E22BF1D25A41D00C53809 /* Physics */ = {
-			isa = PBXGroup;
-			children = (
-				C11E22C11D25A43700C53809 /* PhysicsWorld.hpp */,
-				C11E22C01D25A43700C53809 /* PhysicsWorld.cpp */,
-				C11E22C41D25A63800C53809 /* PhysicsBody.hpp */,
-				C11E22C31D25A63800C53809 /* PhysicsBody.cpp */,
-				C11E22C71D25A66300C53809 /* PhysicsBodyRigid.hpp */,
-				C11E22C61D25A66300C53809 /* PhysicsBodyRigid.cpp */,
-				C11E22CA1D25BE3300C53809 /* PhysicsShape.hpp */,
-				C11E22C91D25BE3300C53809 /* PhysicsShape.cpp */,
-				C11E22CD1D25BE6B00C53809 /* PhysicsShapeCube.hpp */,
-				C11E22CC1D25BE6B00C53809 /* PhysicsShapeCube.cpp */,
-			);
-			name = Physics;
-			sourceTree = "<group>";
-		};
 		C124295C1D19F2BB00CEABBF = {
 			isa = PBXGroup;
 			children = (
@@ -775,7 +743,6 @@
 		C12429A11D19F50D00CEABBF /* MySource */ = {
 			isa = PBXGroup;
 			children = (
-				C11E22BF1D25A41D00C53809 /* Physics */,
 				C149C1871D221A5000988F89 /* Geometry */,
 				C1242DDB1D1B311000CEABBF /* AbstractDecorator.cpp */,
 				C1242DDC1D1B311000CEABBF /* AbstractDecorator.hpp */,
@@ -1414,6 +1381,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -1528,7 +1496,6 @@
 				C1242D3A1D1A008C00CEABBF /* btPoint2PointConstraint.cpp in Sources */,
 				C1242D1C1D1A008C00CEABBF /* btPersistentManifold.cpp in Sources */,
 				C1242CCD1D1A008C00CEABBF /* btCylinderShape.cpp in Sources */,
-				C11E22C81D25A66300C53809 /* PhysicsBodyRigid.cpp in Sources */,
 				C1242D321D1A008C00CEABBF /* btGeneric6DofConstraint.cpp in Sources */,
 				C1242C6E1D1A008C00CEABBF /* btDbvt.cpp in Sources */,
 				C12429AD1D19FEE100CEABBF /* Node.cpp in Sources */,
@@ -1593,7 +1560,6 @@
 				C18168281D26B89F00AB90DD /* btSoftSoftCollisionAlgorithm.cpp in Sources */,
 				C1242D361D1A008C00CEABBF /* btHinge2Constraint.cpp in Sources */,
 				C1242C7F1D1A008C00CEABBF /* btBox2dBox2dCollisionAlgorithm.cpp in Sources */,
-				C11E22C51D25A63800C53809 /* PhysicsBody.cpp in Sources */,
 				C18167B01D26224C00AB90DD /* btGpu3DGridBroadphase.cpp in Sources */,
 				C1242D1A1D1A008C00CEABBF /* btMinkowskiPenetrationDepthSolver.cpp in Sources */,
 				C1242D4D1D1A008C00CEABBF /* btMultiBody.cpp in Sources */,
@@ -1608,7 +1574,6 @@
 				C18167ED1D26224C00AB90DD /* boxBoxDistance.cpp in Sources */,
 				C1242CCF1D1A008C00CEABBF /* btEmptyShape.cpp in Sources */,
 				C1242CE91D1A008C00CEABBF /* btTriangleBuffer.cpp in Sources */,
-				C11E22CB1D25BE3300C53809 /* PhysicsShape.cpp in Sources */,
 				C1242D381D1A008C00CEABBF /* btHingeConstraint.cpp in Sources */,
 				C1242C9F1D1A008C00CEABBF /* btInternalEdgeUtility.cpp in Sources */,
 				C1242CC11D1A008C00CEABBF /* btConvexHullShape.cpp in Sources */,
@@ -1641,7 +1606,6 @@
 				C1242CBD1D1A008C00CEABBF /* btConeShape.cpp in Sources */,
 				C1242C741D1A008C00CEABBF /* btMultiSapBroadphase.cpp in Sources */,
 				C1242CF11D1A008C00CEABBF /* btTriangleMesh.cpp in Sources */,
-				C11E22C21D25A43700C53809 /* PhysicsWorld.cpp in Sources */,
 				C1242CA11D1A008C00CEABBF /* btManifoldResult.cpp in Sources */,
 				C18167EB1D26224C00AB90DD /* SpuGatheringCollisionDispatcher.cpp in Sources */,
 				C149C1801D221A1F00988F89 /* Geometry.cpp in Sources */,
@@ -1657,7 +1621,6 @@
 				C183AB331D5EC6AF00EAB8AB /* MaterialProperty.cpp in Sources */,
 				C1242CA91D1A008C00CEABBF /* btSphereTriangleCollisionAlgorithm.cpp in Sources */,
 				C1242CA31D1A008C00CEABBF /* btSimulationIslandManager.cpp in Sources */,
-				C11E22CE1D25BE6B00C53809 /* PhysicsShapeCube.cpp in Sources */,
 				C1242DD91D1A1FFD00CEABBF /* Scene.cpp in Sources */,
 				C1242CED1D1A008C00CEABBF /* btTriangleIndexVertexArray.cpp in Sources */,
 				C1242CC71D1A008C00CEABBF /* btConvexPolyhedron.cpp in Sources */,
@@ -1826,6 +1789,7 @@
 					"\"${PODS_ROOT}/Headers/Public\"",
 					"\"${PODS_ROOT}/Headers/Public/GVRSDK\"",
 					"\"$(SRCROOT)/VerizonTest/src/bullet-2.82-r2704/src\"/**",
+					"\"$(SRCROOT)/VerizonTest/src/glm\"",
 				);
 				INFOPLIST_FILE = VerizonTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1846,6 +1810,7 @@
 					"\"${PODS_ROOT}/Headers/Public\"",
 					"\"${PODS_ROOT}/Headers/Public/GVRSDK\"",
 					"\"$(SRCROOT)/VerizonTest/src/bullet-2.82-r2704/src\"/**",
+					"\"$(SRCROOT)/VerizonTest/src/glm\"",
 				);
 				INFOPLIST_FILE = VerizonTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
