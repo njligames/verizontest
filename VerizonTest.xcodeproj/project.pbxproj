@@ -71,22 +71,22 @@
 		C12429A21D19F50D00CEABBF /* Cubenado.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cubenado.cpp; sourceTree = "<group>"; };
 		C12429A31D19F50D00CEABBF /* Cubenado.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Cubenado.hpp; sourceTree = "<group>"; };
 		C12429A51D19FE8F00CEABBF /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
-		C12429A61D19FE8F00CEABBF /* Shader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Shader.hpp; sourceTree = "<group>"; };
+		C12429A61D19FE8F00CEABBF /* Shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
 		C12429AB1D19FEE100CEABBF /* Node.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Node.cpp; sourceTree = "<group>"; };
-		C12429AC1D19FEE100CEABBF /* Node.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Node.hpp; sourceTree = "<group>"; };
+		C12429AC1D19FEE100CEABBF /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
 		C12429AE1D19FEF300CEABBF /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
-		C12429AF1D19FEF300CEABBF /* Camera.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Camera.hpp; sourceTree = "<group>"; };
+		C12429AF1D19FEF300CEABBF /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		C1242DD51D1A1E2000CEABBF /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = "<group>"; };
 		C1242DD71D1A1FFD00CEABBF /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
-		C1242DD81D1A1FFD00CEABBF /* Scene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Scene.hpp; sourceTree = "<group>"; };
+		C1242DD81D1A1FFD00CEABBF /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
 		C1242DDB1D1B311000CEABBF /* AbstractDecorator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AbstractDecorator.cpp; sourceTree = "<group>"; };
 		C1242DDC1D1B311000CEABBF /* AbstractDecorator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AbstractDecorator.hpp; sourceTree = "<group>"; };
 		C148503F1D69487B00992B05 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		C14850401D69487B00992B05 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		C149C17E1D221A1F00988F89 /* Geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Geometry.cpp; sourceTree = "<group>"; };
-		C149C17F1D221A1F00988F89 /* Geometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Geometry.hpp; sourceTree = "<group>"; };
+		C149C17F1D221A1F00988F89 /* Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Geometry.h; sourceTree = "<group>"; };
 		C149C18B1D2338A700988F89 /* MeshGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeshGeometry.cpp; sourceTree = "<group>"; };
-		C149C18C1D2338A700988F89 /* MeshGeometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MeshGeometry.hpp; sourceTree = "<group>"; };
+		C149C18C1D2338A700988F89 /* MeshGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshGeometry.h; sourceTree = "<group>"; };
 		C183AB2E1D5EC29700EAB8AB /* Material.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Material.cpp; sourceTree = "<group>"; };
 		C183AB2F1D5EC29700EAB8AB /* Material.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Material.hpp; sourceTree = "<group>"; };
 		C183AB311D5EC6AF00EAB8AB /* MaterialProperty.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MaterialProperty.cpp; sourceTree = "<group>"; };
@@ -228,13 +228,13 @@
 				C1242DDC1D1B311000CEABBF /* AbstractDecorator.hpp */,
 				C12429A31D19F50D00CEABBF /* Cubenado.hpp */,
 				C12429A21D19F50D00CEABBF /* Cubenado.cpp */,
-				C12429A61D19FE8F00CEABBF /* Shader.hpp */,
+				C12429A61D19FE8F00CEABBF /* Shader.h */,
 				C12429A51D19FE8F00CEABBF /* Shader.cpp */,
-				C12429AC1D19FEE100CEABBF /* Node.hpp */,
+				C12429AC1D19FEE100CEABBF /* Node.h */,
 				C12429AB1D19FEE100CEABBF /* Node.cpp */,
-				C12429AF1D19FEF300CEABBF /* Camera.hpp */,
+				C12429AF1D19FEF300CEABBF /* Camera.h */,
 				C12429AE1D19FEF300CEABBF /* Camera.cpp */,
-				C1242DD81D1A1FFD00CEABBF /* Scene.hpp */,
+				C1242DD81D1A1FFD00CEABBF /* Scene.h */,
 				C1242DD71D1A1FFD00CEABBF /* Scene.cpp */,
 				C183AB2F1D5EC29700EAB8AB /* Material.hpp */,
 				C183AB2E1D5EC29700EAB8AB /* Material.cpp */,
@@ -251,9 +251,9 @@
 		C149C1871D221A5000988F89 /* Geometry */ = {
 			isa = PBXGroup;
 			children = (
-				C149C17F1D221A1F00988F89 /* Geometry.hpp */,
+				C149C17F1D221A1F00988F89 /* Geometry.h */,
 				C149C17E1D221A1F00988F89 /* Geometry.cpp */,
-				C149C18C1D2338A700988F89 /* MeshGeometry.hpp */,
+				C149C18C1D2338A700988F89 /* MeshGeometry.h */,
 				C149C18B1D2338A700988F89 /* MeshGeometry.cpp */,
 			);
 			name = Geometry;

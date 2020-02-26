@@ -6,9 +6,9 @@
 //  Copyright © 2016 NJLIGames Ltd. All rights reserved.
 //
 
-#include "MeshGeometry.hpp"
+#include "MeshGeometry.h"
 
-#include "Node.hpp"
+#include "Node.h"
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -24,6 +24,7 @@
 //}
 namespace njli
 {
+class Node;
     MeshGeometry::MeshGeometry():
     Geometry(),
     m_VertexData(NULL),

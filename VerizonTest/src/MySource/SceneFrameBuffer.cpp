@@ -7,8 +7,8 @@
 //
 
 #include "SceneFrameBuffer.hpp"
-#include "Scene.hpp"
-#include "Shader.hpp"
+#include "Scene.h"
+#include "Shader.h"
 
 namespace njli
 {

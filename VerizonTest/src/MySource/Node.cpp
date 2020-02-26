@@ -6,9 +6,9 @@
 //  Copyright © 2016 NJLIGames Ltd. All rights reserved.
 //
 
-#include "Node.hpp"
-#include "Geometry.hpp"
-#include "Camera.hpp"
+#include "Node.h"
+#include "Geometry.h"
+#include "Camera.h"
 
 #include <assert.h>
 #include <iostream>

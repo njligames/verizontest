@@ -6,9 +6,9 @@
 //  Copyright © 2016 NJLIGames Ltd. All rights reserved.
 //
 
-#include "Scene.hpp"
-#include "Node.hpp"
-#include "Geometry.hpp"
+#include "Scene.h"
+#include "Node.h"
+#include "Geometry.h"
 
 #include <assert.h>
 

@@ -9,8 +9,8 @@
 #import "GameViewController.h"
 #import <OpenGLES/ES2/glext.h>
 #include "Cubenado.hpp"
-#include "Node.hpp"
-#include "Geometry.hpp"
+#include "Node.h"
+#include "Geometry.h"
 
 #include <pthread.h>
 

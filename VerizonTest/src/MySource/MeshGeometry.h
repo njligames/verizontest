@@ -9,7 +9,7 @@
 #ifndef MeshGeometry_hpp
 #define MeshGeometry_hpp
 
-#include "Geometry.hpp"
+#include "Geometry.h"
 
 namespace njli
 {

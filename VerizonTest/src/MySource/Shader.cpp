@@ -6,7 +6,7 @@
 //  Copyright © 2016 NJLIGames Ltd. All rights reserved.
 //
 
-#include "Shader.hpp"
+#include "Shader.h"
 #include <iostream>
 #include <assert.h>
 

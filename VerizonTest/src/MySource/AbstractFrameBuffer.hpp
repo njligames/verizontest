@@ -14,7 +14,7 @@
 
 class MaterialProperty;
 
-#include "Shader.hpp"
+#include "Shader.h"
 
 //https://www.opengl.org/wiki/Framebuffer_Object_Examples
 //http://gamedev.stackexchange.com/questions/19461/opengl-glsl-render-to-cube-map

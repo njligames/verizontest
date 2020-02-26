@@ -6,19 +6,19 @@
 //  Copyright © 2016 NJLIGames Ltd. All rights reserved.
 //
 
-#include "Geometry.hpp"
+#include "Geometry.h"
 
 #include <assert.h>
 #include <iostream>
 
-#include "Shader.hpp"
-#include "Camera.hpp"
-#include "Node.hpp"
+#include "Shader.h"
+#include "Camera.h"
+#include "Node.h"
 //https://en.wikipedia.org/wiki/Wavefront_.obj_file#Material_template_library
 
 namespace njli
 {
-    
+
     const unsigned int HALF_FLOAT_MIN_BIASED_EXP_AS_SINGLE_FP_EXP = 0x38000000;
     const unsigned int HALF_FLOAT_MAX_BIASED_EXP_AS_SINGLE_FP_EXP = 0x47800000;
     const unsigned int FLOAT_MAX_BIASED_EXP = (0xFF << 23);

@@ -8,12 +8,12 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "Shader.hpp"
-#include "CubeGeometry.hpp"
-#include "RectangleGeometry.hpp"
-#include "MeshGeometry.hpp"
-#include "Node.hpp"
-#include "Scene.hpp"
+#include "Shader.h"
+//#include "CubeGeometry.hpp"
+//#include "RectangleGeometry.hpp"
+#include "MeshGeometry.h"
+#include "Node.h"
+#include "Scene.h"
 #include "AbstractFrameBuffer.hpp"
 #include "SceneFrameBuffer.hpp"
 

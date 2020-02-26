@@ -5,7 +5,7 @@
 #include <vector>
 #include <map>
 
-#include "Camera.hpp"
+#include "Camera.h"
 
 namespace njli
 {

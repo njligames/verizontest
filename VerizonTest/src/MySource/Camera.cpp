@@ -6,9 +6,9 @@
 //  Copyright © 2016 NJLIGames Ltd. All rights reserved.
 //
 
-#include "Camera.hpp"
-#include "Node.hpp"
-#include "Shader.hpp"
+#include "Camera.h"
+#include "Node.h"
+#include "Shader.h"
 
 namespace njli
 {
